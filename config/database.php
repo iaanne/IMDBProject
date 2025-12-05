@@ -110,9 +110,22 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
 
-            // TAMBAHKAN INI:
-            'encrypt' => env('DB_ENCRYPT', true),
+            // Opsi untuk koneksi yang lebih stabil
+            'options' => [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::SQLSRV_ATTR_ENCODING => PDO::SQLSRV_ENCODING_UTF8,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::SQLSRV_ATTR_QUERY_TIMEOUT => 30,
+            ],
+            // Opsi khusus SQL Server
+            'appname' => 'LaravelApp',
+            'connection_pooling' => false,
+            'multiple_active_result_sets' => false,
+            'encrypt' => env('DB_ENCRYPT', false), // Coba false dulu untuk testing
             'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', true),
+            'login_timeout' => 30,
+            'readonly' => false,
+
         ],
 
 
