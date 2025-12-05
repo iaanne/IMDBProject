@@ -13,6 +13,7 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * The path to the "home" route for your application.
      *
+<<<<<<< HEAD
      * Typically, users are redirected here after authentication.
      *
      * @var string
@@ -21,6 +22,14 @@ class RouteServiceProvider extends ServiceProvider
 
     /**
      * Define your route model bindings, pattern filters, and other route configuration.
+=======
+     * @var string
+     */
+    public const HOME = '/';
+
+    /**
+     * Define your route model bindings, pattern filters, etc.
+>>>>>>> 36d7b7a9bbff291d174a935f2731a17c71dbae77
      */
     public function boot(): void
     {
@@ -37,4 +46,8 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/web.php'));
         });
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 36d7b7a9bbff291d174a935f2731a17c71dbae77
