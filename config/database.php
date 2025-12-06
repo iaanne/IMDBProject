@@ -103,7 +103,7 @@ return [
             'url' => env('DATABASE_URL'),
             'host' => env('DB_HOST', '192.168.193.145'),
             'port' => env('DB_PORT', '1433'),
-            'database' => env('DB_DATABASE', 'IMDB'),
+            'database' => env('DB_DATABASE', 'IMDB_Data'),
             'username' => env('DB_USERNAME', 'remote_user'),
             'password' => env('DB_PASSWORD', 'loginzero!'),
             'charset' => 'utf8',
@@ -117,16 +117,7 @@ return [
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                 PDO::SQLSRV_ATTR_QUERY_TIMEOUT => 30,
             ],
-            // Opsi khusus SQL Server
-            'appname' => 'LaravelApp',
-            'connection_pooling' => false,
-            'multiple_active_result_sets' => false,
-            'encrypt' => env('DB_ENCRYPT', false), // Coba false dulu untuk testing
-            'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', true),
-            'login_timeout' => 30,
-            'readonly' => false,
-            'timeout' => 5,
-            'options' => [PDO::ATTR_TIMEOUT => 5,]
+        
 
 
         ],
