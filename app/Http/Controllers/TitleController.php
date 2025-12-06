@@ -10,49 +10,68 @@ class TitleController extends Controller
     // ===========================
     //       SEARCH
     // ===========================
-    public function search(Request $request)
-    {
-        $keyword = $request->input('q');
+public function search(Request $request)
+{
+    $keyword = $request->input('q');
 
-        if (!$keyword) {
-            return view('titles.search', [
-                'results' => [],
-                'keyword' => ''
-            ]);
-        }
-
-        // Panggil SP
-        $results = DB::select('EXEC sp_Title_Search @keyword = ?', [$keyword]);
-
+    if (!$keyword) {
         return view('titles.search', [
-            'results' => $results,
-            'keyword' => $keyword
+            'results' => [],
+            'keyword' => ''
         ]);
     }
+
+    try {
+        // Panggil SP dengan named parameter
+        $results = DB::select(
+            "EXEC sp_Title_Search @keyword = :keyword",
+            ['keyword' => $keyword]
+        );
+
+    } catch (\Exception $e) {
+        return view('titles.search', [
+            'results' => [],
+            'keyword' => $keyword,
+            'error' => $e->getMessage()
+        ]);
+    }
+
+    return view('titles.search', [
+        'results' => $results,
+        'keyword' => $keyword
+    ]);
+}
+
+
 
     // ===========================
     //       DETAIL PAGE
     // ===========================
     public function show($tconst)
     {
-        // 1. Detail judul
-        $title = DB::select('EXEC sp_Title_GetDetail @tconst = ?', [$tconst]);
+        // Detail
+        $title = DB::select("EXEC sp_Title_GetDetail ?", [$tconst]);
         $title = $title[0] ?? null;
 
         if (!$title) {
             abort(404, "Title not found.");
         }
 
-        // 2. Rating
-        $rating = DB::select('EXEC sp_Title_GetRating @tconst = ?', [$tconst]);
+        // Rating
+        $rating = DB::select("EXEC sp_Title_GetRating ?", [$tconst]);
         $rating = $rating[0] ?? null;
 
-        // 3. Cast (aktor, sutradara, crew)
-        $cast = DB::select('EXEC sp_Title_GetCast @tconst = ?', [$tconst]);
+        // Cast
+        $cast = DB::select("EXEC sp_Title_GetCast ?", [$tconst]);
 
-        // 4. Genre
-        $genres = DB::select('EXEC sp_Title_GetDetailGenre @tconst = ?', [$tconst]);
-
+        // GENRE — karena SP ini TIDAK ADA di file SQL kamu
+        // Maka diganti query native
+        $genres = DB::select("
+            SELECT dg.genre_name
+            FROM bridge_title_genre btg
+            JOIN dim_genre dg ON btg.genre_id = dg.genre_id
+            WHERE btg.tconst = ?
+        ", [$tconst]);
 
         return view('titles.show', [
             'title' => $title,

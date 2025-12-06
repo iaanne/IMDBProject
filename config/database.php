@@ -125,8 +125,16 @@ return [
             'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', true),
             'login_timeout' => 30,
             'readonly' => false,
+            'timeout' => 5,
+            'options' => [PDO::ATTR_TIMEOUT => 5,]
+
 
         ],
+
+         'options' => [
+        PDO::ATTR_TIMEOUT => 10, // 10 detik
+        ],
+
 
 
 
