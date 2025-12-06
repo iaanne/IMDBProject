@@ -1,106 +1,111 @@
 @extends('layouts.app')
 
-@section('title', 'Search Results')
+@section('title', $detail->primaryTitle)
 
 @section('content')
-<div class="row mb-4">
-    <div class="col-12">
-        <h1 class="mb-4">
-            <i class="fas fa-search me-2"></i>Pencarian
-        </h1>
-        
-        <!-- Search Box -->
-        <div class="card">
-            <div class="card-body">
-                <form action="{{ route('titles.search') }}" method="GET">
-                    <div class="input-group input-group-lg">
-                        <input type="text" 
-                               name="q" 
-                               class="form-control" 
-                               placeholder="Masukkan judul film, serial TV, atau kata kunci..."
-                               value="{{ $keyword ?? '' }}"
-                               required>
-                        <button class="btn btn-warning" type="submit">
-                            <i class="fas fa-search me-2"></i>Cari
-                        </button>
-                    </div>
-                </form>
-            </div>
+
+<style>
+    body {
+        background-color: #0f172a;
+        color: white;
+    }
+    .movie-hero {
+        background: linear-gradient(135deg, #1e293b, #0f172a);
+        padding: 40px;
+        border-radius: 20px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
+    .rating-box {
+        background: #1e293b;
+        padding: 20px;
+        border-radius: 15px;
+        margin-bottom: 20px;
+    }
+    .genre-badge {
+        background: #38bdf8;
+        color: #0f172a;
+        padding: 6px 12px;
+        border-radius: 15px;
+        margin-right: 6px;
+        font-weight: 600;
+    }
+    .cast-card {
+        background: #1e293b;
+        padding: 15px;
+        border-radius: 12px;
+        margin-bottom: 12px;
+        transition: 0.2s;
+    }
+    .cast-card:hover {
+        transform: translateX(5px);
+        background: #334155;
+    }
+</style>
+
+
+<div class="container mt-4">
+
+    {{-- HERO / TITLE --}}
+    <div class="movie-hero">
+        <h1 class="fw-bold">{{ $detail->primaryTitle }}</h1>
+
+        <p class="text-pink mt-2">
+            {{ ucfirst($detail->titleType) }} • 
+            {{ $detail->startYear ?? 'N/A' }} • 
+            {{ $detail->runtimeMinutes ? $detail->runtimeMinutes . ' menit' : 'Durasi tidak tersedia' }}
+        </p>
+
+        <div class="mt-3">
+            <span class="badge bg-warning text-dark">ID: {{ $detail->tconst }}</span>
         </div>
     </div>
-</div>
 
-<!-- Results Section -->
-@if(!empty($keyword))
-<div class="row">
-    <div class="col-12">
-        <h3 class="mb-3">
-            Hasil pencarian untuk: "<strong>{{ $keyword }}</strong>"
-            <span class="badge bg-primary fs-6">{{ count($results) }} hasil</span>
-        </h3>
-        
-        @if(count($results) > 0)
-        <div class="row">
-            @foreach($results as $title)
-            <div class="col-md-4 mb-4">
-                <div class="card h-100 movie-card">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <a href="{{ route('titles.show', $title->tconst) }}" 
-                               class="text-decoration-none text-dark">
-                                {{ $title->primaryTitle ?? 'No Title' }}
-                            </a>
-                        </h5>
-                        
-                        <div class="mb-2">
-                            <span class="badge bg-secondary">{{ $title->titleType ?? 'Unknown' }}</span>
-                            @if(!empty($title->startYear))
-                            <span class="badge bg-info">{{ $title->startYear }}</span>
-                            @endif
-                        </div>
-                        
-                        <p class="card-text">
-                            <small class="text-muted">
-                                <i class="fas fa-clock me-1"></i>
-                                {{ !empty($title->runtimeMinutes) ? $title->runtimeMinutes . ' menit' : 'N/A' }}
-                            </small>
-                        </p>
-                        
-                        <a href="{{ route('titles.show', $title->tconst) }}" 
-                           class="btn btn-sm btn-outline-primary">
-                            <i class="fas fa-info-circle me-1"></i>Detail Lengkap
-                        </a>
-                    </div>
-                </div>
-            </div>
-            @endforeach
-        </div>
+
+    {{-- RATING --}}
+    <div class="rating-box text-center">
+        @if($rating)
+            <h2 class="text-warning">⭐ {{ $rating->averageRating }} / 10</h2>
+            <p class="text-secondary">{{ number_format($rating->numVotes) }} votes</p>
         @else
-        <div class="alert alert-warning">
-            <h4 class="alert-heading">
-                <i class="fas fa-exclamation-triangle me-2"></i>Tidak ditemukan
-            </h4>
-            <p>Tidak ada hasil yang cocok dengan kata kunci "<strong>{{ $keyword }}</strong>"</p>
-            <hr>
-            <p class="mb-0">Coba kata kunci lain atau periksa ejaan Anda.</p>
-        </div>
+            <p class="text-muted">Belum ada rating.</p>
         @endif
     </div>
-</div>
-@else
-<div class="row">
-    <div class="col-12">
-        <div class="alert alert-info">
-            <h4 class="alert-heading">
-                <i class="fas fa-info-circle me-2"></i>Tips Pencarian
-            </h4>
-            <ul>
-                <li>Gunakan kata kunci spesifik untuk hasil yang lebih akurat</li>
-                <li>Coba cari berdasarkan judul, genre, atau tahun rilis</li>
-                <li>Anda juga bisa mencari berdasarkan ID (tconst)</li>
-            </ul>
+
+
+    {{-- GENRE --}}
+    <h3 class="mb-3">🎭 Genre</h3>
+
+    @if(count($genres) > 0)
+        @foreach($genres as $g)
+            <span class="genre-badge">{{ $g->genre_name }}</span>
+        @endforeach
+    @else
+        <p class="text-muted">Genre tidak tersedia.</p>
+    @endif
+
+    <hr class="border-secondary my-4">
+
+    {{-- CAST --}}
+    <h3 class="mb-3">🎬 Pemeran & Kru</h3>
+
+    @if(count($cast) > 0)
+        @foreach($cast as $c)
+        <div class="cast-card">
+            <strong>{{ $c->PersonName }}</strong>  
+            <br>
+            <span class="text-info">{{ $c->Category }}</span>
+
+            @if($c->characters)
+                <br>
+                <small class="text-secondary">Sebagai: {{ $c->characters }}</small>
+            @endif
         </div>
-    </div>
+        @endforeach
+    @else
+        <p class="text-muted">Tidak ada data cast untuk title ini.</p>
+    @endif
+
 </div>
-@endif
+
 @endsection

@@ -12,15 +12,14 @@
         </h1>
     @endif
 
-    {{-- Jika ada error --}}
+    {{-- ERROR --}}
     @if(isset($error))
         <div class="alert alert-danger mt-3">
             {{ $error }}
         </div>
     @endif
 
-
-    {{-- Jika tidak ada hasil --}}
+    {{-- NO RESULTS --}}
     @if(isset($results) && count($results) === 0)
         <div class="no-results text-center mt-5">
             <i class="fas fa-search fa-4x mb-3" style="color:#8CE4FF"></i>
@@ -29,8 +28,7 @@
         </div>
     @endif
 
-
-    {{-- Hasil pencarian --}}
+    {{-- RESULTS --}}
     @if(isset($results) && count($results) > 0)
 
         <p class="text-light mb-4">
@@ -45,25 +43,18 @@
                 <div class="scenepix-card" onclick="window.location.href='{{ route('titles.show',$title->tconst) }}'">
 
                     <div class="card-body">
+                        <h5 class="movie-title">{{ Str::limit($title->primaryTitle, 40) }}</h5>
 
-                        {{-- TITLE --}}
-                        <h5 class="movie-title">
-                            {{ Str::limit($title->primaryTitle, 40) }}
-                        </h5>
-
-                        {{-- YEAR & TYPE --}}
                         <p class="movie-meta">
                             {{ $title->startYear ?? 'Unknown' }} • {{ ucfirst($title->titleType) }}
                         </p>
 
-                        {{-- RUNTIME --}}
                         @if($title->runtimeMinutes)
                         <p class="movie-runtime">
                             <i class="fas fa-clock me-1"></i>
                             {{ $title->runtimeMinutes }} min
                         </p>
                         @endif
-
                     </div>
 
                 </div>
@@ -76,7 +67,6 @@
     @endif
 
 </div>
-
 @endsection
 
 
@@ -87,17 +77,14 @@
         font-weight: 700;
         font-size: 1.1rem;
     }
-
     .movie-meta {
         color: #8CE4FF;
         font-size: 0.9rem;
     }
-
     .movie-runtime {
         color: #FF8F8F;
         font-size: 0.85rem;
     }
-
     .scenepix-card {
         background: rgba(255,255,255,0.05);
         border-radius: 12px;
@@ -106,7 +93,6 @@
         border: 1px solid rgba(255,255,255,0.1);
         cursor: pointer;
     }
-
     .scenepix-card:hover {
         transform: translateY(-6px);
         box-shadow: 0 12px 25px rgba(0,0,0,0.3);

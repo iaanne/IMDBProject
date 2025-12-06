@@ -49,35 +49,32 @@ public function search(Request $request)
     // ===========================
     public function show($tconst)
     {
-        // Detail
-        $title = DB::select("EXEC sp_Title_GetDetail ?", [$tconst]);
-        $title = $title[0] ?? null;
-
-        if (!$title) {
-            abort(404, "Title not found.");
+        // DETAIL
+        $detail = DB::select('EXEC sp_Title_GetDetail ?', [$tconst]);
+        if (!$detail || count($detail) == 0) {
+            return abort(404, "Title not found");
         }
+        $detail = $detail[0];
 
-        // Rating
-        $rating = DB::select("EXEC sp_Title_GetRating ?", [$tconst]);
+        // RATING
+        $rating = DB::select('EXEC sp_Title_GetRating ?', [$tconst]);
         $rating = $rating[0] ?? null;
 
-        // Cast
-        $cast = DB::select("EXEC sp_Title_GetCast ?", [$tconst]);
+        // CAST
+        $cast = DB::select('EXEC sp_Title_GetCast ?', [$tconst]);
 
         // GENRE — karena SP ini TIDAK ADA di file SQL kamu
         // Maka diganti query native
-        $genres = DB::select("
-            SELECT dg.genre_name
-            FROM bridge_title_genre btg
-            JOIN dim_genre dg ON btg.genre_id = dg.genre_id
-            WHERE btg.tconst = ?
-        ", [$tconst]);
+        $genres = DB::select('EXEC sp_Title_GetDetailGenre ?', [$tconst]);
 
-        return view('titles.show', [
-            'title' => $title,
-            'rating' => $rating,
-            'cast' => $cast,
-            'genres' => $genres
-        ]);
+        return view('titles.search', [
+    'detail' => $detail,
+    'rating' => $rating,
+    'genres' => $genres,
+    'cast' => $cast,
+    'results' => [],
+    'keyword' => null
+]);
+
     }
 }
