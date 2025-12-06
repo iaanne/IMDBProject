@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\TitleController;
-use App\Http\Controllers\AnalyticsController;
+// use App\Http\Controllers\AnalyticsController;
 
 
 Route::get('/', function () {
@@ -19,15 +19,8 @@ Route::get('/titles/cast/{tconst}', [TitleController::class, 'getCast']);
 Route::get('/titles/rating/{tconst}', [TitleController::class, 'getRating']);
 
 // Analytics public
-Route::get('/analytics/top-shows', [AnalyticsController::class, 'topShows']);
-Route::get('/analytics/top-rated', [AnalyticsController::class, 'topRated']);
-Route::get('/analytics/genre-popularity', [AnalyticsController::class, 'genrePopularity']);
-Route::get('/analytics/rating-trend', [AnalyticsController::class, 'ratingTrend']);
-Route::get('/analytics/person-productivity', [AnalyticsController::class, 'personProductivity']);
-
-// SEMENTARA COMMENT YANG BUTUH AUTH
-// Route::post('/titles', [TitleController::class, 'insert']);
-// Route::put('/titles/{tconst}', [TitleController::class, 'update']);
-// Route::delete('/titles/{tconst}', [TitleController::class, 'delete']);
-
-
+// Route::get('/analytics/top-shows', [AnalyticsController::class, 'topShows']);
+// Route::get('/analytics/top-rated', [AnalyticsController::class, 'topRated']);
+// Route::get('/analytics/genre-popularity', [AnalyticsController::class, 'genrePopularity']);
+// Route::get('/analytics/rating-trend', [AnalyticsController::class, 'ratingTrend']);
+// Route::get('/analytics/person-productivity', [AnalyticsController::class, 'personProductivity']);

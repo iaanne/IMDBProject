@@ -1,0 +1,234 @@
+/* Global Colors */
+:root {
+    --dark-blue: #0e2242;
+    --navy: #13284b;
+    --accent: #ff8f8f;
+    --white: #ffffff;
+    --light: #d9e6ff;
+}
+
+/* Remove leftover inline CSS */
+body {
+    background-color: var(--dark-blue);
+    color: var(--white);
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* ---- HOME PAGE ---- */
+
+.home-wrapper {
+    padding: 40px 0;
+}
+
+/* Title */
+.section-title {
+    text-align: center;
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--accent);
+    margin-bottom: 30px;
+}
+
+/* Carousel Container */
+.top10-carousel-container {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.carousel-track {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    gap: 20px;
+    padding: 10px 0;
+}
+
+.carousel-track::-webkit-scrollbar {
+    display: none;
+}
+
+/* Movie Cards */
+.movie-card {
+    min-width: 250px;
+    background-color: var(--navy);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    text-align: center;
+    transition: 0.3s;
+}
+
+.movie-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+}
+
+.movie-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--white);
+    min-height: 50px;
+}
+
+.movie-rating {
+    margin-top: 10px;
+    color: gold;
+    font-size: 1.2rem;
+}
+
+.movie-votes {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin-top: 5px;
+}
+
+/* Carousel Buttons */
+.carousel-btn {
+    position: absolute;
+    width: 45px;
+    height: 45px;
+    background-color: var(--accent);
+    border-radius: 50%;
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carousel-btn.left {
+    left: -20px;
+}
+
+.carousel-btn.right {
+    right: -20px;
+}
+
+.carousel-btn:hover {
+    transform: scale(1.1);
+}
+
+.top10-carousel-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 20px 0;
+}
+
+.carousel-track {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 10px;
+}
+
+.carousel-track::-webkit-scrollbar {
+    display: none; /* biar gak ada scrollbar jelek */
+}
+
+.movie-card {
+    min-width: 260px;
+    background: #10254a;
+    border-radius: 15px;
+    padding: 20px;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+
+.movie-card:hover {
+    transform: translateY(-5px);
+}
+
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 45px;
+    height: 45px;
+    border: none;
+    border-radius: 50%;
+    background: #ff8f8f;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --- FIX TOMBOL SLIDER --- */
+.top10-carousel-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 20px 40px; /* memberi ruang tombol */
+}
+
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 9999;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
+    background: var(--accent);
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: auto;
+}
+
+.carousel-btn.left {
+    left: -10px; /* Jangan minus terlalu jauh */
+}
+
+.carousel-btn.right {
+    right: -10px;
+}
+
+.carousel-btn:hover {
+    transform: translateY(-50%) scale(1.15);
+}
+
+/* AREA TRACK UTAMA */
+.carousel-track {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto !important;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    padding: 10px;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none; /* Firefox */
+}
+
+.carousel-track::-webkit-scrollbar {
+    display: none; /* Chrome & Safari */
+}
+
+/* BIAR CARD TIDAK KECIL & BISA DIGESER */
+.movie-card {
+    min-width: 260px;  /* WAJIB ADA */
+    flex-shrink: 0;    /* WAJIB ADA */
+    scroll-snap-align: start;
+}
+
+.top10-carousel-container {
+    position: relative;
+    width: 100%;
+    padding: 0 60px; /* ruang untuk tombol */
+}
