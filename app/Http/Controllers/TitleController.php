@@ -67,11 +67,14 @@ public function search(Request $request)
         // Maka diganti query native
         $genres = DB::select('EXEC sp_Title_GetDetailGenre ?', [$tconst]);
 
-        return view('titles.search', [
+        $crew = DB::select('EXEC sp_Title_GetCrew ?', [$tconst]);
+
+        return view('titles.show', [
     'detail' => $detail,
     'rating' => $rating,
     'genres' => $genres,
     'cast' => $cast,
+    'crew' => $crew,
     'results' => [],
     'keyword' => null
 ]);
