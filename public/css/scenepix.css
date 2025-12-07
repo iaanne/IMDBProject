@@ -553,3 +553,61 @@ body {
 .nav-menu li.active a {
     color: white !important;
 }
+
+/* ===================== DETAIL PAGE STYLES ===================== */
+
+body.detail-page {
+    background-color: #0f172a;
+    color: white;
+}
+
+/* Hero section */
+.movie-hero {
+    background: linear-gradient(135deg, #1e293b, #0E1830);
+    padding: 40px;
+    border-radius: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* Rating box */
+.rating-box {
+    background: #0E1830;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+}
+
+/* Genre badges */
+.genre-badge {
+    background: #FF8F8F;
+    color: #0f172a;
+    padding: 6px 12px;
+    border-radius: 15px;
+    margin-right: 6px;
+    font-weight: 600;
+}
+
+/* Cast / Crew cards */
+.cast-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.cast-card {
+    background: #1A2A4F;
+    padding: 15px;
+    border-radius: 12px;
+    transition: 0.2s;
+    border: 1px solid rgba(255,255,255,0.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.cast-card:hover {
+    transform: translateY(-3px);
+    background: #8CE4FF;
+    box-shadow: 0 8px 20px rgba(140, 228, 255, 0.35);
+}
+

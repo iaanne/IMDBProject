@@ -4,50 +4,6 @@
 
 @section('content')
 
-    <style>
-        body {
-            background-color: #0f172a;
-            color: white;
-        }
-
-        .movie-hero {
-            background: linear-gradient(135deg, #1e293b, #0f172a);
-            padding: 40px;
-            border-radius: 20px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-        }
-
-        .rating-box {
-            background: #1e293b;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-        }
-
-        .genre-badge {
-            background: #38bdf8;
-            color: #0f172a;
-            padding: 6px 12px;
-            border-radius: 15px;
-            margin-right: 6px;
-            font-weight: 600;
-        }
-
-        .cast-card {
-            background: #1e293b;
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 12px;
-            transition: 0.2s;
-        }
-
-        .cast-card:hover {
-            transform: translateX(5px);
-            background: #334155;
-        }
-    </style>
-
 
     <div class="container mt-4">
 
@@ -70,12 +26,16 @@
         {{-- RATING --}}
         <div class="rating-box text-center">
             @if ($rating)
-                <h2 class="text-warning">⭐ {{ $rating->averageRating }} / 10</h2>
-                <p class="text-secondary">{{ number_format($rating->numVotes) }} votes</p>
+                <h2 class="text-warning">
+            ⭐ {{ number_format($rating->averageRating, 2) }} / 10
+                </h2>
+                <p class="text-secondary"> {{ $rating->averageRating }} votes</p>
             @else
                 <p class="text-muted">Belum ada rating.</p>
             @endif
         </div>
+
+        
 
 
         {{-- GENRE --}}
@@ -92,37 +52,43 @@
         <hr class="border-secondary my-4">
         {{-- CAST --}}
         <h3 class="mb-3">🎬 Pemeran Utama</h3>
+
         @if (count($cast) > 0)
-            @foreach ($cast as $c)
+            <div class="cast-grid">
+                @foreach ($cast as $c)
                 <div class="cast-card">
-                    <strong>{{ $c->PersonName }}</strong>
-                    <br>
+                    <strong>{{ $c->PersonName }}</strong><br>
                     <span class="text-info">{{ $c->Category }}</span>
+
                     @if ($c->characters)
-                        <br>
-                        <small class="text-secondary">Sebagai: {{ $c->characters }}</small>
+                     <br><small class="text-secondary">Sebagai: {{ $c->characters }}</small>
                     @endif
-                </div>
-            @endforeach
-        @else
-            <p class="text-muted">Tidak ada data pemeran.</p>
-        @endif
+            </div>
+                 @endforeach
+        </div>
+@else
+    <p class="text-muted">Tidak ada data pemeran.</p>
+@endif
+
 
         <hr class="border-secondary my-4">
 
         {{-- CREW --}}
         <h3 class="mb-3">👨‍💼 Kru (Sutradara, Penulis, dll.)</h3>
-        @if (isset($crew) && count($crew) > 0) {{-- Periksa apakah variabel $crew ada --}}
-            @foreach ($crew as $c)
-                <div class="cast-card">
-                    <strong>{{ $c->PersonName }}</strong>
-                    <br>
+
+@           @if (isset($crew) && count($crew) > 0)
+            <div class="cast-grid">
+                 @foreach ($crew as $c)
+                 <div class="cast-card">
+                    <strong>{{ $c->PersonName }}</strong><br>
                     <span class="text-info">{{ $c->Category }}</span>
-                </div>
-            @endforeach
-        @else
-            <p class="text-muted">Tidak ada data kru.</p>
-        @endif
+                 </div>
+                @endforeach
+            </div>
+            @else
+             <p class="text-muted">Tidak ada data kru.</p>
+@endif
+
     </div>
 
 @endsection
