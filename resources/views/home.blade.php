@@ -33,6 +33,67 @@
 
     </div>
 
+    {{-- ================= POPULAR MOVIES ================= --}}
+    @if(isset($popular) && count($popular) > 0)
+    <h1 class="section-title mt-5">🔥 Popular Movies</h1>
+
+    <div class="top10-container">
+    @foreach($popular as $movie)
+        <div class="movie-card" onclick="window.location='/title/{{ $movie->tconst }}'">
+
+            <div class="movie-icon-container">
+                <i class="fas fa-fire movie-icon"></i>
+            </div>
+
+            <div class="movie-info">
+                <h3 class="movie-title">{{ $movie->primaryTitle }}</h3>
+
+                <p class="movie-year">
+                    {{ $movie->startYear ?? 'N/A' }} • Popularity: {{ $movie->popularity ?? '-' }}
+                </p>
+
+                <div class="movie-rating">⭐
+                    <span class="rating-value">
+                        {{ $movie->averageRating ? number_format($movie->averageRating, 2) : '-' }}
+                    </span>
+
+                </div>
+            </div>
+        </div>
+    @endforeach
+    </div>
+    @endif
+
+
+    {{-- ================= MOVIES BY YEAR ================= --}}
+    @if(isset($seasonal) && count($seasonal) > 0)
+    <h1 class="section-title mt-5">📅 Movies Released in 2024</h1>
+
+    <div class="top10-container">
+        @foreach($seasonal as $movie)
+        <div class="movie-card" onclick="window.location='/title/{{ $movie->tconst }}'">
+
+            <div class="movie-icon-container">
+                <i class="fas fa-calendar movie-icon"></i>
+            </div>
+
+            <div class="movie-info">
+                <h3 class="movie-title">{{ $movie->primaryTitle }}</h3>
+
+                <p class="movie-year">
+                    {{ $movie->startYear ?? 'N/A' }}
+                </p>
+
+                <div class="movie-rating">  ⭐
+                    <span class="rating-value">{{ $movie->averageRating ?? '-' }}</span>
+                </div>
+            </div>
+        </div>
+        @endforeach
+    </div>
+    @endif
+
+
 </div>
 
 @endsection

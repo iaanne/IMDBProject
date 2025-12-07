@@ -1,234 +1,555 @@
-/* Global Colors */
+/* ========================================================
+   SCENEPIX GLOBAL THEME
+   ======================================================== */
+
 :root {
     --dark-blue: #0e2242;
     --navy: #13284b;
     --accent: #ff8f8f;
+    --accent-light: #ffb4b4;
+    --cyan: #8CE4FF;
     --white: #ffffff;
-    --light: #d9e6ff;
+    --soft-white: #d9e6ff;
 }
 
-/* Remove leftover inline CSS */
+/* Base page */
 body {
     background-color: var(--dark-blue);
     color: var(--white);
     font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
-/* ---- HOME PAGE ---- */
-
-.home-wrapper {
-    padding: 40px 0;
-}
-
-/* Title */
+/* Titles */
 .section-title {
     text-align: center;
-    font-size: 2.2rem;
+    font-size: 2.3rem;
     font-weight: 800;
     color: var(--accent);
-    margin-bottom: 30px;
+    letter-spacing: 1px;
+    margin: 40px 0 20px;
+    text-transform: uppercase;
 }
 
-/* Carousel Container */
+/* ========================================================
+   TOP 10 CAROUSEL
+   ======================================================== */
+
 .top10-carousel-container {
     position: relative;
     width: 100%;
-    display: flex;
-    align-items: center;
+    padding: 0 60px;
+    margin-bottom: 60px;
 }
 
 .carousel-track {
     display: flex;
-    overflow-x: auto;
-    scroll-behavior: smooth;
     gap: 20px;
-    padding: 10px 0;
+    overflow-x: auto !important;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+    padding: 15px;
+    scroll-snap-type: x mandatory;
 }
 
 .carousel-track::-webkit-scrollbar {
     display: none;
 }
 
-/* Movie Cards */
 .movie-card {
-    min-width: 250px;
     background-color: var(--navy);
-    border-radius: 16px;
+    min-width: 260px;
     padding: 20px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    border-radius: 18px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     text-align: center;
     transition: 0.3s;
+    cursor: pointer;
+    scroll-snap-align: start;
 }
 
 .movie-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    transform: translateY(-6px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
 }
 
 .movie-title {
-    font-size: 1.1rem;
-    font-weight: bold;
+    font-size: 1.2rem;
+    font-weight: 700;
     color: var(--white);
-    min-height: 50px;
+    min-height: 45px;
 }
 
 .movie-rating {
-    margin-top: 10px;
     color: gold;
     font-size: 1.2rem;
+    margin-top: 10px;
 }
 
 .movie-votes {
     font-size: 0.9rem;
-    opacity: 0.8;
-    margin-top: 5px;
+    opacity: .7;
 }
 
-/* Carousel Buttons */
-.carousel-btn {
-    position: absolute;
-    width: 45px;
-    height: 45px;
-    background-color: var(--accent);
-    border-radius: 50%;
-    border: none;
-    color: white;
-    font-size: 18px;
-    cursor: pointer;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.carousel-btn.left {
-    left: -20px;
-}
-
-.carousel-btn.right {
-    right: -20px;
-}
-
-.carousel-btn:hover {
-    transform: scale(1.1);
-}
-
-.top10-carousel-container {
-    position: relative;
-    width: 100%;
-    overflow: hidden;
-    padding: 20px 0;
-}
-
-.carousel-track {
-    display: flex;
-    gap: 20px;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    padding: 10px;
-}
-
-.carousel-track::-webkit-scrollbar {
-    display: none; /* biar gak ada scrollbar jelek */
-}
-
-.movie-card {
-    min-width: 260px;
-    background: #10254a;
-    border-radius: 15px;
-    padding: 20px;
-    color: white;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    text-align: center;
-    transition: transform 0.2s ease;
-}
-
-.movie-card:hover {
-    transform: translateY(-5px);
-}
-
+/* Slider buttons */
 .carousel-btn {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    z-index: 10;
-    width: 45px;
-    height: 45px;
-    border: none;
-    border-radius: 50%;
-    background: #ff8f8f;
-    color: white;
-    font-size: 18px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* --- FIX TOMBOL SLIDER --- */
-.top10-carousel-container {
-    position: relative;
-    width: 100%;
-    overflow: hidden;
-    padding: 20px 40px; /* memberi ruang tombol */
-}
-
-.carousel-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 9999;
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    border: none;
     background: var(--accent);
-    color: white;
-    font-size: 20px;
-    cursor: pointer;
+    border: none;
+    color: var(--white);
+    font-size: 22px;
     display: flex;
-    justify-content: center;
     align-items: center;
-    pointer-events: auto;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: 0.2s;
 }
 
-.carousel-btn.left {
-    left: -10px; /* Jangan minus terlalu jauh */
-}
-
-.carousel-btn.right {
-    right: -10px;
-}
+.carousel-btn.left { left: -5px; }
+.carousel-btn.right { right: -5px; }
 
 .carousel-btn:hover {
     transform: translateY(-50%) scale(1.15);
 }
 
-/* AREA TRACK UTAMA */
-.carousel-track {
-    display: flex;
-    gap: 20px;
-    overflow-x: auto !important;
-    overflow-y: hidden;
-    scroll-behavior: smooth;
+/* ========================================================
+   POPULAR MOVIES GRID
+   ======================================================== */
+
+.popular-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 25px;
+    padding: 0 40px;
+    margin-bottom: 50px;
+}
+
+.popular-card {
+    background: var(--navy);
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    transition: .25s;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+}
+
+.popular-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.popular-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--soft-white);
+    margin-bottom: 5px;
+}
+
+.popular-meta {
+    color: var(--cyan);
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+/* Rating */
+.popular-rating {
+    font-size: 1.3rem;
+    color: gold;
+    font-weight: bold;
+}
+
+/* ========================================================
+   SEASONAL / YEARLY MOVIES SECTION
+   ======================================================== */
+
+.year-container {
+    padding: 20px 40px;
+    margin-bottom: 50px;
+}
+
+.year-title {
+    font-size: 2rem;
+    color: var(--accent);
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.year-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 25px;
+}
+
+.year-card {
+    background: #10254a;
+    padding: 18px;
+    border-radius: 14px;
+    transition: .25s;
+    cursor: pointer;
+}
+
+.year-card:hover {
+    transform: scale(1.04);
+    background: #163566;
+}
+
+.year-name {
+    font-size: 1.1rem;
+    color: var(--white);
+    font-weight: 700;
+}
+
+.year-info {
+    color: var(--cyan);
+    font-size: .85rem;
+}
+
+/* ========================================================
+   RESPONSIVE
+   ======================================================== */
+
+@media (max-width: 600px) {
+    .carousel-btn {
+        display: none;
+    }
+}
+
+/* ===== GRID WRAPPER UNTUK POPULAR & BY YEAR ===== */
+.top10-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 22px;
+    margin-top: 25px;
     padding: 10px;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none; /* Firefox */
 }
 
-.carousel-track::-webkit-scrollbar {
-    display: none; /* Chrome & Safari */
+/* ===== CARD KHUSUS POPULAR & BY YEAR ===== */
+.top10-container .movie-card {
+    background: #10254a;
+    border-radius: 15px;
+    padding: 18px;
+    color: white;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    transition: .25s ease;
+    cursor: pointer;
 }
 
-/* BIAR CARD TIDAK KECIL & BISA DIGESER */
-.movie-card {
-    min-width: 260px;  /* WAJIB ADA */
-    flex-shrink: 0;    /* WAJIB ADA */
-    scroll-snap-align: start;
+.top10-container .movie-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
 }
 
-.top10-carousel-container {
+/* ICON kiri */
+.movie-icon-container {
+    width: 60px;
+    height: 60px;
+    background: #1b3767;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.movie-icon {
+    font-size: 26px;
+    color: #ff8f8f;
+}
+
+/* INFO TEXT */
+.movie-info {
+    flex: 1;
+}
+
+.movie-info .movie-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.movie-year {
+    color: #8CE4FF;
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+.rating-value {
+    font-size: 1.3rem;
+    color: gold;
+    font-weight: bold;
+}
+
+/* Modern Search Bar */
+.search-wrapper {
     position: relative;
+    width: 260px;
+}
+
+.search-input {
     width: 100%;
-    padding: 0 60px; /* ruang untuk tombol */
+    padding: 10px 15px;
+    padding-right: 45px;
+    border-radius: 25px;
+    border: none;
+    outline: none;
+    background: rgba(255,255,255,0.15);
+    color: white;
+    font-size: 0.9rem;
+    transition: 0.3s ease;
+}
+
+.search-input::placeholder {
+    color: #d9e6ff;
+}
+
+.search-input:focus {
+    background: rgba(255,255,255,0.25);
+    box-shadow: 0 0 8px rgba(255,143,143,0.5);
+}
+
+.search-btn {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: none;
+    color: #d9e6ff;
+    cursor: pointer;
+    transition: 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-btn:hover {
+    background: #ffb3b3;
+    transform: translateY(-50%) scale(1.1);
+}
+
+/* ===== NAVBAR HEADER BAR ===== */
+
+.scenepix-navbar {
+    width: 100%;
+    background: #faebd7; /* cream / beige */
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 5px solid #0e2242;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* LEFT: Logo + Menu Icon */
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nav-menu-icon {
+    font-size: 28px;
+    color: #ff8f8f;
+    cursor: pointer;
+}
+
+.nav-logo {
+    font-size: 26px;
+    font-weight: 900;
+    color: #ff8f8f;
+    letter-spacing: 1px;
+}
+
+/* CENTER MENU */
+.nav-center {
+    list-style: none;
+    background: #e8e1d1;
+    padding: 10px 25px;
+    border-radius: 30px;
+    display: flex;
+    gap: 25px;
+}
+
+.nav-center li a {
+    text-decoration: none;
+    color: #444;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 30px;
+    transition: 0.2s ease;
+}
+
+.nav-center li a:hover {
+    background: #ff8f8f;
+    color: white;
+}
+
+/* RIGHT: Search Bar */
+.nav-search {
+    display: flex;
+    align-items: center;
+    background: #e8e1d1;
+    padding: 8px 18px;
+    border-radius: 30px;
+}
+
+.nav-search input {
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 6px;
+    width: 180px;
+}
+
+.nav-search button {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: #666;
+    font-size: 18px;
+}
+
+/* --- HEADER STYLING --- */
+
+.navbar-custom {
+    background: #faecd8;
+    padding: 18px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 110px;
+    border-radius: 12px 12px 0 0;
+
+}
+
+/* Logo */
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nav-logo-icon {
+    font-size: 30px;
+    color: #FF8F8F;
+}
+
+.nav-logo-text {
+    font-size: 30px;
+    font-weight: 800;
+    color: #FF8F8F;
+    letter-spacing: 1px;
+}
+
+/* Menu */
+.nav-menu {
+    display: flex;
+    gap: 30px;
+    list-style: none;
+}
+
+.nav-menu a {
+    text-decoration: none;
+    font-weight: 600;
+    color: #1A2A4F; /* navy biar terlihat */
+    font-size: 1.25rem;  
+    display: center;
+    transition: 0.2s;
+}
+
+.nav-menu a:hover {
+    color: #FF8F8F;
+}
+
+
+/* Search bar */
+.search-wrapper {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    padding: 6px 20px;
+    border-radius: 40px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.search-input {
+    border: none;
+    outline: none;
+    background: none;
+    font-size: 14px;
+    width: 180px;
+}
+
+.search-btn {
+    width: 32px;
+    height: 32px;
+    background: #FF8F8F;
+    color: white;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.search-btn i {
+    font-size: 14px;
+}
+
+/* NAV MENU WRAPPER */
+.nav-menu {
+    display: flex;
+    align-items: center;     /* Ini yg bikin sejajar vertikal */
+    justify-content: center; /* Biar berada di tengah header */
+    gap: 40px;
+    background: #e8dfc8;
+    padding: 12px 40px;
+    border-radius: 50px;
+    margin: 0 auto;
+    margin-top: 0px;        /* 👉 Tambahin jarak ke bawah navbar */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* TEXT DEFAULT */
+.nav-menu a {
+    color: #263859;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+/* LIST ITEM */
+.nav-menu li {
+    list-style: none;
+    padding: 6px 16px;
+    border-radius: 20px;
+    transition: 0.25s ease;
+}
+
+/* HOVER EFFECT */
+.nav-menu li:hover {
+    background: #ffb4b4;
+    color: white;
+}
+
+/* ACTIVE STATE — INI YANG KAMU MAU */
+.nav-menu li.active {
+    background: #ff8f8f;
+    border: 2px solid #ffbebe;
+    box-shadow: 0 4px 10px rgba(255, 143, 143, 0.4);
+}
+
+.nav-menu li.active a {
+    color: white !important;
 }

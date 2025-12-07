@@ -22,57 +22,43 @@
 <body>
 
     <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-dark scenepix-navbar">
-        <div class="container">
+    <nav class="navbar-custom">
+    <div class="nav-left">
+        <i class="fas fa-film nav-logo-icon"></i>
+        <span class="nav-logo-text">SCENEPIX</span>
+    </div>
 
-            <a class="navbar-brand scenepix-brand" href="{{ url('/') }}">
-                <i class="fas fa-film me-2"></i>SCENEPIX
-            </a>
+    <ul class="nav-menu">
+    <li class="{{ request()->is('/') ? 'active' : '' }}">
+        <a href="{{ url('/') }}">Home</a>
+    </li>
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+    <li class="{{ request()->is('review') ? 'active' : '' }}">
+        <a href="{{ url('/review') }}">Review</a>
+    </li>
 
-            <div class="collapse navbar-collapse" id="navbarNav">
+    <li class="{{ request()->is('films') ? 'active' : '' }}">
+        <a href="{{ url('/films') }}">Films</a>
+    </li>
 
-                <ul class="navbar-nav mx-auto">
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->is('/') ? 'active' : '' }}" href="{{ url('/') }}">
-                            Home
-                        </a>
-                    </li>
+    <li class="{{ request()->is('tv-shows') ? 'active' : '' }}">
+        <a href="{{ url('/tv-shows') }}">TV Show</a>
+    </li>
 
-                    <li class="nav-item"><a class="nav-link" href="#">Review</a></li>
+    <li class="{{ request()->is('signup') ? 'active' : '' }}">
+        <a href="{{ url('/signup') }}">Sign Up</a>
+    </li>
+</ul>
 
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->is('films') ? 'active' : '' }}"
-                           href="{{ route('films.index') }}">
-                           Films
-                        </a>
-                    </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->is('tv-shows') ? 'active' : '' }}"
-                           href="{{ route('tv.index') }}">
-                           TV Show
-                        </a>
-                    </li>
-                </ul>
+    <form action="{{ route('titles.search') }}" method="GET" class="search-wrapper">
+        <input type="text" name="q" placeholder="Search movies, TV shows..." class="search-input">
+        <button type="submit" class="search-btn">
+            <i class="fas fa-search"></i>
+        </button>
+    </form>
+</nav>
 
-                <!-- SEARCH -->
-                <form action="{{ route('titles.search') }}" method="GET" class="d-flex scenepix-search-box">
-                    <input type="text" name="q" class="search-input"
-                           placeholder="Search here..." value="{{ request('q') }}">
-                    
-                    <button class="search-btn" type="submit">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </form>
-
-            </div>
-
-        </div>
-    </nav>
 
     <!-- CONTENT -->
     <main class="scenepix-content">
