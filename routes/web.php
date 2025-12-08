@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TitleController;
 use App\Http\Controllers\FilmsController;
@@ -27,7 +26,7 @@ Route::get('/films', [FilmsController::class, 'index'])->name('films.index');
 // TV SHOW PAGE
 Route::get('/tv-shows', [TvController::class, 'index'])->name('tv.index');
 
-// POPULAR MOVIES PAGE
-Route::get('/popular', [TitleController::class, 'popular'])->name('titles.popular');
-// SEASONAL MOVIES PAGE
-Route::get('/year', [TitleController::class, 'moviesByYear'])->name('titles.byYear');
+// // POPULAR MOVIES PAGE
+// Route::get('/popular', [TitleController::class, 'popular'])->name('titles.popular');
+// // SEASONAL MOVIES PAGE
+// Route::get('/year', [TitleController::class, 'moviesByYear'])->name('titles.byYear');
