@@ -1,5 +1,5 @@
 /* ========================================================
-SHOWFY GLOBAL THEME - UNGU & PINK PASTEL
+   SHOWFY GLOBAL THEME - FINAL VERSION
    ======================================================== */
 :root {
     --cyan: #00ADB5;
@@ -13,11 +13,11 @@ body {
     background-color: var(--dark-text);
     color: var(--white);
     margin: 0;
-    padding-top: 180px; /* Ruang untuk navbar yang fixed */
+    padding-top: 80px; /* Dikurangi dari 180px */
 }
 
 /* ========================================================
-   NAVBAR & HEADER
+   NAVBAR & HEADER (FINAL VERSION)
    ======================================================== */
 .navbar-custom {
     position: fixed;
@@ -25,17 +25,16 @@ body {
     left: 0;
     width: 100%;
     background: var(--dark-text);
-    color: var(--white);
-    padding: 15px 0;
     z-index: 1000;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
-.navbar-top, .navbar-menu, .navbar-search {
+.navbar-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 40px;
+    padding: 15px 40px;
+    height: 80px; /* Tinggi navbar yang konsisten */
 }
 
 .navbar-brand {
@@ -49,15 +48,66 @@ body {
 
 .brand-icon {
     margin-right: 10px;
-    color: var(--pastel-pink);
+    color: var(--cyan);
+}
+
+.navbar-center {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    margin: 0 40px;
+}
+
+.navbar-search {
+    display: flex;
+}
+
+.navbar-search .search-input {
+    width: 300px; /* Diperbesar sedikit */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px 0 0 25px;
+    outline: none;
+    background-color: rgba(255,255,255,0.1);
+    color: var(--white);
+    transition: all 0.3s ease;
+}
+
+.navbar-search .search-input::placeholder {
+    color: rgba(255,255,255,0.6);
+}
+
+.navbar-search .search-input:focus {
+    background-color: rgba(255,255,255,0.15);
+    box-shadow: 0 0 0 2px var(--cyan);
+}
+
+.navbar-search .search-btn {
+    background-color: var(--cyan);
+    color: var(--dark-text);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 0 25px 25px 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.navbar-search .search-btn:hover {
+    background-color: #0099a0;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
 
 .btn-login {
-    background-color: var(--dark-text);
+    background-color: var(--gray);
     color: var(--white);
-    border: none;
-    padding: 8px 20px;
-    border-radius: 20px;
+    border: 1px solid var(--white);
+    padding: 10px 20px;
+    border-radius: 25px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -65,16 +115,28 @@ body {
 
 .btn-login:hover {
     background-color: var(--cyan);
-    color: #222831;
+    color: var(--dark-text);
+    border-color: var(--cyan);
     transform: scale(1.05);
 }
 
-.navbar-menu {
-    margin-top: 10px;
-    justify-content: center;
+.hamburger-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--white);
+    font-size: 1.5rem;
+    cursor: pointer;
 }
 
-.nav-list {
+.navbar-menu {
+    display: flex;
+    justify-content: center;
+    background-color: rgba(0,0,0,0.2);
+    padding: 10px 0;
+}
+
+.navbar-menu .nav-list {
     list-style: none;
     display: flex;
     gap: 30px;
@@ -82,73 +144,85 @@ body {
     margin: 0;
 }
 
-.nav-list a {
+.navbar-menu .nav-list a {
     text-decoration: none;
     color: var(--white);
     font-weight: 600;
-    padding: 8px 16px;
-    border-radius: 20px;
+    padding: 10px 20px;
+    border-radius: 25px;
     transition: all 0.3s ease;
 }
 
-.nav-list a:hover, .nav-list li.active a {
-    background-color: var(--pastel-pink);
-    color: var(--deep-purple);
-}
-
-.navbar-search {
-    margin-top: 15px;
-    justify-content: center;
-}
-
-.navbar-search .search-input {
-    width: 300px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 25px 0 0 25px;
-    outline: none;
-}
-
-.navbar-search .search-btn {
-    background-color: var(--pastel-pink);
-    color: var(--deep-purple);
-    border: none;
-    padding: 10px 15px;
-    border-radius: 0 25px 25px 0;
-    cursor: pointer;
+.navbar-menu .nav-list a:hover, 
+.navbar-menu .nav-list li.active a {
+    background-color: var(--cyan);
+    color: var(--dark-text);
 }
 
 /* ========================================================
-   MODAL LOGIN
+   RESPONSIVE NAVBAR (MOBILE)
    ======================================================== */
-.modal-content {
-    border-radius: 15px;
-    border: none;
-    background-color: #222831;
-    color: #EEEEEE;
+@media (max-width: 768px) {
+    .navbar-custom {
+        position: fixed;
+    }
+    
+    .navbar-menu {
+        display: none;
+        padding: 20px 0;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+    
+    .hamburger-btn {
+        display: block;
+    }
+    
+    .navbar-custom.is-active .navbar-menu {
+        display: flex;
+    }
+    
+    .navbar-menu .nav-list {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+    
+    .navbar-center {
+        margin: 0 20px;
+    }
+    
+    .navbar-search .search-input {
+        width: 200px;
+    }
+    
+    body {
+        padding-top: 70px;
+    }
 }
-.modal-header .btn-close {
-    filter: invert(1);
-}
-.modal-body .form-control {
-    border-radius: 10px;
-}
-.modal-body .btn-primary {
-    background-color: var(--gray);
-    border-color: var(--cyan);
-}
-/* .modal-body .btn-primary:hover {
-    background-color: var(--light-purple);
-    border-color: var(--light-purple);
-} */
-
 
 /* ========================================================
-   HERO PREVIEW SECTION (Homepage)
+   MAIN CONTENT & UTILITY
+   ======================================================== */
+.movie-section {
+    margin-bottom: 30px;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--cyan);
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+/* ========================================================
+   HERO PREVIEW SECTION
    ======================================================== */
 .hero-preview {
     position: relative;
-    height: 85vh; /* Tinggi 85% dari layar */
+    height: 50vh;
     background-size: cover;
     background-position: center;
     display: flex;
@@ -158,7 +232,6 @@ body {
     margin-bottom: 60px;
 }
 
-/* Overlay gradien untuk membuat teks terbaca */
 .hero-preview::before {
     content: '';
     position: absolute;
@@ -175,21 +248,9 @@ body {
     z-index: 2;
 }
 
-.hero-preview .display-4 {
-    font-weight: 800;
-    margin-bottom: 20px;
-}
-
-.hero-preview .lead {
-    font-size: 1.25rem;
-    max-width: 600px;
-    margin-bottom: 30px;
-}
-
 .hero-preview .btn-details {
-    background-color: var(--dark-text);
+    background-color: var(--gray);
     color: var(--white);
-    border: none;
     padding: 12px 30px;
     font-size: 1.1rem;
     font-weight: 600;
@@ -200,45 +261,39 @@ body {
 }
 
 .hero-preview .btn-details:hover {
-    background-color: var(--dark-text);
+    background-color: var(--cyan);
+    color: var(--dark-text);
     transform: scale(1.05);
-    color: var(--cyan);
-}
-
-/* Penyesuaian kecil untuk tampilan di home */
-.movie-section {
-    margin-bottom: 0px; /* Kurangi jarak antar baris */
 }
 
 /* ========================================================
-   RESPONSIVE CARD GRID (Tanpa Gambar)
+   CARD GRID LAYOUT
    ======================================================== */
-
 .card-grid {
     display: grid;
-    /* Membuat grid yang responsif: minimal 250px lebar, dan bisa menyesuaikan */
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 25px; /* Jarak antar kartu */
-    padding: 0 40px 50px; /* Padding agar rapi dengan container */
+    gap: 25px;
+    padding: 0 40px 50px;
 }
 
-/* Kartu untuk tampilan grid */
 .grid-card {
-    background: var(--gray); /* Warna krem untuk kontras */
-    border-radius: 15px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
     padding: 25px;
     text-align: center;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-    transition: all 0.3s ease;
-    text-decoration: none; /* Hapus garis bawah dari link */
-    color: var(--white); /* Gunakan warna teks default */
+    text-decoration: none;
+    color: var(--white);
     display: block;
     height: 100%;
+    transition: all 0.3s ease;
+    cursor: pointer;
 }
 
 .grid-card:hover {
-    transform: translateY(-8px); /* Efek hover yang menarik */
-    box-shadow: 0 12px 25px #00ADB5;
+    transform: translateY(-8px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.3);
+    border-color: var(--cyan);
 }
 
 .grid-card .card-title {
@@ -249,80 +304,13 @@ body {
 }
 
 .grid-card .card-meta {
-    color: #666;
+    color: var(--cyan);
     font-size: 0.9rem;
     margin-bottom: 15px;
 }
 
 .grid-card .rating {
     font-size: 1.3rem;
-    color: #FFC107; /* Warna emas untuk rating */
-    font-weight: bold;
-}
-
-/* ========================================================
-   MAIN CONTENT & UTILITY
-   ======================================================== */
-.main-content {
-    min-height: 100vh;
-}
-.section-title {
-    font-size: 2.5rem;
-    font-weight: 800;
-    color: var(--cyan);
-    text-align: center;
-    margin-bottom: 40px;
-}
-.hero-section {
-    background: #222831, url('https://source.unsplash.com/random/1600x900/?movies') no-repeat center center;
-    background-size: cover;
-    color: var(--white);
-    padding: 100px 40px;
-    text-align: center;
-    border-radius: 0 0 30px 30px;
-    margin-bottom: 50px;
-}
-
-/* ========================================================
-   CARD COMPONENTS
-   ======================================================== */
-.card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 25px;
-    padding: 0 40px 50px;
-}
-.content-card {
-    background: var(--gray);
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-    transition: all 0.3s ease;
-    text-align: center;
-}
-.content-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.15);
-}
-.content-card img {
-    width: 100%;
-    height: 350px;
-    object-fit: cover;
-}
-.card-body {
-    padding: 20px;
-}
-.card-title {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--deep-purple);
-    margin-bottom: 10px;
-}
-.card-text {
-    color: #666;
-    font-size: 0.9rem;
-}
-.rating {
     color: #FFC107;
     font-weight: bold;
 }
@@ -331,15 +319,42 @@ body {
    FOOTER
    ======================================================== */
 .footer-custom {
-    /* width: 100%; */
-    /* background-color: var(--cyan); */
+    background-color: var(--dark-text);
     color: var(--white);
     padding: 30px 0;
-    margin: auto;
     text-align: center;
 }
+
 .footer-brand {
     font-size: 1.5rem;
     font-weight: 800;
     color: var(--cyan);
+}
+
+/* ========================================================
+   MODAL LOGIN
+   ======================================================== */
+.modal-content {
+    border-radius: 15px;
+    border: none;
+    background-color: var(--dark-text);
+    color: var(--white);
+}
+
+.modal-header .btn-close {
+    filter: invert(1);
+}
+
+.modal-body .form-control {
+    border-radius: 10px;
+}
+
+.modal-body .btn-primary {
+    background-color: var(--gray);
+    border-color: var(--cyan);
+}
+
+.modal-body .btn-primary:hover {
+    background-color: var(--cyan);
+    border-color: var(--cyan);
 }

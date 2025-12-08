@@ -21,42 +21,45 @@
 </head>
 
 <body>
-
-    {{-- NAVBAR BARU --}}
     <header class="navbar-custom">
-        <div class="container-fluid">
-            <div class="navbar-top">
-                <a href="{{ url('/') }}" class="navbar-brand">
-                    <i class="fas fa-play-circle brand-icon"></i>
-                    <span class="brand-text">Showfy</span>
-                </a>
-                <button class="btn-login" data-bs-toggle="modal" data-bs-target="#loginModal">
-                    <i class="fas fa-user"></i> Login
-                </button>
-            </div>
-            <nav class="navbar-menu">
-                <ul class="nav-list">
-                    <li class="{{ request()->is('/') ? 'active' : '' }}">
-                        <a href="{{ url('/') }}">Home</a>
-                    </li>
-                    <li class="{{ request()->is('films') ? 'active' : '' }}">
-                        <a href="{{ route('films.index') }}">Films</a>
-                    </li>
-                    <li class="{{ request()->is('tv-shows') ? 'active' : '' }}">
-                        <a href="{{ route('tv.index') }}">TV Shows</a>
-                    </li>
-                </ul>
-            </nav>
-            <div class="navbar-search">
-                <form action="{{ route('titles.search') }}" method="GET">
-                    <input type="text" name="q" class="search-input" placeholder="Cari film, serial, aktor..."
+        {{-- BARIS ATAS: LOGO, SEARCH, LOGIN, HAMBURGER --}}
+        <div class="navbar-top">
+            <a href="{{ url('/') }}" class="navbar-brand">
+                <i class="fas fa-play-circle brand-icon"></i>
+                <span class="brand-text">Showfy</span>
+            </a>
+
+            <div class="navbar-right">
+                <form action="{{ route('titles.search') }}" method="GET" class="navbar-search">
+                    <input type="text" name="q" class="search-input" placeholder="Cari film, serial..."
                         value="{{ request('q') }}">
                     <button type="submit" class="search-btn"><i class="fas fa-search"></i></button>
                 </form>
+                <button class="btn-login" data-bs-toggle="modal" data-bs-target="#loginModal">
+                    <i class="fas fa-user"></i>
+                </button>
+                <button class="hamburger-btn" id="hamburgerBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
             </div>
         </div>
-    </header>
 
+        {{-- BARIS MENU: HOME, FILMS, TV SHOWS --}}
+        <nav class="navbar-menu" id="navbarMenu">
+            <ul class="nav-list">
+                <li class="{{ request()->is('/') ? 'active' : '' }}">
+                    <a href="{{ url('/') }}">Home</a>
+                </li>
+                <li class="{{ request()->is('films') ? 'active' : '' }}">
+                    <a href="{{ route('films.index') }}">Films</a>
+                </li>
+                <li class="{{ request()->is('tv-shows') ? 'active' : '' }}">
+                    <a href="{{ route('tv.index') }}">TV Shows</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    
     {{-- MODAL LOGIN --}}
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -105,8 +108,31 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('js/home.js') }}"></script>
 
-    {{-- TAMBAHKAN INI --}}
-    @yield('scripts')
+    {{-- ... semua kode sebelumnya ... --}}
+
+    {{-- JS Bootstrap --}}
+    {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script> --}}
+
+    {{-- SCRIPT UNTUK HAMBURGER MENU --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const navbar = document.querySelector('.navbar-custom');
+
+            if (hamburgerBtn) {
+                hamburgerBtn.addEventListener('click', function() {
+                    // Toggle kelas 'is-active' untuk menampilkan/menyembunyikan menu
+                    navbar.classList.toggle('is-active');
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
+
+{{-- TAMBAHKAN INI --}}
+@yield('scripts')
 
 
 </body>
