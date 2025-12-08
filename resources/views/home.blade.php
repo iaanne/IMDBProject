@@ -1,122 +1,108 @@
 @extends('layouts.app')
 
+@section('title', 'Showfy - Temukan Film & Serial TV Favorit')
+
 @section('content')
+    <div class="container-fluid p-0">
 
-<div class="home-wrapper">
-
-    <h1 class="section-title">TOP 10 IN THIS WEEK</h1>
-
-    <div class="top10-carousel-container">
-
-        <!-- LEFT BUTTON -->
-        <button class="carousel-btn left" id="btnLeft">
-            <i class="fas fa-chevron-left"></i>
-        </button>
-
-        <!-- TRACK -->
-        <div class="carousel-track" id="top10Track">
-            @foreach($top10 as $movie)
-                <div class="movie-card">
-                    <div class="movie-card-content">
-                        <h3 class="movie-title">{{ $movie->primaryTitle }}</h3>
-                        <div class="movie-rating">⭐ {{ number_format($movie->averageRating, 1) }}</div>
-                        <div class="movie-votes">Votes: {{ number_format($movie->numVotes) }}</div>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-
-        <!-- RIGHT BUTTON -->
-        <button class="carousel-btn right" id="btnRight">
-            <i class="fas fa-chevron-right"></i>
-        </button>
-
-    </div>
-
-    {{-- ================= POPULAR MOVIES ================= --}}
-    @if(isset($popular) && count($popular) > 0)
-    <h1 class="section-title mt-5">🔥 Popular Movies</h1>
-
-    <div class="top10-container">
-    @foreach($popular as $movie)
-        <div class="movie-card" onclick="window.location='/title/{{ $movie->tconst }}'">
-
-            <div class="movie-icon-container">
-                <i class="fas fa-fire movie-icon"></i>
-            </div>
-
-            <div class="movie-info">
-                <h3 class="movie-title">{{ $movie->primaryTitle }}</h3>
-
-                <p class="movie-year">
-                    {{ $movie->startYear ?? 'N/A' }} • Popularity: {{ $movie->popularity ?? '-' }}
-                </p>
-
-                <div class="movie-rating">⭐
-                    <span class="rating-value">
-                        {{ $movie->averageRating ? number_format($movie->averageRating, 2) : '-' }}
-                    </span>
-
+        {{-- 1. HERO PREVIEW SECTION --}}
+        @if ($featuredMovie)
+            <div class="hero-preview"
+                style="background-image: url('https://source.unsplash.com/random/1600x900/?movie,{{ $featuredMovie->primaryTitle }}');">
+                <div class="container">
+                    <h1 class="display-4 fw-bold">{{ $featuredMovie->primaryTitle }}</h1>
+                    <p class="lead">
+                        Tahun {{ $featuredMovie->startYear ?? 'N/A' }} • {{ $featuredMovie->runtimeMinutes ?? 'N/A' }} menit
+                        •
+                        <i class="fas fa-star"></i> {{ number_format($featuredMovie->averageRating, 1) }}
+                        ({{ number_format($featuredMovie->numVotes) }} votes)
+                    </p>
+                    <a href="{{ route('titles.show', $featuredMovie->tconst) }}" class="btn-details">
+                        <i class="fas fa-play-circle me-2"></i> Lihat Detail
+                    </a>
                 </div>
             </div>
-        </div>
-    @endforeach
-    </div>
-    @endif
+        @endif
 
+        <div class="container">
 
-    {{-- ================= MOVIES BY YEAR ================= --}}
-    @if(isset($seasonal) && count($seasonal) > 0)
-    <h1 class="section-title mt-5">📅 Movies Released in 2024</h1>
+            {{-- 2. DAFTAR TOP 10 MOVIES --}}
+            {{-- ... di dalam file home.blade.php ... --}}
 
-    <div class="top10-container">
-        @foreach($seasonal as $movie)
-        <div class="movie-card" onclick="window.location='/title/{{ $movie->tconst }}'">
+            {{-- DAFTAR TOP 10 MOVIES (MENGGUNAKAN GRID) --}}
+            <div class="movie-section">
+                <h2 class="movie-row-title">🔥 Top 10 Movies</h2>
 
-            <div class="movie-icon-container">
-                <i class="fas fa-calendar movie-icon"></i>
-            </div>
-
-            <div class="movie-info">
-                <h3 class="movie-title">{{ $movie->primaryTitle }}</h3>
-
-                <p class="movie-year">
-                    {{ $movie->startYear ?? 'N/A' }}
-                </p>
-
-                <div class="movie-rating">  ⭐
-                    <span class="rating-value">{{ $movie->averageRating ?? '-' }}</span>
+                <div class="card-grid">
+                    @forelse ($topMovies as $movie)
+                        <a href="{{ route('titles.show', $movie->tconst) }}" class="grid-card">
+                            <h5 class="card-title">{{ Str::limit($movie->primaryTitle, 30) }}</h5>
+                            <p class="card-meta">
+                                Tahun {{ $movie->startYear ?? 'N/A' }}
+                            </p>
+                            <p class="rating">
+                                <i class="fas fa-star"></i> {{ number_format($movie->averageRating, 1) }}
+                            </p>
+                        </a>
+                    @empty
+                        <p class="text-center w-100">Belum ada film populer.</p>
+                    @endforelse
                 </div>
             </div>
-        </div>
-        @endforeach
-    </div>
-    @endif
 
+            {{-- DAFTAR REKOMENDASI (MENGGUNAKAN GRID) --}}
+            <div class="movie-section">
+                <h2 class="movie-row-title">✨ Direkomendasikan Untuk Anda</h2>
 
-</div>
+                <div class="card-grid">
+                    @forelse ($recommendedMovies as $movie)
+                        <a href="{{ route('titles.show', $movie->tconst) }}" class="grid-card">
+                            <h5 class="card-title">{{ Str::limit($movie->primaryTitle, 30) }}</h5>
+                            <p class="card-meta">
+                                Tahun {{ $movie->startYear ?? 'N/A' }}
+                            </p>
+                            <p class="rating">
+                                <i class="fas fa-star"></i> {{ number_format($movie->averageRating, 1) }}
+                            </p>
+                        </a>
+                    @empty
+                        <p class="text-center w-100">Belum ada rekomendasi.</p>
+                    @endforelse
+                </div>
+            </div>
 
-@endsection
+    {{-- ... di akiran file home.blade.php ... --}}
 
+    {{-- HAPUS SCRIPT LAMA ANDA --}}
 
-{{-- ############ JAVASCRIPT SLIDER ############ --}}
-@section('scripts')
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    const track = document.getElementById("top10Track");
-    const btnLeft = document.getElementById("btnLeft");
-    const btnRight = document.getElementById("btnRight");
+    {{-- GANTI DENGAN INI --}}
+    @section('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                function setupArrows(rowId) {
+                    const container = document.querySelector(`#${rowId}`).closest('.movie-row-container');
+                    const row = document.getElementById(rowId);
+                    const prevBtn = container.querySelector('.prev');
+                    const nextBtn = container.querySelector('.next');
 
-    // Width scroll per-click (satu card)
-    const scrollAmount = 300;
+                    if (row) {
+                        prevBtn.addEventListener('click', () => {
+                            row.scrollBy({
+                                left: -220,
+                                behavior: 'smooth'
+                            });
+                        });
+                        nextBtn.addEventListener('click', () => {
+                            row.scrollBy({
+                                left: 220,
+                                behavior: 'smooth'
+                            });
+                        });
+                    }
+                }
 
-    btnLeft.addEventListener("click", () => {
-        track.scrollBy({ left: -scrollAmount, behavior: "smooth" });
-    });
-
-    btnRight.addEventListener("click", () => {
-        track.scrollBy({ left: scrollAmount, behavior: "smooth" });
-    });
-});
-</script>
-@endsection
+                setupArrows('top-movies-row');
+                setupArrows('recommended-movies-row');
+            });
+        </script>
+    @endsection

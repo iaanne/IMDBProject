@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,6 +19,7 @@
     <link rel="stylesheet" href="{{ asset('css/showfy.css') }}">
     @yield('styles')
 </head>
+
 <body>
 
     {{-- NAVBAR BARU --}}
@@ -47,7 +49,8 @@
             </nav>
             <div class="navbar-search">
                 <form action="{{ route('titles.search') }}" method="GET">
-                    <input type="text" name="q" class="search-input" placeholder="Cari film, serial, aktor..." value="{{ request('q') }}">
+                    <input type="text" name="q" class="search-input" placeholder="Cari film, serial, aktor..."
+                        value="{{ request('q') }}">
                     <button type="submit" class="search-btn"><i class="fas fa-search"></i></button>
                 </form>
             </div>
@@ -96,7 +99,16 @@
         </div>
     </footer>
 
+    <!-- ... di dalam layouts/app.blade.php ... -->
+
     {{-- JS Bootstrap --}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('js/home.js') }}"></script>
+
+    {{-- TAMBAHKAN INI --}}
+    @yield('scripts')
+
+
 </body>
+
 </html>

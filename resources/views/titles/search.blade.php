@@ -8,7 +8,7 @@
 
     @if($keyword)
         <h1 class="section-title">
-            Search Results for: <span style="color:#FF8F8F">{{ $keyword }}</span>
+            Search Results for: <span style="color:#00ADB5">{{ $keyword }}</span>
         </h1>
     @endif
 
@@ -82,7 +82,7 @@
         font-size: 0.9rem;
     }
     .movie-runtime {
-        color: #FF8F8F;
+        color: #00ADB5;
         font-size: 0.85rem;
     }
     .scenepix-card {
@@ -96,7 +96,7 @@
     .scenepix-card:hover {
         transform: translateY(-6px);
         box-shadow: 0 12px 25px rgba(0,0,0,0.3);
-        border-color: #FF8F8F;
+        border-color: #00ADB5;
     }
 </style>
 @endsection

@@ -1,20 +1,17 @@
 /* ========================================================
-   SHOWFY GLOBAL THEME - UNGU & PINK PASTEL
+SHOWFY GLOBAL THEME - UNGU & PINK PASTEL
    ======================================================== */
 :root {
-    --deep-purple: #2D1B69;
-    --medium-purple: #6A1B9A;
-    --light-purple: #9C27B0;
-    --pastel-pink: #FFB3BA;
-    --white: #FFFFFF;
-    --light-gray: #F4F4F4;
-    --dark-text: #333333;
+    --cyan: #00ADB5;
+    --white: #EEEEEE;
+    --gray: #393E46;
+    --dark-text: #222831;
 }
 
 body {
     font-family: 'Poppins', sans-serif;
-    background-color: var(--light-gray);
-    color: var(--dark-text);
+    background-color: var(--dark-text);
+    color: var(--white);
     margin: 0;
     padding-top: 180px; /* Ruang untuk navbar yang fixed */
 }
@@ -27,7 +24,7 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    background: linear-gradient(135deg, var(--deep-purple), var(--medium-purple));
+    background: var(--dark-text);
     color: var(--white);
     padding: 15px 0;
     z-index: 1000;
@@ -56,8 +53,8 @@ body {
 }
 
 .btn-login {
-    background-color: var(--pastel-pink);
-    color: var(--deep-purple);
+    background-color: var(--dark-text);
+    color: var(--white);
     border: none;
     padding: 8px 20px;
     border-radius: 20px;
@@ -67,7 +64,8 @@ body {
 }
 
 .btn-login:hover {
-    background-color: var(--white);
+    background-color: var(--cyan);
+    color: #222831;
     transform: scale(1.05);
 }
 
@@ -126,6 +124,8 @@ body {
 .modal-content {
     border-radius: 15px;
     border: none;
+    background-color: #222831;
+    color: #EEEEEE;
 }
 .modal-header .btn-close {
     filter: invert(1);
@@ -134,12 +134,130 @@ body {
     border-radius: 10px;
 }
 .modal-body .btn-primary {
-    background-color: var(--medium-purple);
-    border-color: var(--medium-purple);
+    background-color: var(--gray);
+    border-color: var(--cyan);
 }
-.modal-body .btn-primary:hover {
+/* .modal-body .btn-primary:hover {
     background-color: var(--light-purple);
     border-color: var(--light-purple);
+} */
+
+
+/* ========================================================
+   HERO PREVIEW SECTION (Homepage)
+   ======================================================== */
+.hero-preview {
+    position: relative;
+    height: 85vh; /* Tinggi 85% dari layar */
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    color: var(--white);
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+    margin-bottom: 60px;
+}
+
+/* Overlay gradien untuk membuat teks terbaca */
+.hero-preview::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to right, #00ADB5, #393E46);
+    z-index: 1;
+}
+
+.hero-preview .container {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-preview .display-4 {
+    font-weight: 800;
+    margin-bottom: 20px;
+}
+
+.hero-preview .lead {
+    font-size: 1.25rem;
+    max-width: 600px;
+    margin-bottom: 30px;
+}
+
+.hero-preview .btn-details {
+    background-color: var(--dark-text);
+    color: var(--white);
+    border: none;
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.hero-preview .btn-details:hover {
+    background-color: var(--dark-text);
+    transform: scale(1.05);
+    color: var(--cyan);
+}
+
+/* Penyesuaian kecil untuk tampilan di home */
+.movie-section {
+    margin-bottom: 0px; /* Kurangi jarak antar baris */
+}
+
+/* ========================================================
+   RESPONSIVE CARD GRID (Tanpa Gambar)
+   ======================================================== */
+
+.card-grid {
+    display: grid;
+    /* Membuat grid yang responsif: minimal 250px lebar, dan bisa menyesuaikan */
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 25px; /* Jarak antar kartu */
+    padding: 0 40px 50px; /* Padding agar rapi dengan container */
+}
+
+/* Kartu untuk tampilan grid */
+.grid-card {
+    background: var(--gray); /* Warna krem untuk kontras */
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    text-decoration: none; /* Hapus garis bawah dari link */
+    color: var(--white); /* Gunakan warna teks default */
+    display: block;
+    height: 100%;
+}
+
+.grid-card:hover {
+    transform: translateY(-8px); /* Efek hover yang menarik */
+    box-shadow: 0 12px 25px #00ADB5;
+}
+
+.grid-card .card-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 10px;
+}
+
+.grid-card .card-meta {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+}
+
+.grid-card .rating {
+    font-size: 1.3rem;
+    color: #FFC107; /* Warna emas untuk rating */
+    font-weight: bold;
 }
 
 /* ========================================================
@@ -151,12 +269,12 @@ body {
 .section-title {
     font-size: 2.5rem;
     font-weight: 800;
-    color: var(--deep-purple);
+    color: var(--cyan);
     text-align: center;
     margin-bottom: 40px;
 }
 .hero-section {
-    background: linear-gradient(rgba(45, 27, 105, 0.8), rgba(106, 27, 154, 0.8)), url('https://source.unsplash.com/random/1600x900/?movies') no-repeat center center;
+    background: #222831, url('https://source.unsplash.com/random/1600x900/?movies') no-repeat center center;
     background-size: cover;
     color: var(--white);
     padding: 100px 40px;
@@ -175,7 +293,7 @@ body {
     padding: 0 40px 50px;
 }
 .content-card {
-    background: var(--white);
+    background: var(--gray);
     border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 5px 15px rgba(0,0,0,0.08);
@@ -213,13 +331,15 @@ body {
    FOOTER
    ======================================================== */
 .footer-custom {
-    background-color: var(--deep-purple);
+    /* width: 100%; */
+    /* background-color: var(--cyan); */
     color: var(--white);
     padding: 30px 0;
+    margin: auto;
     text-align: center;
 }
 .footer-brand {
     font-size: 1.5rem;
     font-weight: 800;
-    color: var(--pastel-pink);
+    color: var(--cyan);
 }
