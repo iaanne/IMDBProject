@@ -23,6 +23,8 @@ Route::get('/genre/{genre}', [TitleController::class, 'byGenre'])->name('titles.
 // FILMS PAGE
 Route::get('/films', [FilmsController::class, 'index'])->name('films.index');
 
+Route::get('/search', [FilmController::class, 'search'])->name('search');
+
 // TV SHOW PAGE
 Route::get('/tv-shows', [TvController::class, 'index'])->name('tv.index');
 
