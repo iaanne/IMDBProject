@@ -358,3 +358,107 @@ body {
     background-color: var(--cyan);
     border-color: var(--cyan);
 }
+
+
+/* Tambahkan ke file public/css/showfy.css atau di dalam <style> tag di app.blade.php */
+
+/* Dropdown Menu Styling */
+.navbar-menu .dropdown {
+    position: relative;
+}
+
+.navbar-menu .dropdown-toggle {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.navbar-menu .dropdown-toggle::after {
+    content: '\f107';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    border: none;
+    margin-left: 5px;
+}
+
+.navbar-menu .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    min-width: 200px;
+    margin-top: 10px;
+    background-color: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+.navbar-menu .dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.navbar-menu .dropdown-menu li {
+    list-style: none;
+}
+
+.navbar-menu .dropdown-menu .dropdown-item {
+    display: block;
+    padding: 10px 20px;
+    color: #e2e8f0;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.navbar-menu .dropdown-menu .dropdown-item:hover {
+    background-color: #334155;
+    color: #22d3ee;
+}
+
+.navbar-menu .dropdown-menu .dropdown-divider {
+    height: 1px;
+    background-color: #334155;
+    margin: 5px 0;
+    border: none;
+}
+
+/* Dropdown di user menu (kanan atas) */
+.dropdown-menu-dark {
+    background-color: #1e293b;
+    border: 1px solid #334155;
+}
+
+.dropdown-menu-dark .dropdown-item {
+    color: #e2e8f0;
+    padding: 10px 20px;
+}
+
+.dropdown-menu-dark .dropdown-item:hover {
+    background-color: #334155;
+    color: #22d3ee;
+}
+
+.dropdown-menu-dark .dropdown-divider {
+    border-color: #334155;
+}
+
+.dropdown-menu-dark .dropdown-item-text {
+    padding: 10px 20px;
+    color: #94a3b8;
+}
+
+/* Responsive untuk mobile */
+@media (max-width: 768px) {
+    .navbar-menu .dropdown-menu {
+        position: static;
+        margin-top: 5px;
+        box-shadow: none;
+        border-left: 3px solid #06b6d4;
+    }
+    
+    .navbar-menu .dropdown-menu .dropdown-item {
+        padding-left: 30px;
+    }
+}

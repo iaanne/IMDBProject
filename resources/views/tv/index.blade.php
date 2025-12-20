@@ -1,5 +1,3 @@
-{{-- resources/views/tv/index.blade.php --}}
-
 @extends('layouts.app')
 
 @section('title', 'Beranda TV Show - Temukan Serial Terbaik')
@@ -30,20 +28,23 @@
         color: rgba(255, 255, 255, 0.6);
     }
     .section-title {
-        border-left: 5px solid #f97316; -- Warna oranye untuk membedakan dari film
+        border-left: 5px solid #f97316; /* Warna oranye */
         padding-left: 15px;
         margin-bottom: 25px;
+        font-weight: bold;
     }
     .show-card {
         background-color: #1e293b;
         border-radius: 12px;
         overflow: hidden;
         transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-        height: 100%;
+        height: 100%; /* Agar tinggi kartu sama rata */
+        border: 1px solid #334155;
     }
     .show-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        border-color: #f97316;
     }
     .network-badge {
         background-color: #334155;
@@ -56,7 +57,7 @@
         transition: background-color 0.2s;
     }
     .network-badge:hover {
-        background-color: #475569;
+        background-color: #f97316; /* Ubah jadi oranye saat hover */
         color: white;
     }
 </style>
@@ -82,37 +83,69 @@
 <div class="container mt-5">
 
     {{-- DAFTAR SERIAL TV TERPOPULER --}}
-    <div class="show-card">
-    <img src="https://via.placeholder.com/300x450.png?text={{ urlencode($show->primaryTitle) }}"
-         class="card-img-top"
-         alt="{{ $show->primaryTitle }}">
-
-    <div class="card-body">
-        <h5 class="card-title">
-            {{ Str::limit($show->primaryTitle, 25) }}
-        </h5>
-
-        <p class="card-text text-secondary">
-            {{ $show->number_of_seasons ?? 'N/A' }} Musim •
-            {{ $show->averageRating ? number_format($show->averageRating, 1) . ' ⭐' : 'N/A' }}
-        </p>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="section-title h3 mb-0">🔥 Serial TV Populer</h2>
     </div>
-</div>
 
-    <hr class="my-5 border-secondary">
+    {{-- GRID SYSTEM --}}
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        @forelse($topShows as $show) 
+            <div class="col">
+                <div class="show-card">
+                    <div class="card-body p-4 d-flex flex-column h-100">
+                        {{-- Bagian Atas: Ikon & Judul --}}
+                        <div class="mb-auto">
+                            <div class="mb-3 text-warning">
+                                <i class="fas fa-tv fa-2x"></i> </div>
+                            
+                            <h5 class="card-title text-white fw-bold mb-3">
+                                {{ $show->name ?? $show->primaryTitle ?? 'Tanpa Judul' }}
+                            </h5>
 
-    {{-- JEJLAHI BERDASARKAN JARINGAN TV --}}
-    <h2 class="section-title h3">📡 Jelajahi Berdasarkan Jaringan</h2>
-    <div class="text-center">
-        @forelse ($networks as $network)
-            <a href="#" class="network-badge"> {{-- Ganti nanti dengan route untuk jaringan --}}
-                {{ $network->network_name }}
-            </a>
+                            <div class="d-flex justify-content-between align-items-center mb-3 text-secondary">
+                                <span>
+                                    <i class="fas fa-layer-group me-1"></i> 
+                                    {{ $show->number_of_seasons ?? '?' }} Season
+                                </span>
+                                <span class="text-warning fw-bold">
+                                    <i class="fas fa-star me-1"></i> 
+                                    {{ isset($show->averageRating) ? number_format($show->averageRating, 1) : '-' }}
+                                </span>
+                            </div>
+                        </div>
+
+                        {{-- Tombol Detail (Akan selalu di bawah) --}}
+                        <a href="#" class="btn btn-outline-warning w-100 mt-3">
+                            Lihat Detail
+                        </a>
+                    </div>
+                </div>
+            </div>
         @empty
-            <p>Belum ada data jaringan TV.</p>
+            <div class="col-12">
+                <div class="alert alert-dark text-center py-5">
+                    <i class="fas fa-film fa-3x mb-3 text-muted"></i>
+                    <p class="mb-0">Belum ada data serial TV yang ditampilkan.</p>
+                </div>
+            </div>
         @endforelse
     </div>
 
-</div>
+    <hr class="my-5 border-secondary">
 
+    {{-- JELAJAHI BERDASARKAN JARINGAN TV --}}
+    <h2 class="section-title h3">📡 Jelajahi Berdasarkan Jaringan</h2>
+    <div class="text-center py-4">
+        @if(isset($networks))
+            @forelse ($networks as $network)
+                <a href="#" class="network-badge">
+                    {{ $network->name }}
+                </a>
+            @empty
+                <p class="text-muted">Belum ada data jaringan TV.</p>
+            @endforelse
+        @endif
+    </div>
+
+</div>
 @endsection

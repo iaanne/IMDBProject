@@ -87,3 +87,42 @@ Route::middleware(['auth', 'role:production'])->prefix('production')->group(func
     Route::delete('/movies/{tconst}', [ProductionController::class, 'destroyMovie'])->name('production.movies.destroy');
 });
 
+// Route untuk Executive (pastikan ada middleware auth)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/executive/dashboard', [ExecutiveController::class, 'dashboard'])->name('executive.dashboard');
+    Route::get('/executive/top-movies', [ExecutiveController::class, 'topMovies'])->name('executive.top-movies');
+    Route::get('/executive/genre-popularity', [ExecutiveController::class, 'genrePopularity'])->name('executive.genre-popularity');
+    Route::get('/executive/rating-trends', [ExecutiveController::class, 'ratingTrends'])->name('executive.rating-trends');
+});
+
+// Production Routes (dengan middleware auth)
+Route::middleware(['auth'])->prefix('production')->name('production.')->group(function () {
+    
+    // Dashboard
+    Route::get('/dashboard', [ProductionController::class, 'dashboard'])->name('dashboard');
+    
+    // Movies Management
+    Route::get('/movies', [ProductionController::class, 'indexMovies'])->name('movies.index');
+    Route::get('/movies/create', [ProductionController::class, 'createMovie'])->name('movies.create');
+    Route::post('/movies', [ProductionController::class, 'storeMovie'])->name('movies.store');
+    Route::delete('/movies/{tconst}', [ProductionController::class, 'destroyMovie'])->name('movies.destroy');
+    
+    // Shows Management
+    Route::get('/shows', [ProductionController::class, 'indexShows'])->name('shows.index');
+    Route::get('/shows/create', [ProductionController::class, 'createShow'])->name('shows.create');
+    Route::post('/shows', [ProductionController::class, 'storeShow'])->name('shows.store');
+    Route::get('/shows/{show_id}/edit', [ProductionController::class, 'editShow'])->name('shows.edit');
+    Route::put('/shows/{show_id}', [ProductionController::class, 'updateShow'])->name('shows.update');
+    
+    // Episodes Management
+    Route::get('/episodes', [ProductionController::class, 'indexEpisodes'])->name('episodes.index');
+    Route::get('/episodes/create', [ProductionController::class, 'createEpisode'])->name('episodes.create');
+    Route::post('/episodes', [ProductionController::class, 'storeEpisode'])->name('episodes.store');
+    Route::get('/episodes/{tconst}/edit', [ProductionController::class, 'editEpisode'])->name('episodes.edit');
+    Route::put('/episodes/{tconst}', [ProductionController::class, 'updateEpisode'])->name('episodes.update');
+});
+
+// Route sementara untuk testing
+Route::get('/cek-file', function () {
+    return view('production.movies.index');
+});

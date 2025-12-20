@@ -115,7 +115,7 @@ return [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::SQLSRV_ATTR_ENCODING => PDO::SQLSRV_ENCODING_UTF8,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                PDO::SQLSRV_ATTR_QUERY_TIMEOUT => 30,
+                PDO::SQLSRV_ATTR_QUERY_TIMEOUT => 120,
             ],
         
 

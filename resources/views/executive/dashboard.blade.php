@@ -102,7 +102,7 @@
 </style>
 
 <div class="container-fluid mt-4 mb-5">
-    {{-- Header Section --}}
+    {{-- Header --}}
     <div class="dashboard-header">
         <h1 class="mb-2">
             <i class="fas fa-chart-line"></i> Executive Analytics Dashboard
@@ -140,90 +140,67 @@
             <div class="stats-card orange">
                 <div class="d-flex justify-content-between align-items-start">
                     <div class="flex-grow-1">
-                        <div class="stat-label">Top TV Shows</div>
-                        <div class="stat-number" style="color: #f59e0b;">{{ $topTVShows->count() }}</div>
-                        <div class="stat-subtitle">Analyzed series</div>
+                        <div class="stat-label">Top Actors</div>
+                        <div class="stat-number" style="color: #f59e0b;">{{ $actorProductivity->take(10)->count() }}</div>
+                        <div class="stat-subtitle">Most productive</div>
                     </div>
-                    <i class="fas fa-tv stat-icon" style="color: #f59e0b;"></i>
+                    <i class="fas fa-users stat-icon" style="color: #f59e0b;"></i>
                 </div>
             </div>
         </div>
         <div class="col-lg-3 col-md-6">
-            <div class="stats-card cyan">
+            <div class="stats-card purple">
                 <div class="d-flex justify-content-between align-items-start">
                     <div class="flex-grow-1">
-                        <div class="stat-label">Active Actors</div>
-                        <div class="stat-number" style="color: #06b6d4;">{{ $actorProductivity->count() }}</div>
-                        <div class="stat-subtitle">In database</div>
+                        <div class="stat-label">Top TV Shows</div>
+                        <div class="stat-number" style="color: #8b5cf6;">{{ $topTVShows->count() }}</div>
+                        <div class="stat-subtitle">Highest rated</div>
                     </div>
-                    <i class="fas fa-users stat-icon" style="color: #06b6d4;"></i>
+                    <i class="fas fa-tv stat-icon" style="color: #8b5cf6;"></i>
                 </div>
             </div>
         </div>
     </div>
 
+    {{-- Row 1: Top Movies Bar Chart & Rating Trend Line Chart --}}
     <div class="row">
-        {{-- Chart 1: Top Movies Rating --}}
         <div class="col-lg-8 mb-4">
             <div class="chart-container">
                 <div class="chart-title">
                     <i class="fas fa-chart-bar" style="color: #3b82f6;"></i>
-                    <span>Top 10 Movies Rating Distribution</span>
+                    <span>Top 10 Movies by Rating</span>
                 </div>
-                <canvas id="ratingChart" height="100"></canvas>
+                <canvas id="topMoviesChart" height="80"></canvas>
             </div>
         </div>
 
-        {{-- Chart 2: Rating Categories Pie --}}
         <div class="col-lg-4 mb-4">
-            <div class="chart-container">
-                <div class="chart-title">
-                    <i class="fas fa-chart-pie" style="color: #10b981;"></i>
-                    <span>Rating Categories</span>
-                </div>
-                <canvas id="ratingPieChart"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        {{-- Chart 3: Genre Popularity --}}
-        <div class="col-lg-7 mb-4">
-            <div class="chart-container">
-                <div class="chart-title">
-                    <i class="fas fa-chart-area" style="color: #f59e0b;"></i>
-                    <span>Genre Popularity (Top 10)</span>
-                </div>
-                <canvas id="genreChart" height="120"></canvas>
-            </div>
-        </div>
-
-        {{-- Table: Top Rated Movies --}}
-        <div class="col-lg-5 mb-4">
             <div class="chart-container">
                 <div class="chart-title">
                     <i class="fas fa-trophy" style="color: #f59e0b;"></i>
                     <span>Top Rated Movies</span>
                 </div>
-                <div class="table-responsive">
+                <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
                     <table class="table table-dark-custom table-hover mb-0">
-                        <thead>
+                        <thead class="sticky-top">
                             <tr>
-                                <th width="40" class="text-center">#</th>
+                                <th width="40">#</th>
                                 <th>Title</th>
-                                <th width="80" class="text-center">Rating</th>
+                                <th width="80">Rating</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($topMovies->take(8) as $index => $movie)
+                            @foreach($topMovies->take(10) as $index => $movie)
                             <tr>
                                 <td class="text-center">
-                                    <span class="badge {{ $index < 3 ? 'bg-warning text-dark' : 'bg-secondary' }} fw-bold">
-                                        {{ $index + 1 }}
-                                    </span>
+                                    @if($index < 3)
+                                        <span class="badge bg-warning text-dark fw-bold">{{ $index + 1 }}</span>
+                                    @else
+                                        <span class="text-muted">{{ $index + 1 }}</span>
+                                    @endif
                                 </td>
                                 <td>
-                                    <strong class="text-white">{{ Str::limit($movie->primaryTitle, 30) }}</strong>
+                                    <strong class="text-white">{{ Str::limit($movie->primaryTitle, 25) }}</strong>
                                     <br><small class="text-muted">{{ $movie->startYear }}</small>
                                 </td>
                                 <td class="text-center">
@@ -240,216 +217,269 @@
         </div>
     </div>
 
+    {{-- Row 2: Rating Trend & Genre Popularity --}}
     <div class="row">
-        {{-- Chart 4: Rating Trend Per Year --}}
-        <div class="col-lg-8 mb-4">
+        <div class="col-lg-7 mb-4">
             <div class="chart-container">
                 <div class="chart-title">
-                    <i class="fas fa-chart-line" style="color: #8b5cf6;"></i>
-                    <span>Average Rating Trend by Year</span>
+                    <i class="fas fa-chart-line" style="color: #06b6d4;"></i>
+                    <span>Rating Trend Per Year</span>
                 </div>
                 <canvas id="ratingTrendChart" height="80"></canvas>
             </div>
         </div>
 
-        {{-- Table: Top TV Shows --}}
-        <div class="col-lg-4 mb-4">
+        <div class="col-lg-5 mb-4">
             <div class="chart-container">
                 <div class="chart-title">
-                    <i class="fas fa-tv" style="color: #f59e0b;"></i>
-                    <span>Top TV Shows</span>
+                    <i class="fas fa-chart-pie" style="color: #10b981;"></i>
+                    <span>Genre Popularity (Top 10)</span>
                 </div>
-                <div class="table-responsive">
-                    <table class="table table-dark-custom table-hover mb-0">
-                        <thead>
-                            <tr>
-                                <th width="40">#</th>
-                                <th>Title</th>
-                                <th width="70" class="text-center">Rating</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($topTVShows->take(6) as $index => $show)
-                            <tr>
-                                <td>
-                                    <span class="badge bg-info fw-bold">{{ $index + 1 }}</span>
-                                </td>
-                                <td>
-                                    <strong class="text-white">{{ Str::limit($show->primaryTitle, 25) }}</strong>
-                                    <br><small class="text-muted">{{ $show->startYear }}</small>
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge bg-success fw-bold">{{ number_format($show->averageRating, 1) }}</span>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                <canvas id="genreChart"></canvas>
             </div>
         </div>
     </div>
 
+    {{-- Row 3: Actor Productivity & Top TV Shows --}}
     <div class="row">
-        {{-- Chart 5: Actor Productivity --}}
-        <div class="col-lg-12 mb-4">
+        <div class="col-lg-6 mb-4">
             <div class="chart-container">
                 <div class="chart-title">
-                    <i class="fas fa-user-friends" style="color: #06b6d4;"></i>
+                    <i class="fas fa-user-tie" style="color: #f59e0b;"></i>
                     <span>Top 15 Most Productive Actors</span>
                 </div>
-                <canvas id="actorProductivityChart" height="70"></canvas>
+                <canvas id="actorChart" height="100"></canvas>
+            </div>
+        </div>
+
+        <div class="col-lg-6 mb-4">
+            <div class="chart-container">
+                <div class="chart-title">
+                    <i class="fas fa-tv" style="color: #8b5cf6;"></i>
+                    <span>Top 10 TV Shows</span>
+                </div>
+                <canvas id="tvShowsChart" height="100"></canvas>
             </div>
         </div>
     </div>
 </div>
 
+{{-- Chart.js Library --}}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
 <script>
-    const topMovies = @json($topMovies);
-    const genrePopularity = @json($genrePopularity->take(10));
-    const actorProductivity = @json($actorProductivity->take(15));
-    const ratingTrend = @json($ratingTrend);
-    const topTVShows = @json($topTVShows);
-    
-    const colors = {
-        primary: '#3b82f6', 
-        success: '#10b981', 
-        warning: '#f59e0b',
-        info: '#06b6d4', 
-        danger: '#ef4444', 
-        purple: '#8b5cf6'
-    };
+// Data dari Laravel
+const topMovies = @json($topMovies);
+const genrePopularity = @json($genrePopularity->take(10));
+const actorProductivity = @json($actorProductivity->take(15));
+const ratingTrend = @json($ratingTrend);
+const topTVShows = @json($topTVShows);
 
-    Chart.defaults.color = '#94a3b8';
-    Chart.defaults.borderColor = '#334155';
+// Color palette
+const colors = {
+    primary: '#3b82f6',
+    success: '#10b981',
+    warning: '#f59e0b',
+    info: '#06b6d4',
+    danger: '#ef4444',
+    purple: '#8b5cf6'
+};
 
-    document.addEventListener("DOMContentLoaded", function() {
-        if (topMovies.length > 0) {
-            // Chart 1: Top Movies Rating Bar Chart
-            new Chart(document.getElementById('ratingChart'), {
-                type: 'bar',
-                data: {
-                    labels: topMovies.map(m => m.primaryTitle.length > 15 ? m.primaryTitle.substring(0, 15) + '...' : m.primaryTitle),
-                    datasets: [{
-                        label: 'Rating',
-                        data: topMovies.map(m => parseFloat(m.averageRating)),
-                        backgroundColor: colors.primary,
-                        borderRadius: 8
-                    }]
-                },
-                options: { 
-                    scales: { 
-                        y: { 
-                            beginAtZero: true, 
-                            max: 10 
-                        } 
-                    },
-                    plugins: {
-                        legend: { display: true }
+// Chart default options
+Chart.defaults.color = '#94a3b8';
+Chart.defaults.borderColor = '#334155';
+
+// 1. Top Movies Bar Chart
+if (topMovies.length > 0) {
+    const topMoviesCtx = document.getElementById('topMoviesChart').getContext('2d');
+    new Chart(topMoviesCtx, {
+        type: 'bar',
+        data: {
+            labels: topMovies.map(m => m.primaryTitle.length > 20 ? m.primaryTitle.substring(0, 20) + '...' : m.primaryTitle),
+            datasets: [{
+                label: 'Rating',  
+                data: topMovies.map(m => parseFloat(m.averageRating)),
+                backgroundColor: colors.primary,
+                borderRadius: 8,
+                barThickness: 35
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#1e293b',
+                    callbacks: {
+                        label: (context) => 'Rating: ' + context.parsed.y.toFixed(1) + ' ⭐'
                     }
                 }
-            });
-
-            // Chart 2: Rating Categories Pie Chart
-            const ratingCategories = {
-                'Excellent (9+)': topMovies.filter(m => m.averageRating >= 9).length,
-                'Great (8-9)': topMovies.filter(m => m.averageRating >= 8 && m.averageRating < 9).length,
-                'Good (7-8)': topMovies.filter(m => m.averageRating >= 7 && m.averageRating < 8).length,
-                'Average (<7)': topMovies.filter(m => m.averageRating < 7).length
-            };
-            new Chart(document.getElementById('ratingPieChart'), {
-                type: 'doughnut',
-                data: {
-                    labels: Object.keys(ratingCategories),
-                    datasets: [{
-                        data: Object.values(ratingCategories),
-                        backgroundColor: [colors.success, colors.primary, colors.warning, colors.danger],
-                        borderWidth: 0
-                    }]
-                }
-            });
-        }
-
-        // Chart 3: Genre Popularity Horizontal Bar
-        if (genrePopularity.length > 0) {
-            new Chart(document.getElementById('genreChart'), {
-                type: 'bar',
-                data: {
-                    labels: genrePopularity.map(g => g.genre_name),
-                    datasets: [{
-                        label: 'Total Titles',
-                        data: genrePopularity.map(g => parseInt(g.total_titles)),
-                        backgroundColor: colors.warning,
-                        borderRadius: 5
-                    }]
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 10,
+                    ticks: { color: '#94a3b8' },
+                    grid: { color: '#334155' }
                 },
-                options: { 
-                    indexAxis: 'y',
-                    plugins: {
-                        legend: { display: true }
-                    }
+                x: {
+                    ticks: { color: '#94a3b8', maxRotation: 45, minRotation: 45 },
+                    grid: { display: false }
                 }
-            });
-        }
-
-        // Chart 4: Rating Trend Per Year Line Chart
-        if (ratingTrend.length > 0) {
-            new Chart(document.getElementById('ratingTrendChart'), {
-                type: 'line',
-                data: {
-                    labels: ratingTrend.map(t => t.release_year),
-                    datasets: [{
-                        label: 'Average Rating',
-                        data: ratingTrend.map(t => parseFloat(t.avg_rating)),
-                        borderColor: colors.purple,
-                        backgroundColor: 'rgba(139, 92, 246, 0.1)',
-                        fill: true,
-                        tension: 0.4,
-                        pointRadius: 4,
-                        pointHoverRadius: 6
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: 10
-                        }
-                    },
-                    plugins: {
-                        legend: { display: true }
-                    }
-                }
-            });
-        }
-
-        // Chart 5: Actor Productivity Bar Chart
-        if (actorProductivity.length > 0) {
-            new Chart(document.getElementById('actorProductivityChart'), {
-                type: 'bar',
-                data: {
-                    labels: actorProductivity.map(a => a.primaryName),
-                    datasets: [{
-                        label: 'Total Titles',
-                        data: actorProductivity.map(a => parseInt(a.total_titles)),
-                        backgroundColor: colors.info,
-                        borderRadius: 6
-                    }]
-                },
-                options: {
-                    plugins: {
-                        legend: { display: true }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
+            }
         }
     });
+}
+
+// 2. Rating Trend Line Chart
+if (ratingTrend.length > 0) {
+    const ratingTrendCtx = document.getElementById('ratingTrendChart').getContext('2d');
+    new Chart(ratingTrendCtx, {
+        type: 'line',
+        data: {
+            labels: ratingTrend.map(r => r.startYear),
+            datasets: [{
+                label: 'Average Rating',
+                data: ratingTrend.map(r => parseFloat(r.avg_rating)),
+                borderColor: colors.info,
+                backgroundColor: 'rgba(6, 182, 212, 0.1)',
+                fill: true,
+                tension: 0.4,
+                borderWidth: 3,
+                pointRadius: 3,
+                pointBackgroundColor: colors.info
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { labels: { color: '#e2e8f0' } },
+                tooltip: { backgroundColor: '#1e293b' }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 10,
+                    ticks: { color: '#94a3b8' },
+                    grid: { color: '#334155' }
+                },
+                x: {
+                    ticks: { color: '#94a3b8', maxRotation: 45 },
+                    grid: { display: false }
+                }
+            }
+        }
+    });
+}
+
+// 3. Genre Pie Chart
+if (genrePopularity.length > 0) {
+    const genreCtx = document.getElementById('genreChart').getContext('2d');
+    new Chart(genreCtx, {
+        type: 'doughnut',
+        data: {
+            labels: genrePopularity.map(g => g.genre_name),
+            datasets: [{
+                data: genrePopularity.map(g => parseInt(g.total_titles)),
+                backgroundColor: [
+                    colors.primary, colors.success, colors.warning, colors.info, 
+                    colors.danger, colors.purple, '#ec4899', '#f59e0b', '#10b981', '#3b82f6'
+                ],
+                borderWidth: 3,
+                borderColor: '#1e293b'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { color: '#e2e8f0', padding: 10, font: { size: 11 } }
+                },
+                tooltip: { backgroundColor: '#1e293b' }
+            }
+        }
+    });
+}
+
+// 4. Actor Productivity Horizontal Bar
+if (actorProductivity.length > 0) {
+    const actorCtx = document.getElementById('actorChart').getContext('2d');
+    new Chart(actorCtx, {
+        type: 'bar',
+        data: {
+            labels: actorProductivity.map(a => a.primaryName.length > 25 ? a.primaryName.substring(0, 25) + '...' : a.primaryName),
+            datasets: [{
+                label: 'Total Titles',
+                data: actorProductivity.map(a => parseInt(a.total_titles)),
+                backgroundColor: colors.warning,
+                borderRadius: 8,
+                barThickness: 25
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                tooltip: { backgroundColor: '#1e293b' }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    ticks: { color: '#94a3b8' },
+                    grid: { color: '#334155' }
+                },
+                y: {
+                    ticks: { color: '#94a3b8', font: { size: 11 } },
+                    grid: { display: false }
+                }
+            }
+        }
+    });
+}
+
+// 5. Top TV Shows Bar Chart
+if (topTVShows.length > 0) {
+    const tvShowsCtx = document.getElementById('tvShowsChart').getContext('2d');
+    new Chart(tvShowsCtx, {
+        type: 'bar',
+        data: {
+            labels: topTVShows.map(tv => tv.name.length > 20 ? tv.name.substring(0, 20) + '...' : tv.name),
+            datasets: [{
+                label: 'Vote Average',
+                data: topTVShows.map(tv => parseFloat(tv.vote_average)),
+                backgroundColor: colors.purple,
+                borderRadius: 8,
+                barThickness: 30
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#1e293b',
+                    callbacks: {
+                        label: (context) => 'Rating: ' + context.parsed.x.toFixed(1) + ' ⭐'
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    max: 10,
+                    ticks: { color: '#94a3b8' },
+                    grid: { color: '#334155' }
+                },
+                y: {
+                    ticks: { color: '#94a3b8', font: { size: 11 } },
+                    grid: { display: false }
+                }
+            }
+        }
+    });
+}
 </script>
-@endsection
+@endsection 

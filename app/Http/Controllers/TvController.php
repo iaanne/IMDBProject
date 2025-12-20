@@ -16,6 +16,7 @@ class TvController extends Controller
     // Ambil networks (pakai SP yang ada)
     $networks = DB::select('EXEC sp_GetAllTvNetworks');
 
+
     return view('tv.index', [
         'topShows' => $topShows,
         'networks' => $networks
