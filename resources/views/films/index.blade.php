@@ -120,9 +120,10 @@
         <h2 class="section-title h3">🎭 Jelajahi Berdasarkan Genre</h2>
         <div class="text-center">
             @forelse ($genres as $genre)
-                <a href="{{ route('search') }}?q={{ urlencode($genre->genre_name) }}" class="genre-badge">
-                    {{ $genre->genre_name }}
-                </a>
+                <a href="{{ route('search', ['q' => $genre->genre_name]) }}" class="genre-badge">{{ $genre->genre_name }}
+
+                </a>   
+
             @empty
                 <p>Belum ada data genre.</p>
             @endforelse

@@ -9,17 +9,17 @@ use Illuminate\Support\Str; // Tambahkan ini
 class TvController extends Controller
 {
     public function index()
-    {
-        // 1. Ambil 8 serial TV teratas berdasarkan rating
-        $topShows = DB::select('EXEC sp_GetTopRatedShows @top = 8');
+{
+    // Ambil top TV shows (pakai SP yang ada)
+    $topShows = DB::select('EXEC sp_GetPopularTvShows @limit = 8');
 
-        // 2. Ambil semua jaringan TV
-        $networks = DB::select('EXEC sp_GetAllNetworks');
+    // Ambil networks (pakai SP yang ada)
+    $networks = DB::select('EXEC sp_GetAllTvNetworks');
 
-        // 3. Kirim data ke view
-        return view('tv.index', [
-            'topShows' => $topShows,
-            'networks' => $networks
-        ]);
-    }
+    return view('tv.index', [
+        'topShows' => $topShows,
+        'networks' => $networks
+    ]);
+}
+
 }

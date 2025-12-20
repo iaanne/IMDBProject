@@ -47,36 +47,50 @@ class TitleController extends Controller
     // ===========================
     //       DETAIL PAGE
     // ===========================
-    public function show($tconst)
-    {
-        // DETAIL
-        $detail = DB::select('EXEC sp_Title_GetDetail ?', [$tconst]);
-        if (!$detail || count($detail) == 0) {
-            return abort(404, "Title not found");
-        }
-        $detail = $detail[0];
-
-        // RATING
-        $rating = DB::select('EXEC sp_Title_GetRating ?', [$tconst]);
-        $rating = $rating[0] ?? null;
-
-        // CAST
-        $cast = DB::select('EXEC sp_Title_GetCast ?', [$tconst]);
-
-        // GENRE — karena SP ini TIDAK ADA di file SQL kamu
-        // Maka diganti query native
-        $genres = DB::select('EXEC sp_Title_GetDetailGenre ?', [$tconst]);
-
-        $crew = DB::select('EXEC sp_Title_GetCrew ?', [$tconst]);
-
-        return view('titles.show', [
-            'detail' => $detail,
-            'rating' => $rating,
-            'genres' => $genres,
-            'cast' => $cast,
-            'crew' => $crew,
-            'results' => [],
-            'keyword' => null
-        ]);
+   public function show($tconst)
+{
+    // =====================
+    // DETAIL
+    // =====================
+    $detail = DB::select('EXEC sp_GetMovieDetail ?', [$tconst]);
+    if (!$detail || count($detail) === 0) {
+        abort(404, 'Title not found');
     }
+    $detail = $detail[0];
+
+    // =====================
+    // RATING
+    // =====================
+    $rating = DB::select('EXEC sp_GetMovieRating ?', [$tconst]);
+    $rating = $rating[0] ?? null;
+
+    // =====================
+    // CAST + CREW
+    // =====================
+    $principals = DB::select('EXEC sp_GetMovieCast ?', [$tconst]);
+
+    $cast = array_filter(
+        $principals,
+        fn ($p) => in_array($p->Category, ['actor', 'actress'])
+    );
+
+    $crew = array_filter(
+        $principals,
+        fn ($p) => !in_array($p->Category, ['actor', 'actress'])
+    );
+
+    // =====================
+    // GENRE (SP BARU)
+    // =====================
+    $genres = DB::select('EXEC sp_GetMovieGenres ?', [$tconst]);
+
+    return view('titles.show', compact(
+        'detail',
+        'rating',
+        'cast',
+        'crew',
+        'genres'
+    ));
+}
+
 }

@@ -68,7 +68,7 @@
         <p class="lead">Temukan serial TV terbaik dari berbagai genre dan jaringan.</p>
         
         {{-- FORM PENCARIAN --}}
-        <form action="{{ route('titles.search') }}" method="GET" class="search-form mt-4">
+        <form action="{{ route('search') }}" method="GET" class="search-form mt-4">
             <div class="input-group input-group-lg">
                 <input type="text" name="q" class="form-control search-input" placeholder="Cari judul serial, aktor, sutradara..." value="{{ request('q') }}">
                 <button class="btn btn-warning" type="submit">
@@ -82,26 +82,22 @@
 <div class="container mt-5">
 
     {{-- DAFTAR SERIAL TV TERPOPULER --}}
-    <h2 class="section-title h3">📺 Serial TV Terpopuler</h2>
-    <div class="row">
-        @forelse ($topShows as $show)
-            <div class="col-md-3 col-sm-6 mb-4">
-                <a href="#" class="text-decoration-none text-white"> {{-- Ganti nanti dengan route detail show --}}
-                    <div class="show-card">
-                        <img src="https://via.placeholder.com/300x450.png?text={{ $show->name }}" class="card-img-top" alt="{{ $show->name }}">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ Str::limit($show->name, 25) }}</h5>
-                            <p class="card-text text-secondary">
-                                {{ $show->number_of_seasons ?? 'N/A' }} Musim • {{ $show->vote_average ? number_format($show->vote_average, 1) . ' ⭐' : 'N/A' }}
-                            </p>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        @empty
-            <p>Belum ada data serial TV terpopuler.</p>
-        @endforelse
+    <div class="show-card">
+    <img src="https://via.placeholder.com/300x450.png?text={{ urlencode($show->primaryTitle) }}"
+         class="card-img-top"
+         alt="{{ $show->primaryTitle }}">
+
+    <div class="card-body">
+        <h5 class="card-title">
+            {{ Str::limit($show->primaryTitle, 25) }}
+        </h5>
+
+        <p class="card-text text-secondary">
+            {{ $show->number_of_seasons ?? 'N/A' }} Musim •
+            {{ $show->averageRating ? number_format($show->averageRating, 1) . ' ⭐' : 'N/A' }}
+        </p>
     </div>
+</div>
 
     <hr class="my-5 border-secondary">
 
