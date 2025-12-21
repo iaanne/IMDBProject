@@ -272,7 +272,7 @@
     {{-- END TAMBAHAN --}}
 
     @if(Auth::user()->role === 'executive' || Auth::user()->role === 'production')
-        <li><a class="dropdown-item" href="{{ Auth::user()->role === 'executive' ? route('executive.dashboard') : route('production.dashboard') }}">Dashboard</a></li>
+        
     @endif
     
     <li>
