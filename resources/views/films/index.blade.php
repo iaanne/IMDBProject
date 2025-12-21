@@ -1,18 +1,16 @@
-{{-- resources/views/films/index.blade.php --}}
-
 @extends('layouts.app')
 
 @section('title', 'Dunia Film - Jelajahi Film Terpopuler')
 
 @section('content')
 <style>
-    /* === KONFIGURASI WARNA (SAMA DENGAN TV SHOWS) === */
+    /* === KONFIGURASI WARNA === */
     :root {
-        --bg-main: #0d0d0d;        /* Background Utama */
-        --bg-card: #000000;        /* Card Background */
-        --primary-pink: #d95f8c;   /* Pink (Highlight/Text) */
-        --primary-red: #870339;    /* Burgundy (Button/Gradient) */
-        --text-muted: #a3a3a3;     /* Abu-abu teks */
+        --bg-main: #0d0d0d;
+        --bg-card: #000000;
+        --primary-pink: #d95f8c;
+        --primary-red: #870339;
+        --text-muted: #a3a3a3;
         --border-color: rgba(255, 255, 255, 0.15);
     }
 
@@ -22,7 +20,6 @@
         font-family: 'Poppins', sans-serif;
     }
 
-    /* Utilities */
     .text-pink { color: var(--primary-pink) !important; }
 
     /* === HERO SECTION === */
@@ -43,7 +40,6 @@
         background: linear-gradient(90deg, #ffffff, var(--primary-pink));
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        background-clip: text;
     }
 
     .hero-subtitle {
@@ -104,6 +100,7 @@
         margin-bottom: 30px;
         padding-bottom: 15px;
         border-bottom: 1px solid var(--border-color);
+        margin-top: 60px; /* Jarak antar section */
     }
 
     .section-title {
@@ -127,9 +124,9 @@
     /* === FILM CARDS (GRID) === */
     .films-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Ukuran kartu disesuaikan */
         gap: 24px;
-        margin-bottom: 50px;
+        margin-bottom: 20px;
     }
 
     .film-card {
@@ -150,7 +147,7 @@
     }
 
     .film-card-image {
-        height: 250px; /* Sedikit lebih tinggi untuk poster film */
+        height: 300px; /* Poster Height */
         background: linear-gradient(135deg, #1a1a1a, #000000);
         display: flex;
         align-items: center;
@@ -159,26 +156,15 @@
         position: relative;
     }
 
-    .film-card-image i {
-        font-size: 3rem;
-        color: rgba(255, 255, 255, 0.1);
-        transition: 0.3s;
-    }
-
-    .film-card:hover .film-card-image i {
-        color: var(--primary-pink);
-        transform: scale(1.1);
-    }
-
     .film-card-content {
-        padding: 20px;
+        padding: 15px;
         flex-grow: 1;
         display: flex;
         flex-direction: column;
     }
 
     .film-title {
-        font-size: 1.05rem;
+        font-size: 1rem;
         font-weight: 700;
         margin-bottom: 10px;
         color: white;
@@ -189,7 +175,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 20px;
+        margin-bottom: 15px;
         font-size: 0.85rem;
         color: var(--text-muted);
     }
@@ -201,12 +187,13 @@
         background: transparent;
         border: 1px solid var(--primary-pink);
         color: var(--primary-pink);
-        padding: 10px;
+        padding: 8px;
         border-radius: 8px;
         text-align: center;
         text-decoration: none;
         font-weight: 600;
         transition: all 0.3s ease;
+        font-size: 0.9rem;
     }
 
     .film-detail-btn:hover {
@@ -215,7 +202,7 @@
         box-shadow: 0 0 15px rgba(217, 95, 140, 0.3);
     }
 
-    /* === GENRE BADGES (GRID STYLE) === */
+    /* === GENRE BADGES === */
     .genres-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
@@ -244,50 +231,25 @@
         transform: translateY(-3px);
     }
 
-    .genre-icon {
-        font-size: 1.5rem;
-        color: var(--primary-pink);
-        margin-bottom: 5px;
-        opacity: 0.8;
-    }
-    
-    .genre-name {
-        font-size: 0.9rem;
-        font-weight: 600;
-    }
+    .genre-icon { font-size: 1.5rem; color: var(--primary-pink); opacity: 0.8; }
+    .genre-name { font-size: 0.9rem; font-weight: 600; }
 
-    /* === SEARCH BAR BAWAH === */
+    /* === BOTTOM SEARCH === */
     .bottom-search-section {
         background: rgba(255, 255, 255, 0.02);
         border-radius: 16px;
         padding: 50px 20px;
         text-align: center;
         border: 1px dashed var(--border-color);
-        margin-top: 30px;
+        margin-top: 50px;
     }
-
     .bottom-search-input {
         background: #000000;
         border: 1px solid var(--border-color);
         color: #ffffff;
         padding: 15px 25px;
         border-radius: 50px 0 0 50px;
-        width: 100%;
-        flex: 1; /* Agar sejajar */
-        width: auto;
-        font-size: 1rem;
-        transition: all 0.3s;
-    }
-    
-    .bottom-search-input::placeholder {
-        color: rgba(255, 255, 255, 0.7);
-        opacity: 1;
-    }
-
-    .bottom-search-input:focus {
-        border-color: var(--primary-pink);
-        outline: none;
-        box-shadow: 0 0 15px rgba(217, 95, 140, 0.2);
+        flex: 1; 
     }
 </style>
 
@@ -296,66 +258,244 @@
     <div class="container text-center">
         <h1 class="hero-title">Jelajahi Dunia Film</h1>
         <p class="hero-subtitle">Temukan film bioskop, aktor, dan sutradara favorit Anda.</p>
-
-        {{-- FORM PENCARIAN ATAS --}}
-        <form action="{{ route('search') }}" method="GET" class="search-form mx-auto" style="max-width: 600px;">
-            <div class="search-input-group">
-                <input type="text" name="q" class="search-input" placeholder="Cari judul film, aktor, sutradara..." value="{{ request('q') }}">
-                <button class="btn-custom" type="submit">
-                    <i class="fas fa-search me-2"></i> Cari
-                </button>
-            </div>
-        </form>
     </div>
 </div>
 
 <div class="container pb-5">
 
-    {{-- SECTION: DAFTAR FILM TERPOPULER --}}
-    <div class="section-header">
+    {{-- 1. FILM TERPOPULER --}}
+    <div class="section-header" style="margin-top: 0;">
         <h2 class="section-title">🔥 Film Terpopuler</h2>
     </div>
 
     <div class="films-grid">
         @forelse ($topFilms as $film)
             <div class="film-card">
-                {{-- Menggunakan Placeholder Icon agar seragam dengan desain TV --}}
                 <div class="film-card-image">
-                    <i class="fas fa-film"></i>
+                    {{-- POSTER IMAGE --}}
+                    <img src="https://via.placeholder.com/300x450?text=Loading..." 
+                         class="tmdb-poster" 
+                         alt="{{ $film->primaryTitle }}"
+                         data-id="{{ $film->tconst }}" 
+                         data-type="movie"
+                         style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
-                
                 <div class="film-card-content">
                     <h5 class="film-title">{{ Str::limit($film->primaryTitle, 40) }}</h5>
-                    
                     <div class="film-meta">
-                        <span>
-                            <i class="fas fa-calendar-alt me-1 text-pink"></i> 
-                            {{ $film->startYear ?? 'N/A' }}
-                        </span>
-                        <span style="color: white; font-weight: bold;">
-                            <i class="fas fa-star me-1 text-pink"></i>
-                            {{ $film->averageRating ? number_format($film->averageRating, 1) : '-' }}
-                        </span>
+                        <span><i class="fas fa-calendar-alt me-1 text-pink"></i> {{ $film->startYear ?? 'N/A' }}</span>
+                        <span style="color: white; font-weight: bold;"><i class="fas fa-star me-1 text-pink"></i> {{ number_format($film->averageRating, 1) }}</span>
                     </div>
-
-                    <a href="{{ route('titles.show', $film->tconst) }}" class="film-detail-btn">
-                        Lihat Detail
-                    </a>
+                    <a href="{{ route('titles.show', $film->tconst) }}" class="film-detail-btn">Lihat Detail</a>
                 </div>
             </div>
         @empty
-            <div class="col-12" style="grid-column: 1 / -1;">
-                <div class="text-center py-5">
-                    <i class="fas fa-video-slash fa-4x mb-4 text-muted"></i>
-                    <h4 class="text-white mb-2">Belum ada data film terpopuler.</h4>
-                </div>
-            </div>
+            <div class="col-12 text-center text-muted">Belum ada data.</div>
         @endforelse
     </div>
 
-    {{-- SECTION: JELAJAHI GENRE --}}
+{{-- SECTION: MOST WATCHED (BY VOTES) --}}
     <div class="section-header mt-5">
-        <h2 class="section-title">🎭 Jelajahi Genre</h2>
+        <h2 class="section-title">⭐ Paling Banyak Ditonton (All Time)</h2>
+    </div>
+
+    <div class="films-grid">
+        @forelse ($mostWatchedFilms as $film)
+            <div class="film-card">
+                <div class="film-card-image">
+                    <img src="https://via.placeholder.com/300x450?text=Loading..." 
+                         class="tmdb-poster" 
+                         alt="{{ $film->primaryTitle }}"
+                         data-id="{{ $film->tconst }}" 
+                         data-type="movie"
+                         style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div class="film-card-content">
+                    <h5 class="film-title">{{ Str::limit($film->primaryTitle, 40) }}</h5>
+                    <div class="film-meta">
+                        <span><i class="fas fa-users me-1 text-pink"></i> {{ number_format($film->numVotes / 1000000, 1) }}M Votes</span>
+                        <span style="font-weight: bold;"><i class="fas fa-star text-pink me-1"></i> {{ number_format($film->averageRating, 1) }}</span>
+                    </div>
+                    <a href="{{ route('titles.show', $film->tconst) }}" class="film-detail-btn">Lihat Detail</a>
+                </div>
+            </div>
+        @empty
+            <div class="col-12 text-center py-5 text-muted">Data tidak ditemukan.</div>
+        @endforelse
+    </div>
+
+    {{-- 2. FILM TAHUN INI --}}
+    <div class="section-header">
+        <h2 class="section-title">📅 Film Musim Ini </h2>
+    </div>
+    <div class="films-grid">
+        @forelse ($currentYearFilms as $film)
+            <div class="film-card">
+                <div class="film-card-image">
+                    <img src="https://via.placeholder.com/300x450?text=Loading..." class="tmdb-poster" alt="{{ $film->primaryTitle }}" data-id="{{ $film->tconst }}" data-type="movie" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div class="film-card-content">
+                    <h5 class="film-title">{{ Str::limit($film->primaryTitle, 40) }}</h5>
+                    <div class="film-meta">
+                        <span>{{ $film->startYear }}</span>
+                        <span style="font-weight: bold;"><i class="fas fa-star text-pink me-1"></i> {{ number_format($film->averageRating, 1) }}</span>
+                    </div>
+                    <a href="{{ route('titles.show', $film->tconst) }}" class="film-detail-btn">Lihat Detail</a>
+                </div>
+            </div>
+        @empty
+            <div class="col-12 text-center text-muted">Belum ada data tahun ini.</div>
+        @endforelse
+    </div>
+
+    {{-- 3. GENRE: ACTION --}}
+    <div class="section-header">
+        <h2 class="section-title">💥 Action Movies</h2>
+    </div>
+    <div class="films-grid">
+        @forelse ($actionFilms as $film)
+            <div class="film-card">
+                <div class="film-card-image">
+                    <img src="https://via.placeholder.com/300x450?text=Loading..." class="tmdb-poster" alt="{{ $film->primaryTitle }}" data-id="{{ $film->tconst }}" data-type="movie" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div class="film-card-content">
+                    <h5 class="film-title">{{ Str::limit($film->primaryTitle, 40) }}</h5>
+                    <div class="film-meta">
+                        <span>{{ $film->startYear }}</span>
+                        <span style="font-weight: bold;"><i class="fas fa-star text-pink me-1"></i> {{ number_format($film->averageRating, 1) }}</span>
+                    </div>
+                    <a href="{{ route('titles.show', $film->tconst) }}" class="film-detail-btn">Lihat Detail</a>
+                </div>
+            </div>
+        @empty
+            <div class="col-12 text-center text-muted">Belum ada data Action.</div>
+        @endforelse
+    </div>
+
+    {{-- 4. GENRE: COMEDY --}}
+    <div class="section-header">
+        <h2 class="section-title">😂 Comedy Central</h2>
+    </div>
+    <div class="films-grid">
+        @forelse ($comedyFilms as $film)
+            <div class="film-card">
+                <div class="film-card-image">
+                    <img src="https://via.placeholder.com/300x450?text=Loading..." class="tmdb-poster" alt="{{ $film->primaryTitle }}" data-id="{{ $film->tconst }}" data-type="movie" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div class="film-card-content">
+                    <h5 class="film-title">{{ Str::limit($film->primaryTitle, 40) }}</h5>
+                    <div class="film-meta">
+                        <span>{{ $film->startYear }}</span>
+                        <span style="font-weight: bold;"><i class="fas fa-star text-pink me-1"></i> {{ number_format($film->averageRating, 1) }}</span>
+                    </div>
+                    <a href="{{ route('titles.show', $film->tconst) }}" class="film-detail-btn">Lihat Detail</a>
+                </div>
+            </div>
+        @empty
+            <div class="col-12 text-center text-muted">Belum ada data Comedy.</div>
+        @endforelse
+    </div>
+
+    {{-- 5. GENRE: FAMILY --}}
+    <div class="section-header">
+        <h2 class="section-title">👨‍👩‍👧‍👦 Family Time</h2>
+    </div>
+    <div class="films-grid">
+        @forelse ($familyFilms as $film)
+            <div class="film-card">
+                <div class="film-card-image">
+                    <img src="https://via.placeholder.com/300x450?text=Loading..." class="tmdb-poster" alt="{{ $film->primaryTitle }}" data-id="{{ $film->tconst }}" data-type="movie" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div class="film-card-content">
+                    <h5 class="film-title">{{ Str::limit($film->primaryTitle, 40) }}</h5>
+                    <div class="film-meta">
+                        <span>{{ $film->startYear }}</span>
+                        <span style="font-weight: bold;"><i class="fas fa-star text-pink me-1"></i> {{ number_format($film->averageRating, 1) }}</span>
+                    </div>
+                    <a href="{{ route('titles.show', $film->tconst) }}" class="film-detail-btn">Lihat Detail</a>
+                </div>
+            </div>
+        @empty
+            <div class="col-12 text-center text-muted">Belum ada data Family.</div>
+        @endforelse
+    </div>
+
+    {{-- 6. GENRE: ANIMATION --}}
+    <div class="section-header">
+        <h2 class="section-title">🎨 Animation World</h2>
+    </div>
+    <div class="films-grid">
+        @forelse ($animationFilms as $film)
+            <div class="film-card">
+                <div class="film-card-image">
+                    <img src="https://via.placeholder.com/300x450?text=Loading..." class="tmdb-poster" alt="{{ $film->primaryTitle }}" data-id="{{ $film->tconst }}" data-type="movie" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div class="film-card-content">
+                    <h5 class="film-title">{{ Str::limit($film->primaryTitle, 40) }}</h5>
+                    <div class="film-meta">
+                        <span>{{ $film->startYear }}</span>
+                        <span style="font-weight: bold;"><i class="fas fa-star text-pink me-1"></i> {{ number_format($film->averageRating, 1) }}</span>
+                    </div>
+                    <a href="{{ route('titles.show', $film->tconst) }}" class="film-detail-btn">Lihat Detail</a>
+                </div>
+            </div>
+        @empty
+            <div class="col-12 text-center text-muted">Belum ada data Animation.</div>
+        @endforelse
+    </div>
+
+    {{-- 7. GENRE: KIDS --}}
+    <div class="section-header">
+        <h2 class="section-title">🧸 Kids Corner</h2>
+    </div>
+    <div class="films-grid">
+        @forelse ($kidsFilms as $film)
+            <div class="film-card">
+                <div class="film-card-image">
+                    <img src="https://via.placeholder.com/300x450?text=Loading..." class="tmdb-poster" alt="{{ $film->primaryTitle }}" data-id="{{ $film->tconst }}" data-type="movie" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div class="film-card-content">
+                    <h5 class="film-title">{{ Str::limit($film->primaryTitle, 40) }}</h5>
+                    <div class="film-meta">
+                        <span>{{ $film->startYear }}</span>
+                        <span style="font-weight: bold;"><i class="fas fa-star text-pink me-1"></i> {{ number_format($film->averageRating, 1) }}</span>
+                    </div>
+                    <a href="{{ route('titles.show', $film->tconst) }}" class="film-detail-btn">Lihat Detail</a>
+                </div>
+            </div>
+        @empty
+            <div class="col-12 text-center text-muted">Belum ada data Kids.</div>
+        @endforelse
+    </div>
+
+    {{-- 8. GENRE: ROMANCE --}}
+    <div class="section-header">
+        <h2 class="section-title">💖 Romance & Love</h2>
+    </div>
+    <div class="films-grid">
+        @forelse ($romanceFilms as $film)
+            <div class="film-card">
+                <div class="film-card-image">
+                    <img src="https://via.placeholder.com/300x450?text=Loading..." class="tmdb-poster" alt="{{ $film->primaryTitle }}" data-id="{{ $film->tconst }}" data-type="movie" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div class="film-card-content">
+                    <h5 class="film-title">{{ Str::limit($film->primaryTitle, 40) }}</h5>
+                    <div class="film-meta">
+                        <span>{{ $film->startYear }}</span>
+                        <span style="font-weight: bold;"><i class="fas fa-star text-pink me-1"></i> {{ number_format($film->averageRating, 1) }}</span>
+                    </div>
+                    <a href="{{ route('titles.show', $film->tconst) }}" class="film-detail-btn">Lihat Detail</a>
+                </div>
+            </div>
+        @empty
+            <div class="col-12 text-center text-muted">Belum ada data Romance.</div>
+        @endforelse
+    </div>
+
+
+    {{-- 9. JELAJAHI GENRE (BADGES) --}}
+    <div class="section-header mt-5">
+        <h2 class="section-title">🎭 Jelajahi Semua Genre</h2>
         <span class="badge bg-black border border-secondary text-muted">Kategori</span>
     </div>
 
@@ -372,15 +512,13 @@
         @endforelse
     </div>
 
-    {{-- SECTION: SEARCH BAR BAWAH --}}
+    {{-- 10. SEARCH BAR BAWAH --}}
     <div class="bottom-search-section">
         <h3 class="text-white mb-2" style="font-weight: 700;">Tidak menemukan yang Anda cari?</h3>
         <p class="text-muted mb-4">Cari judul film spesifik dari database lengkap kami.</p>
-        
         <form action="{{ route('search') }}" method="GET">
             <div class="input-group d-flex" style="max-width: 500px; margin: 0 auto;">
-                <input type="text" name="q" class="bottom-search-input" placeholder="Ketik judul film (misal: Avengers, Titanic)..." required>
-                
+                <input type="text" name="q" class="bottom-search-input" placeholder="Ketik judul film..." required>
                 <button class="btn-custom" style="border-radius: 0 50px 50px 0; white-space: nowrap;" type="submit">
                     <i class="fas fa-search me-1"></i> Cari
                 </button>
@@ -390,20 +528,50 @@
 
 </div>
 
-{{-- Script Loading Effect --}}
+{{-- SCRIPT LOAD GAMBAR TMDB --}}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const forms = document.querySelectorAll('form');
-        forms.forEach(form => {
-            form.addEventListener('submit', function(e) {
-                const submitBtn = this.querySelector('button[type="submit"]');
-                if (submitBtn) {
-                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
-                    submitBtn.style.opacity = '0.8';
-                    submitBtn.disabled = true;
+$(document).ready(function() {
+    // === API KEY TMDB ===
+    const apiKey = '8e8ed515442c24035b99b36d4bbb8e6d'; 
+    // ====================
+
+    $('.tmdb-poster').each(function() {
+        var imgElement = $(this);
+        var id = imgElement.data('id');
+        
+        if (!id) return;
+
+        // URL Find by IMDb ID
+        var url = `https://api.themoviedb.org/3/find/${id}?api_key=${apiKey}&external_source=imdb_id`;
+
+        $.ajax({
+            url: url,
+            method: 'GET',
+            success: function(data) {
+                var imagePath = null;
+                
+                // Prioritaskan hasil Movie karena ini halaman Film
+                if (data.movie_results && data.movie_results.length > 0 && data.movie_results[0].poster_path) {
+                    imagePath = data.movie_results[0].poster_path;
+                } 
+                // Jaga-jaga kalau ternyata datanya masuk sebagai TV/Episode
+                else if (data.tv_results && data.tv_results.length > 0 && data.tv_results[0].poster_path) {
+                    imagePath = data.tv_results[0].poster_path;
                 }
-            });
+
+                if (imagePath) {
+                    imgElement.attr('src', 'https://image.tmdb.org/t/p/w500' + imagePath);
+                } else {
+                    // Placeholder kalau tidak ada gambar
+                    imgElement.attr('src', 'https://via.placeholder.com/300x450/1a1a1a/555555?text=No+Poster');
+                }
+            },
+            error: function() {
+                console.log("Gagal load gambar: " + id);
+            }
         });
     });
+});
 </script>
 @endsection

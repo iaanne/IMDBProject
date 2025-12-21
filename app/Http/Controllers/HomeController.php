@@ -22,15 +22,15 @@ class HomeController extends Controller
         $seasonalContent = DB::select('EXEC sp_GetSeasonalContent @top = 12');
 
         // Pastikan tulisan 'Action', 'Romance' ini ada di kolom genre_name tabel dim_genre kamu
-        $actionMovies    = DB::select("EXEC sp_GetMoviesByGenre @GenreName = 'Action'");
-        $ComedyMovies    = DB::select("EXEC sp_GetMoviesByGenre @GenreName = 'Comedy'");
-        $familyMovies    = DB::select("EXEC sp_GetMoviesByGenre @GenreName = 'Family'");
-        $animationMovies = DB::select("EXEC sp_GetMoviesByGenre @GenreName = 'Animation'");
-        $romanceMovies   = DB::select("EXEC sp_GetMoviesByGenre @GenreName = 'Romance'");
+        $actionMovies    = DB::select("EXEC sp_GetMixByGenre @GenreName = 'Action'");
+        $ComedyMovies    = DB::select("EXEC sp_GetMixByGenre @GenreName = 'Comedy'");
+        $familyMovies    = DB::select("EXEC sp_GetMixByGenre @GenreName = 'Family'");
+        $animationMovies = DB::select("EXEC sp_GetMixByGenre @GenreName = 'Animation'");
+        $romanceMovies   = DB::select("EXEC sp_GetMixByGenre @GenreName = 'Romance'");
 
         
         // Khusus Kids, kita pinjam genre Family lagi tapi diacak ulang
-        $kidsMovies      = DB::select("EXEC sp_GetMoviesByGenre @GenreName = 'Family'"); 
+        $kidsMovies      = DB::select("EXEC sp_GetMixByGenre @GenreName = 'Family'"); 
 
 
         return view('home', compact('featuredMovie', 'topMovies', 'recommended', 'seasonalContent', 'actionMovies',

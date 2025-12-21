@@ -16,11 +16,13 @@ class TvController extends Controller
     // Ambil networks (pakai SP yang ada)
     $networks = DB::select('EXEC sp_GetAllTvNetworks');
 
+    $mostWatchedShows = DB::select('EXEC sp_GetMostWatchedSeries @limit = 10');
+
+
 
     return view('tv.index', [
         'topShows' => $topShows,
-        'networks' => $networks
+        'networks' => $networks,
+        'mostWatchedShows' => $mostWatchedShows
     ]);
-}
-
-}
+}}

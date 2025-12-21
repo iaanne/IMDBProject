@@ -227,12 +227,12 @@
                     <li class="nav-item">
                         <a class="nav-link {{ request()->is('tv-shows*') ? 'active' : '' }}" href="{{ route('tv.index') }}">TV Shows</a>
                     </li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('genres.index') }}">Genre</a></li>
 
                     @if(Auth::check() && Auth::user()->role === 'production')
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-warning" href="#" data-bs-toggle="dropdown">Production</a>
                             <ul class="dropdown-menu dropdown-menu-dark-custom">
-                                <li><a class="dropdown-item" href="{{ route('production.dashboard') }}">Dashboard</a></li>
                                 <li><a class="dropdown-item" href="{{ route('production.movies.index') }}">Manage Movies</a></li>
                                 <li><a class="dropdown-item" href="{{ route('production.shows.index') }}">Manage Shows</a></li>
                                 <li><a class="dropdown-item" href="{{ route('production.episodes.index') }}">Manage Episodes</a></li>

@@ -12,6 +12,7 @@ use App\Http\Controllers\ExecutiveController;
 use App\Http\Controllers\ProductionController;
 use App\Http\Controllers\WatchlistController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\GenreController;
 
 // HOME PAGE — gunakan HomeController saja!
 Route::get('/', [HomeController::class, 'home'])->name('home');
@@ -151,3 +152,7 @@ Route::get('/episodes/{tconst}/edit', [ProductionController::class, 'editEpisode
 Route::put('/episodes/{tconst}', [ProductionController::class, 'updateEpisode'])->name('production.episodes.update');
 // Di routes/web.php
 Route::get('/api/search-series', [App\Http\Controllers\ProductionController::class, 'searchSeries'])->name('api.searchSeries');
+
+// Pastikan tidak pakai .php dan gunakan ::class
+Route::get('/genres', [App\Http\Controllers\GenreController::class, 'index'])->name('genres.index');
+Route::get('/genres/{name}', [App\Http\Controllers\GenreController::class, 'show'])->name('genres.show');

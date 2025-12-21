@@ -18,14 +18,26 @@
     
     /* Hero Section dengan Overlay Gradient */
     .detail-hero {
-        position: relative;
-        background: linear-gradient(to right, #0d0d0d 10%, rgba(13, 13, 13, 0.95) 40%, rgba(13, 13, 13, 0.6) 100%),
-                    url('https://source.unsplash.com/random/1920x1080/?cinema,dark,movie');
+        /* Hapus url static, biarkan JavaScript yang mengisi */
+        background-color: #0d0d0d;
+        background-repeat: no-repeat;
         background-size: cover;
-        background-position: center;
-        padding: 80px 0;
-        margin-bottom: 40px;
-        border-bottom: 1px solid var(--c-border);
+        background-position: top center;
+        transition: background-image 0.8s ease-in-out;
+    }
+
+    /* Overlay agar teks tetap terbaca meskipun gambar terang */
+    .detail-hero::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: linear-gradient(to right, #0d0d0d 10%, rgba(13, 13, 13, 0.8) 50%, rgba(13, 13, 13, 0.4) 100%);
+        z-index: 1;
+    }
+
+    .container {
+        position: relative;
+        z-index: 2; /* Supaya teks di atas overlay */
     }
 
     /* Poster Placeholder */
@@ -88,26 +100,27 @@
     }
 
     /* Rating Box */
-    .rating-box {
-        display: inline-flex;
-        align-items: center;
-        gap: 15px;
-        background: rgba(255, 255, 255, 0.05);
-        padding: 12px 25px;
-        border-radius: 50px;
-        border: 1px solid var(--c-border);
-        margin-bottom: 30px;
-        transition: 0.3s;
-    }
-    .rating-box:hover {
-        border-color: var(--c-rose);
-        background: rgba(217, 95, 140, 0.05);
-    }
-    .rating-score {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #fbbf24; /* Gold */
-    }
+    /* Update pada bagian Rating Box */
+.rating-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px; /* Jarak antara bintang dan angka dikurangi */
+    background: rgba(255, 255, 255, 0.05);
+    padding: 8px 20px; /* Padding dikurangi */
+    border-radius: 50px;
+    margin-bottom: 20px; /* Jarak bawah dikurangi */
+}
+
+.rating-score {
+    font-size: 1.2rem; /* Ukuran font dikecilkan dari 1.5rem */
+    font-weight: 700;
+    color: #fbbf24;
+}
+
+.rating-box i.fa-2x {
+    font-size: 1.2rem; /* Ukuran ikon bintang dikecilkan agar seimbang */
+}
+
 
     /* Genre Badges */
     .genre-badge {
@@ -215,21 +228,45 @@
         .detail-title { font-size: 2.5rem; }
         .detail-meta { justify-content: center; }
     }
+
+    /* Menambah jarak antar section */
+.section-header-small {
+    margin-top: 50px; /* Tambahkan margin top agar tidak mepet ke atas */
+    margin-bottom: 25px;
+    font-size: 1.3rem; /* Ukuran header section sedikit diperkecil */
+}
+
+/* Container utama di bawah hero */
+.container.pb-5 {
+    padding-top: 20px; /* Memberi ruang napas tambahan */
+}
 </style>
 
 {{-- 1. HERO SECTION --}}
-<div class="detail-hero">
+{{-- 1. HERO SECTION --}}
+{{-- Tambahkan id "detailHero" untuk backdrop --}}
+<div class="detail-hero" id="detailHero" data-id="{{ $detail->tconst ?? $detail->show_id }}">
     <div class="container">
         <div class="d-flex hero-content gap-5 align-items-start">
             
-            {{-- Kiri: Poster --}}
-            <div class="poster-placeholder flex-shrink-0">
-                @if(isset($detail->titleType) && ($detail->titleType == 'movie'))
-                    <i class="fas fa-film"></i>
-                @else
-                    <i class="fas fa-tv"></i>
-                @endif
+            {{-- Kiri: Poster (Sekarang menggunakan <img>) --}}
+            <div class="poster-placeholder flex-shrink-0" style="overflow: hidden;">
+                <img id="mainPoster" 
+                     src="https://via.placeholder.com/300x450?text=Loading..." 
+                     alt="{{ $detail->primaryTitle ?? $detail->name }}"
+                     style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                
+                {{-- Icon fallback jika gambar gagal dimuat --}}
+                <div id="posterIcon" style="display: flex; align-items: center; justify-content: center; height: 100%; width: 100%;">
+                    @if(isset($detail->titleType) && ($detail->titleType == 'movie'))
+                        <i class="fas fa-film"></i>
+                    @else
+                        <i class="fas fa-tv"></i>
+                    @endif
+                </div>
             </div>
+
+            {{-- ... (Kanan: Informasi tetap sama) ... --}}
 
             {{-- Kanan: Informasi --}}
             <div class="info-content flex-grow-1">
@@ -425,3 +462,52 @@
     }
 </script>
 @endsection
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const apiKey = '8e8ed515442c24035b99b36d4bbb8e6d'; // GANTI DENGAN API KEY TMDB ANDA
+        const contentId = document.getElementById('detailHero').dataset.id;
+        
+        if (contentId) {
+            // Gunakan metode 'find' TMDB untuk mencari berdasarkan ID IMDb (tconst)
+            const url = `https://api.themoviedb.org/3/find/${contentId}?api_key=${apiKey}&external_source=imdb_id`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    let result = null;
+                    
+                    // Cek apakah hasil ditemukan di kategori movie atau tv
+                    if (data.movie_results && data.movie_results.length > 0) {
+                        result = data.movie_results[0];
+                    } else if (data.tv_results && data.tv_results.length > 0) {
+                        result = data.tv_results[0];
+                    }
+
+                    if (result) {
+                        const posterPath = result.poster_path;
+                        const backdropPath = result.backdrop_path;
+
+                        // 1. Update Poster Utama
+                        if (posterPath) {
+                            const mainPoster = document.getElementById('mainPoster');
+                            const posterIcon = document.getElementById('posterIcon');
+                            
+                            mainPoster.src = `https://image.tmdb.org/t/p/w500${posterPath}`;
+                            mainPoster.style.display = 'block';
+                            posterIcon.style.display = 'none';
+                        }
+
+                        // 2. Update Backdrop Hero
+                        if (backdropPath) {
+                            const hero = document.getElementById('detailHero');
+                            hero.style.backgroundImage = `url('https://image.tmdb.org/t/p/original${backdropPath}')`;
+                        }
+                    }
+                })
+                .catch(err => console.error("TMDB Fetch Error:", err));
+        }
+    });
+
+    // ... (Fungsi toggleWatchlist Anda tetap di sini) ...
+</script>

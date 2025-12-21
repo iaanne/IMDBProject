@@ -114,7 +114,7 @@
             </div>
         </div>
 
-        {{-- TABEL FILM (LINK FIXED) --}}
+        {{-- TABEL FILM --}}
         <div class="col-lg-4">
             <div class="chart-container">
                 <div class="chart-title"><i class="fas fa-crown text-warning"></i> Film Terbaik (Top 10)</div>
@@ -132,19 +132,25 @@
                             <tr>
                                 <td class="fw-bold text-muted">{{ $index + 1 }}</td>
                                 <td>
-                                    {{-- LOGIKA LINK KUAT: Cek tconst ATAU show_id --}}
                                     @php
-                                        // Ambil ID dari tconst, kalau gak ada coba show_id, kalau gak ada null
-                                        $movieId = $movie->tconst ?? $movie->show_id ?? null;
+                                        // 1. Ambil ID mentah
+                                        $rawId = $movie->tconst ?? $movie->show_id ?? null;
                                         $title = $movie->primaryTitle ?? $movie->name ?? 'Unknown Title';
+                                        
+                                        // 2. Format ID agar selalu tt + 7 digit (Mencegah 404)
+                                        $movieId = null;
+                                        if ($rawId) {
+                                            $cleanId = preg_replace('/[^0-9]/', '', $rawId);
+                                            $movieId = 'tt' . str_pad($cleanId, 7, '0', STR_PAD_LEFT);
+                                        }
                                     @endphp
 
                                     @if($movieId)
-                                        <a href="{{ url('/title/' . $movieId) }}" class="fw-bold movie-link">
-                                            {{ Str::limit($title, 22) }}
-                                        </a>
+                                        {{-- Pastikan ini mengirim tconst --}}
+<a href="{{ route('titles.show', ['tconst' => $movieId]) }}" class="fw-bold movie-link">
+    {{ Str::limit($title, 22) }}
+</a>
                                     @else
-                                        {{-- Fallback jika ID benar-benar tidak ada --}}
                                         <span class="fw-bold text-white">{{ Str::limit($title, 22) }}</span>
                                     @endif
                                     
@@ -184,7 +190,6 @@
                 </div>
             </div>
         </div>
-        {{-- TV SHOWS CHART (LINK FIXED) --}}
         <div class="col-lg-4">
             <div class="chart-container">
                 <div class="chart-title"><i class="fas fa-tv"></i> Top TV Series <small class="ms-2 text-muted fw-normal fs-6">(Klik Grafik)</small></div>
@@ -198,14 +203,12 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
-    // 1. DATA PREPARATION
     const topMovies = @json($topMovies);
     const genrePopularity = @json($genrePopularity);
     const actorProductivity = @json($actorProductivity);
     const ratingTrend = @json($ratingTrend);
     const topTVShows = @json($topTVShows); 
 
-    // 2. THEME SETUP
     const theme = {
         rose: '#d95f8c', amaranth: '#870339', text: '#a3a3a3', grid: '#333333',
         palette: ['#65022a', '#870339', '#aa4465', '#ce306fff', '#d95f8c', '#f895bcff', '#fbbf24', '#ffd875ff']
@@ -214,12 +217,9 @@
     Chart.defaults.borderColor = theme.grid;
     Chart.defaults.font.family = "'Outfit', sans-serif";
 
-    // 3. CHART CONFIGURATION
-
-    // A. TREND CHART (Line) - Filter Tahun > 2000
+    // A. TREND CHART
     if(ratingTrend.length > 0) {
         const recentTrend = ratingTrend.filter(r => parseInt(r.startYear) >= 2000); 
-
         new Chart(document.getElementById('ratingTrendChart'), {
             type: 'line',
             data: {
@@ -246,7 +246,7 @@
         });
     }
 
-    // B. ACTOR (Bar)
+    // B. ACTOR CHART
     if(actorProductivity.length > 0) {
         new Chart(document.getElementById('actorChart'), {
             type: 'bar',
@@ -266,7 +266,7 @@
         });
     }
 
-    // C. GENRE (Doughnut)
+    // C. GENRE CHART
     if(genrePopularity.length > 0) {
         new Chart(document.getElementById('genreChart'), {
             type: 'doughnut',
@@ -285,12 +285,11 @@
         });
     }
 
-    // D. TV SHOWS (Vertical Bar) - FIX LINK CLICK
+    // D. TV SHOWS CHART - PERBAIKAN DI SINI (FIXED)
     if(topTVShows.length > 0) {
         const tvChart = new Chart(document.getElementById('tvShowsChart'), {
             type: 'bar',
             data: {
-                // Fix: Pakai 'name' dan 'vote_average'
                 labels: topTVShows.slice(0, 8).map(t => t.name ? t.name.substring(0, 10) + '..' : 'Unknown'),
                 datasets: [{
                     label: 'Rating',
@@ -302,17 +301,28 @@
                 responsive: true, maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
                 scales: { y: { beginAtZero: true, max: 10, grid: { color: '#333' } }, x: { grid: { display: false } } },
-                // Event Click yang Lebih Aman
+                
+                // === LOGIKA KLIK YANG DIPERBAIKI ===
                 onClick: (e) => {
-                    const canvasPosition = Chart.helpers.getRelativePosition(e, tvChart);
-                    const dataX = tvChart.scales.x.getValueForPixel(canvasPosition.x);
-                    
-                    if (dataX >= 0 && dataX < topTVShows.length) {
-                        const show = topTVShows[dataX];
-                        // Cek apakah punya tconst ATAU show_id
-                        const id = show.tconst || show.show_id;
-                        if(id) { 
-                            window.location.href = "/title/" + id; 
+                    const points = tvChart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true);
+
+                    if (points.length) {
+                        const firstPoint = points[0];
+                        const dataIndex = firstPoint.index;
+                        const show = topTVShows[dataIndex];
+                        
+                        // Ambil ID (bisa tconst 'tt123' atau ID angka '246')
+                        let rawId = show.tconst || show.show_id || show.id;
+
+                        if(rawId) { 
+                            // 1. Bersihkan ID dari karakter non-angka (misal: tt00246 -> 00246)
+                            let cleanId = String(rawId).replace(/\D/g, '');
+                            
+                            // 2. Format ulang jadi tt + 7 digit (misal: 246 -> tt0000246)
+                            // Ini yang mencegah error 404
+                            let finalId = 'tt' + cleanId.padStart(7, '0');
+                            
+                            window.location.href = "/titles/" + finalId;
                         }
                     }
                 },
@@ -323,4 +333,5 @@
         });
     }
 </script>
+
 @endsection

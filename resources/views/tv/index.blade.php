@@ -150,15 +150,13 @@
     }
 
     .show-card-image {
-        height: 200px;
-        background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-bottom: 1px solid var(--border-color);
-        position: relative;
-        overflow: hidden;
-    }
+    /* Gunakan aspect ratio portrait standar poster film (2:3) */
+    aspect-ratio: 2 / 3; 
+    height: auto; /* Biarkan tinggi menyesuaikan rasio */
+    background: #222;
+    position: relative;
+    overflow: hidden;
+}
     
     .show-card-image::after {
         content: '';
@@ -171,10 +169,24 @@
     }
     .show-card:hover .show-card-image::after { left: 150%; }
 
-    .show-card-image i {
-        font-size: 3.5rem;
-        color: rgba(255, 255, 255, 0.05);
-        transition: 0.3s;
+    .show-card-image {
+        width: 100%;
+        /* Hapus height: 200px */
+        aspect-ratio: 2 / 3; 
+        background: #1a1a1a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-bottom: 1px solid var(--border-color);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .tmdb-poster {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Memastikan gambar memenuhi kotak tanpa gepeng */
+        display: block;
     }
     .show-card:hover .show-card-image i { color: var(--primary-pink); transform: scale(1.1); }
 
@@ -298,6 +310,33 @@
     }
     .network-search-input::placeholder { color: rgba(255, 255, 255, 0.5); }
     .network-search-input:focus { border-color: var(--primary-pink); outline: none; box-shadow: 0 0 15px rgba(217, 95, 140, 0.2); }
+
+    .tmdb-poster {
+    width: 100%;
+    height: 100%;
+    /* object-fit: cover memastikan gambar memenuhi kotak tanpa menjadi gepeng */
+    object-fit: cover; 
+    display: block;
+
+    /* Hilangkan garis bawah dan atur warna teks untuk link card */
+a.show-card {
+    text-decoration: none !important; /* Menghilangkan garis bawah */
+    color: inherit; /* Mengikuti warna teks asli (putih) */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Pastikan judul tidak berubah warna saat di-hover */
+a.show-card:hover .show-title {
+    color: var(--primary-pink); /* Opsional: Ubah judul jadi pink saat hover agar lebih premium */
+    text-decoration: none;
+}
+
+/* Hilangkan garis biru pada link K-Drama juga */
+.shows-grid a {
+    text-decoration: none;
+}
+}
 </style>
 
 {{-- HERO SECTION --}}
@@ -305,100 +344,105 @@
     <div class="hero-content text-center container">
         <h1 class="hero-title">Dunia Serial TV</h1>
         <p class="hero-subtitle">Temukan serial TV terbaik dari berbagai genre dan jaringan.</p>
-        
-        {{-- FORM PENCARIAN ATAS --}}
-        <form action="{{ route('search') }}" method="GET" class="search-form mx-auto" style="max-width: 600px;">
-            <div class="search-input-group">
-                <input type="text" name="q" class="search-input" placeholder="Cari judul serial, aktor, sutradara..." value="{{ request('q') }}">
-                <button class="btn-custom" type="submit">
-                    <i class="fas fa-search me-2"></i> Cari
-                </button>
-            </div>
-        </form>
+    
     </div>
 </div>
 
 <div class="container pb-5">
-
-    {{-- JUDUL DINAMIS --}}
-    <div class="section-header">
-        <h2 class="section-title">
-            <i class="fas fa-tv"></i>
-            @if(request('network'))
-                Hasil Filter: <span class="text-pink ms-2">{{ request('network') }}</span>
-                <a href="{{ route('tv.index') }}" class="btn btn-sm btn-outline-light ms-3" style="border-radius: 20px; font-size: 0.8rem;">
-                    <i class="fas fa-times me-1"></i> Reset
-                </a>
-            @else
-                 Serial TV Populer
-            @endif
-        </h2>
-    </div>
     
-    {{-- GRID TV SHOWS --}}
-    <div class="shows-grid">
-        @forelse($topShows as $show)
-            <div class="show-card">
-                <div class="show-card-image">
-                    {{-- Icon Placeholder --}}
-                    <i class="fas fa-play-circle"></i>
+  <div class="shows-grid">
+    @foreach($topShows as $show)
+        @php
+            $rawId = $show->tconst ?? $show->show_id ?? '';
+            $digits = preg_replace('/[^0-9]/', '', $rawId);
+            $finalId = !empty($digits) ? 'tt' . str_pad($digits, 7, '0', STR_PAD_LEFT) : null;
+        @endphp
+        
+        @if($finalId)
+            {{-- Tambahkan inline style text-decoration none sebagai pengaman tambahan --}}
+            <a href="{{ route('titles.show', $finalId) }}" class="show-card" style="text-decoration: none;">
+        @else
+            <div class="show-card" style="opacity: 0.7; cursor: not-allowed;">
+        @endif
+        
+            <div class="show-card-image">
+                <img src="https://via.placeholder.com/300x450?text=Loading..." 
+                     class="tmdb-poster" 
+                     alt="{{ $show->primaryTitle ?? 'Show' }}"
+                     data-id="{{ $finalId }}" 
+                     data-type="tv">
+            </div>
+            
+            <div class="show-card-content">
+                <h3 class="show-title">{{ $show->primaryTitle ?? $show->name }}</h3>
+                <div class="show-meta">
+                    <span><i class="fas fa-star text-pink"></i> {{ number_format($show->averageRating ?? 0, 1) }}</span>
+                    <span><i class="fas fa-eye text-pink"></i> {{ number_format(($show->numVotes ?? 0) / 1000, 1) }}K</span>
                 </div>
-                <div class="show-card-content">
-                    <h3 class="show-title">
-                        {{ $show->name ?? $show->primaryTitle ?? 'Tanpa Judul' }}
-                    </h3>
-                    
-                    <div class="show-meta">
-                        <span>
-                            <i class="fas fa-layer-group me-1 text-pink"></i>
-                            {{ $show->number_of_seasons ?? '?' }} Season
-                        </span>
-                        <span style="color: white; font-weight: bold;">
-                            <i class="fas fa-star me-1 text-pink"></i>
-                            {{ isset($show->averageRating) ? number_format($show->averageRating, 1) : '-' }}
-                        </span>
-                    </div>
-                    
-                    {{-- SMART LINK: FIX 404 (FINAL FIX) --}}
-                    @php
-                        // Ambil ID Mentah
-                        $rawId = $show->tconst ?? $show->show_id ?? null;
-                        $finalId = null;
+                {{-- Ubah span button agar tidak terlihat seperti link tradisional --}}
+                <span class="show-detail-btn">Lihat Detail</span>
+            </div>
 
-                        if ($rawId) {
-                            // Ambil angka saja
-                            $digits = preg_replace('/[^0-9]/', '', $rawId);
-                            
-                            // FORMAT AJAIB: 'tt' + Angka Nol (Padding 7 Digit)
-                            // Contoh: 91630 -> tt0091630
-                            if (!empty($digits)) {
-                                $finalId = 'tt' . str_pad($digits, 7, '0', STR_PAD_LEFT);
-                            }
-                        }
-                    @endphp
+        @if($finalId)
+            </a>
+        @else
+            </div>
+        @endif
+    @endforeach
+</div>
+{{-- ========================================================= --}}
+{{-- SECTION: PALING BANYAK DITONTON (MOST WATCHED SERIES) --}}
+{{-- ========================================================= --}}
+<div class="section-header mt-5">
+    <h2 class="section-title">
+        <i class="fas fa-users"></i> Paling Banyak Ditonton
+    </h2>
+</div>
 
-                    @if($finalId)
-                        <a href="{{ route('titles.show', $finalId) }}" class="show-detail-btn">
-                            Lihat Detail
-                        </a>
-                    @else
-                        <button class="show-detail-btn" disabled style="opacity: 0.5; cursor: not-allowed; border-color: #555; color: #777;">
-                            Unavailable
-                        </button>
-                    @endif
-
+<div class="shows-grid">
+    @forelse($mostWatchedShows as $show)
+        @php
+            // Membersihkan ID dan memastikan format tt + 7 digit angka
+            $digits = preg_replace('/[^0-9]/', '', $show->tconst);
+            $finalId = 'tt' . str_pad($digits, 7, '0', STR_PAD_LEFT);
+        @endphp
+        
+        {{-- Area Klik: Bungkus seluruh kartu dengan tag <a> --}}
+        <a href="{{ route('titles.show', $finalId) }}" class="show-card" style="text-decoration: none;">
+            <div class="show-card-image">
+                <img src="https://via.placeholder.com/300x450?text=Loading..." 
+                     class="tmdb-poster" 
+                     alt="{{ $show->primaryTitle }}"
+                     data-id="{{ $finalId }}" 
+                     data-type="tv">
+            </div>
+            
+            <div class="show-card-content">
+                <h3 class="show-title">{{ Str::limit($show->primaryTitle, 35) }}</h3>
+                
+                <div class="show-meta">
+                    <span>
+                        <i class="fas fa-eye text-pink me-1"></i> 
+                        {{ number_format($show->numVotes / 1000, 1) }}K Penonton
+                    </span>
+                    <span style="color: white; font-weight: bold;">
+                        <i class="fas fa-star text-pink me-1"></i> 
+                        {{ number_format($show->averageRating, 1) }}
+                    </span>
+                </div>
+                
+                {{-- Tombol ini sekarang hanya sebagai visual --}}
+                <div class="show-detail-btn">
+                    Lihat Detail
                 </div>
             </div>
-        @empty
-            <div class="col-12" style="grid-column: 1 / -1;">
-                <div class="text-center py-5">
-                    <i class="fas fa-film fa-4x mb-4 text-muted"></i>
-                    <h4 class="text-white mb-2">Tidak ada serial TV ditemukan</h4>
-                    <p class="text-muted">Coba cari dengan kata kunci lain atau reset filter.</p>
-                </div>
-            </div>
-        @endforelse
-    </div>
+        </a>
+    @empty
+        <div class="col-12 text-center py-5 text-muted">
+            Belum ada data serial populer yang ditemukan.
+        </div>
+    @endforelse
+</div>
 
     {{-- BAGIAN JARINGAN --}}
     <div class="section-header mt-5">
@@ -417,20 +461,6 @@
         @endforeach
     </div>
 
-    {{-- SEARCH BAR BAWAH --}}
-    <div class="network-search-section">
-        <h3 class="text-white mb-2" style="font-weight: 700;">Tidak menemukan jaringan favoritmu?</h3>
-        <p class="text-white mb-4 opacity-75">Cari dari database lengkap kami yang mencakup ratusan jaringan global.</p>
-        
-        <form action="{{ route('tv.index') }}" method="GET">
-            <div class="input-group" style="max-width: 500px; margin: 0 auto;">
-                <input type="text" name="network" class="network-search-input" placeholder="Ketik nama jaringan (misal: HBO, BBC)..." required>
-                <button class="btn-custom" style="border-radius: 0 50px 50px 0;" type="submit">
-                    <i class="fas fa-search me-1"></i> Cari
-                </button>
-            </div>
-        </form>
-    </div>
 
 </div>
 
@@ -450,3 +480,41 @@
     });
 </script>
 @endsection
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    const apiKey = '8e8ed515442c24035b99b36d4bbb8e6d'; 
+
+    $('.tmdb-poster').each(function() {
+        const imgElement = $(this);
+        const imdbId = imgElement.data('id');
+        
+        if (!imdbId) return;
+
+        // Mencari data berdasarkan IMDb ID
+        const url = `https://api.themoviedb.org/3/find/${imdbId}?api_key=${apiKey}&external_source=imdb_id`;
+
+        $.ajax({
+            url: url,
+            method: 'GET',
+            success: function(data) {
+                let imagePath = null;
+                
+                // Prioritaskan hasil TV (untuk Drakor/Series)
+                if (data.tv_results && data.tv_results.length > 0) {
+                    imagePath = data.tv_results[0].poster_path;
+                } else if (data.movie_results && data.movie_results.length > 0) {
+                    imagePath = data.movie_results[0].poster_path;
+                }
+
+                if (imagePath) {
+                    imgElement.attr('src', 'https://image.tmdb.org/t/p/w500' + imagePath);
+                } else {
+                    imgElement.attr('src', 'https://via.placeholder.com/300x450/1a1a1a/555555?text=No+Poster');
+                }
+            }
+        });
+    });
+});
+</script>
