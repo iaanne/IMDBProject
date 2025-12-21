@@ -3,137 +3,122 @@
 @section('title', 'Add New Episode')
 
 @section('content')
+{{-- Load CSS Select2 --}}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+{{-- CSS Tambahan biar Select2 warnanya gelap/sesuai tema (Opsional) --}}
 <style>
-    body { background-color: #0f172a !important; }
-    .page-header {
-        background: linear-gradient(135deg, #06b6d4 0%, #22d3ee 100%);
-        color: white;
-        padding: 25px 30px;
-        border-radius: 15px;
-        margin-bottom: 25px;
-        box-shadow: 0 8px 20px rgba(6, 182, 212, 0.3);
+    .select2-container .select2-selection--single {
+        height: 38px;
+        border: 1px solid #ced4da; /* Sesuaikan border kamu */
     }
-    .form-card {
-        background: #1e293b;
-        border-radius: 15px;
-        padding: 30px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-    }
-    .form-label { color: #e2e8f0; font-weight: 600; margin-bottom: 8px; }
-    .form-control, .form-select {
-        background-color: #0f172a;
-        border: 1px solid #334155;
-        color: #e2e8f0;
-        padding: 12px;
-        border-radius: 8px;
-    }
-    .form-control:focus, .form-select:focus {
-        background-color: #0f172a;
-        border-color: #06b6d4;
-        color: #e2e8f0;
-        box-shadow: 0 0 0 0.2rem rgba(6, 182, 212, 0.25);
-    }
-    .form-select option {
-        background-color: #0f172a;
-        color: #e2e8f0;
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 36px;
+        color: #000; /* Warna teks dropdown */
     }
 </style>
 
-<div class="container mt-4 mb-5">
-    <div class="page-header">
-        <h1 class="mb-1"><i class="fas fa-plus-circle"></i> Add New Episode</h1>
-        <p class="mb-0 opacity-75">Create a new episode entry</p>
-    </div>
-
-    <div class="form-card">
-        <form action="{{ route('production.episodes.store') }}" method="POST">
-            @csrf
-            
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label for="tconst" class="form-label">
-                        <i class="fas fa-key"></i> Episode ID (tconst) *
-                    </label>
-                    <input type="text" 
-                           class="form-control @error('tconst') is-invalid @enderror" 
-                           id="tconst" 
-                           name="tconst" 
-                           placeholder="e.g., tt9999999"
-                           value="{{ old('tconst') }}"
-                           maxlength="10"
-                           required>
-                    @error('tconst')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-lg" style="background: var(--bg-card); border-radius: 20px;">
+                
+                <div class="card-header border-0 bg-transparent py-4 px-4">
+                    <h4 class="mb-0 fw-bold text-white">
+                        <i class="fas fa-plus-circle me-2" style="color: var(--primary-pink)"></i> Add New Episode
+                    </h4>
                 </div>
+                
+                <div class="card-body px-4 pb-4">
+                    <form action="{{ route('production.episodes.store') }}" method="POST">
+                        @csrf
+                        
+                        {{-- 1. PARENT SERIES (SUDAH DIUBAH PAKAI SELECT2) --}}
+                        <div class="mb-4">
+                            <label class="form-label">Parent Series (TV Show)</label>
+                            {{-- Perhatikan ID="seriesSearch" --}}
+                            <select class="form-control" name="parentTconst" id="seriesSearch" required>
+                                <option value="">-- Ketik Judul Serial TV --</option>
+                                {{-- Kita hapus @foreach disini karena data akan diambil via AJAX --}}
+                            </select>
+                            @error('parentTconst') <div class="text-danger mt-1">{{ $message }}</div> @enderror
+                        </div>
 
-                <div class="col-md-6 mb-3">
-                    <label for="parentTconst" class="form-label">
-                        <i class="fas fa-tv"></i> Parent Series *
-                    </label>
-                    <select class="form-select @error('parentTconst') is-invalid @enderror" 
-                            id="parentTconst" 
-                            name="parentTconst"
-                            required>
-                        <option value="">Select TV Series</option>
-                        @foreach($tvSeries as $series)
-                        <option value="{{ $series->tconst }}" 
-                                {{ old('parentTconst') == $series->tconst ? 'selected' : '' }}>
-                            {{ $series->primaryTitle }}
-                        </option>
-                        @endforeach
-                    </select>
-                    @error('parentTconst')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
+                        {{-- 2. EPISODE DETAILS (JUDUL & ID) --}}
+                        <div class="row">
+                            <div class="col-md-4 mb-4">
+                                <label class="form-label">Episode ID (tconst)</label>
+                                <input type="text" class="form-control form-control-custom @error('tconst') is-invalid @enderror" 
+                                       name="tconst" value="{{ old('tconst') }}" placeholder="tt9999999" maxlength="10" required>
+                            </div>
+                            <div class="col-md-8 mb-4">
+                                <label class="form-label">Episode Title (Judul)</label>
+                                <input type="text" class="form-control form-control-custom" 
+                                       name="primaryTitle" value="{{ old('primaryTitle') }}" placeholder="Contoh: The Pilot" required>
+                            </div>
+                        </div>
 
-            <div class="row">
-                <div class="col-md-6 mb-4">
-                    <label for="seasonNumber" class="form-label">
-                        <i class="fas fa-layer-group"></i> Season Number *
-                    </label>
-                    <input type="number" 
-                           class="form-control @error('seasonNumber') is-invalid @enderror" 
-                           id="seasonNumber" 
-                           name="seasonNumber" 
-                           placeholder="e.g., 1"
-                           value="{{ old('seasonNumber', 1) }}"
-                           min="1"
-                           required>
-                    @error('seasonNumber')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
+                        {{-- 3. SEASON, NUMBER, RUNTIME --}}
+                        <div class="row">
+                            <div class="col-md-4 mb-4">
+                                <label class="form-label">Season No.</label>
+                                <input type="number" class="form-control form-control-custom" 
+                                       name="seasonNumber" value="{{ old('seasonNumber', 1) }}" min="1" required>
+                            </div>
 
-                <div class="col-md-6 mb-4">
-                    <label for="episodeNumber" class="form-label">
-                        <i class="fas fa-list-ol"></i> Episode Number *
-                    </label>
-                    <input type="number" 
-                           class="form-control @error('episodeNumber') is-invalid @enderror" 
-                           id="episodeNumber" 
-                           name="episodeNumber" 
-                           placeholder="e.g., 1"
-                           value="{{ old('episodeNumber', 1) }}"
-                           min="1"
-                           required>
-                    @error('episodeNumber')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+                            <div class="col-md-4 mb-4">
+                                <label class="form-label">Episode No.</label>
+                                <input type="number" class="form-control form-control-custom" 
+                                       name="episodeNumber" value="{{ old('episodeNumber', 1) }}" min="1" required>
+                            </div>
+
+                            <div class="col-md-4 mb-4">
+                                <label class="form-label">Runtime (Menit)</label>
+                                <input type="number" class="form-control form-control-custom" 
+                                       name="runtimeMinutes" value="{{ old('runtimeMinutes') }}" placeholder="45">
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between pt-3">
+                            <a href="{{ route('production.episodes.index') }}" class="btn btn-outline-secondary px-4 rounded-pill">Cancel</a>
+                            <button type="submit" class="btn btn-gradient-pink px-5 rounded-pill fw-bold">Save Episode</button>
+                        </div>
+                    </form>
                 </div>
             </div>
-
-            <div class="d-flex gap-2">
-                <button type="submit" class="btn btn-info btn-lg">
-                    <i class="fas fa-save"></i> Save Episode
-                </button>
-                <a href="{{ route('production.episodes.index') }}" class="btn btn-secondary btn-lg">
-                    <i class="fas fa-times"></i> Cancel
-                </a>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
+
+{{-- SCRIPT BAGIAN BAWAH --}}
+{{-- Load jQuery & Select2 JS --}}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    // Inisialisasi Select2 pada elemen ID #seriesSearch
+    $('#seriesSearch').select2({
+        placeholder: 'Ketik judul serial (contoh: Breaking Bad)...',
+        allowClear: true,
+        width: '100%', // Biar lebar full
+        ajax: {
+            url: '{{ route("api.searchSeries") }}', // Panggil Route API
+            dataType: 'json',
+            delay: 250, // Delay sedikit biar gak spam server pas ngetik
+            data: function (params) {
+                return {
+                    q: params.term // Kirim apa yang diketik user
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: data // Tampilkan hasil dari controller
+                };
+            },
+            cache: true
+        }
+    });
+});
+</script>
+
 @endsection

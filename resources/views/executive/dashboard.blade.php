@@ -1,215 +1,164 @@
 @extends('layouts.app')
 
-@section('title', 'Executive Dashboard - Analytics')
+@section('title', 'Executive Analytics - Showfy')
 
 @section('content')
 <style>
-    body {
-        background-color: #0f172a !important;
+    /* === 1. DEFINISI WARNA (PALETTE) === */
+    :root {
+        --c-rose: #d95f8c;
+        --c-amaranth: #870339;
+        --c-onyx: #0d0d0d;
+        --c-gold: #fbbf24;
+        --text-muted: #a3a3a3;
     }
-    
+
+    /* === 2. DASHBOARD STYLES === */
     .dashboard-header {
-        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
-        color: white;
-        padding: 30px;
-        border-radius: 15px;
-        margin-bottom: 30px;
-        box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+        background: linear-gradient(135deg, var(--c-amaranth) 0%, var(--c-rose) 100%);
+        color: white; padding: 40px 30px; border-radius: 20px; margin-bottom: 40px;
+        box-shadow: 0 20px 50px rgba(135, 3, 57, 0.3); position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);
     }
-    
     .stats-card {
-        background: #1e293b;
-        border-radius: 15px;
-        padding: 25px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-        transition: transform 0.3s;
-        border-left: 5px solid;
-        height: 100%;
+        background: #141414; border-radius: 16px; padding: 25px; border: 1px solid rgba(255, 255, 255, 0.08);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); height: 100%; position: relative; overflow: hidden;
     }
+    .stats-card:hover { transform: translateY(-5px); border-color: var(--c-rose); box-shadow: 0 10px 30px rgba(217, 95, 140, 0.15); }
+    .stats-card::after { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--c-rose); opacity: 0.5; }
     
-    .stats-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 15px rgba(0,0,0,0.5);
-    }
-    
-    .stats-card.blue { border-color: #3b82f6; }
-    .stats-card.green { border-color: #10b981; }
-    .stats-card.orange { border-color: #f59e0b; }
-    .stats-card.cyan { border-color: #06b6d4; }
-    .stats-card.purple { border-color: #8b5cf6; }
-    
+    .stat-label { color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; margin-bottom: 5px; }
+    .stat-number { font-size: 2.5rem; font-weight: 800; color: white; line-height: 1.2; margin-bottom: 5px; background: linear-gradient(90deg, #fff, #ffcce0); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .stat-icon { font-size: 3rem; color: var(--c-rose); opacity: 0.15; position: absolute; right: 20px; top: 50%; transform: translateY(-50%); }
+
+    /* Chart Containers & Wrappers */
     .chart-container {
-        background: #1e293b;
-        border-radius: 15px;
-        padding: 25px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-        margin-bottom: 30px;
+        background: #141414; border-radius: 16px; padding: 20px; border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2); height: 100%; display: flex; flex-direction: column; justify-content: center;
     }
+    .chart-title { font-size: 1rem; font-weight: 700; margin-bottom: 15px; color: white; display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .chart-title i { color: var(--c-rose); background: rgba(217, 95, 140, 0.1); padding: 8px; border-radius: 8px; }
     
-    .chart-title {
-        font-size: 18px;
-        font-weight: 600;
-        margin-bottom: 20px;
-        color: #e2e8f0;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    
-    .stat-number {
-        font-size: 42px;
-        font-weight: 700;
-        margin: 10px 0;
-        color: white;
-    }
-    
-    .stat-label {
-        color: #94a3b8;
-        font-size: 12px;
-        text-transform: uppercase;
-        letter-spacing: 1.5px;
-        font-weight: 600;
-    }
-    
-    .stat-subtitle {
-        color: #64748b;
-        font-size: 13px;
-        margin-top: 5px;
-    }
-    
-    .stat-icon {
-        font-size: 45px;
-        opacity: 0.2;
-    }
-    
-    .table-dark-custom {
-        background-color: #0f172a;
-        color: #e2e8f0;
-    }
-    
-    .table-dark-custom thead {
-        background-color: #1e293b;
-        border-bottom: 2px solid #334155;
-    }
-    
-    .table-dark-custom tbody tr {
-        border-bottom: 1px solid #334155;
-    }
-    
-    .table-dark-custom tbody tr:hover {
-        background-color: #1e293b;
-    }
+    .chart-wrapper { position: relative; width: 100%; height: 300px; margin-top: auto; margin-bottom: auto; }
+
+    /* Table Styles */
+    .table-custom { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
+    .table-custom thead th { color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; padding: 0 15px 10px 15px; border: none; }
+    .table-custom tbody tr { background: rgba(255, 255, 255, 0.03); transition: 0.2s; }
+    .table-custom tbody tr:hover { background: rgba(217, 95, 140, 0.1); transform: scale(1.01); }
+    .table-custom td { padding: 15px; border: none; vertical-align: middle; color: white; }
+    .table-custom td:first-child { border-radius: 10px 0 0 10px; }
+    .table-custom td:last-child { border-radius: 0 10px 10px 0; }
+
+    .table-wrapper { max-height: 420px; overflow-y: auto; padding-right: 5px; }
+    .table-wrapper::-webkit-scrollbar { width: 4px; }
+    .table-wrapper::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+
+    .movie-link { text-decoration: none; color: white; transition: 0.3s; }
+    .movie-link:hover { color: var(--c-rose); }
 </style>
 
-<div class="container-fluid mt-4 mb-5">
-    {{-- Header --}}
+<div class="container-fluid py-4">
+    
+    {{-- HEADER --}}
     <div class="dashboard-header">
-        <h1 class="mb-2">
-            <i class="fas fa-chart-line"></i> Executive Analytics Dashboard
-        </h1>
-        <p class="mb-0 opacity-75">Welcome back, <strong>{{ Auth::user()->username }}</strong>! Here's your comprehensive analytics overview.</p>
+        <div class="position-relative z-1">
+            <h1 class="fw-bold mb-2"><i class="fas fa-chart-pie me-2"></i> Executive Overview</h1>
+            <p class="mb-0 opacity-75 fs-5">Laporan performa konten Showfy secara real-time.</p>
+        </div>
     </div>
 
-    {{-- Statistics Cards --}}
-    <div class="row g-4 mb-4">
-        <div class="col-lg-3 col-md-6">
-            <div class="stats-card blue">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div class="flex-grow-1">
-                        <div class="stat-label">Top Movies</div>
-                        <div class="stat-number" style="color: #3b82f6;">{{ $topMovies->count() }}</div>
-                        <div class="stat-subtitle">Analyzed titles</div>
-                    </div>
-                    <i class="fas fa-film stat-icon" style="color: #3b82f6;"></i>
-                </div>
+    {{-- STAT CARDS --}}
+    <div class="row g-4 mb-5">
+        <div class="col-xl-3 col-md-6">
+            <div class="stats-card">
+                <div class="stat-label">Total Movies</div>
+                <div class="stat-number">{{ count($topMovies) > 0 ? '10+' : '0' }}</div>
+                <div class="small text-muted"><i class="fas fa-arrow-up text-success me-1"></i> Data Teranalisis</div>
+                <i class="fas fa-film stat-icon"></i>
             </div>
         </div>
-        <div class="col-lg-3 col-md-6">
-            <div class="stats-card green">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div class="flex-grow-1">
-                        <div class="stat-label">Genres</div>
-                        <div class="stat-number" style="color: #10b981;">{{ $genrePopularity->count() }}</div>
-                        <div class="stat-subtitle">Total categories</div>
-                    </div>
-                    <i class="fas fa-list stat-icon" style="color: #10b981;"></i>
-                </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="stats-card">
+                <div class="stat-label">TV Shows</div>
+                <div class="stat-number">{{ count($topTVShows) > 0 ? '10+' : '0' }}</div>
+                <div class="small text-muted"><i class="fas fa-star text-warning me-1"></i> Top Rated</div>
+                <i class="fas fa-tv stat-icon"></i>
             </div>
         </div>
-        <div class="col-lg-3 col-md-6">
-            <div class="stats-card orange">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div class="flex-grow-1">
-                        <div class="stat-label">Top Actors</div>
-                        <div class="stat-number" style="color: #f59e0b;">{{ $actorProductivity->take(10)->count() }}</div>
-                        <div class="stat-subtitle">Most productive</div>
-                    </div>
-                    <i class="fas fa-users stat-icon" style="color: #f59e0b;"></i>
-                </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="stats-card">
+                <div class="stat-label">Genre Variances</div>
+                <div class="stat-number">{{ count($genrePopularity) }}</div>
+                <div class="small text-muted">Kategori Konten</div>
+                <i class="fas fa-layer-group stat-icon"></i>
             </div>
         </div>
-        <div class="col-lg-3 col-md-6">
-            <div class="stats-card purple">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div class="flex-grow-1">
-                        <div class="stat-label">Top TV Shows</div>
-                        <div class="stat-number" style="color: #8b5cf6;">{{ $topTVShows->count() }}</div>
-                        <div class="stat-subtitle">Highest rated</div>
-                    </div>
-                    <i class="fas fa-tv stat-icon" style="color: #8b5cf6;"></i>
-                </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="stats-card">
+                <div class="stat-label">Top Talents</div>
+                <div class="stat-number">{{ count($actorProductivity) }}</div>
+                <div class="small text-muted">Aktor Paling Aktif</div>
+                <i class="fas fa-user-astronaut stat-icon"></i>
             </div>
         </div>
     </div>
 
-    {{-- Row 1: Top Movies Bar Chart & Rating Trend Line Chart --}}
-    <div class="row">
-        <div class="col-lg-8 mb-4">
+    {{-- ROW 2: MAIN CHART & TABLE --}}
+    <div class="row g-4 mb-5">
+        <div class="col-lg-8">
             <div class="chart-container">
-                <div class="chart-title">
-                    <i class="fas fa-chart-bar" style="color: #3b82f6;"></i>
-                    <span>Top 10 Movies by Rating</span>
+                <div class="chart-title"><i class="fas fa-wave-square"></i> Tren Kualitas Film (Rating per Tahun)</div>
+                <div class="chart-wrapper">
+                    <canvas id="ratingTrendChart"></canvas>
                 </div>
-                <canvas id="topMoviesChart" height="80"></canvas>
             </div>
         </div>
 
-        <div class="col-lg-4 mb-4">
+        {{-- TABEL FILM (LINK FIXED) --}}
+        <div class="col-lg-4">
             <div class="chart-container">
-                <div class="chart-title">
-                    <i class="fas fa-trophy" style="color: #f59e0b;"></i>
-                    <span>Top Rated Movies</span>
-                </div>
-                <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
-                    <table class="table table-dark-custom table-hover mb-0">
-                        <thead class="sticky-top">
+                <div class="chart-title"><i class="fas fa-crown text-warning"></i> Film Terbaik (Top 10)</div>
+                <div class="table-wrapper">
+                    <table class="table-custom">
+                        <thead>
                             <tr>
-                                <th width="40">#</th>
-                                <th>Title</th>
-                                <th width="80">Rating</th>
+                                <th>#</th>
+                                <th>Judul Film</th>
+                                <th class="text-end">Rating</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($topMovies->take(10) as $index => $movie)
+                            @forelse($topMovies as $index => $movie)
                             <tr>
-                                <td class="text-center">
-                                    @if($index < 3)
-                                        <span class="badge bg-warning text-dark fw-bold">{{ $index + 1 }}</span>
-                                    @else
-                                        <span class="text-muted">{{ $index + 1 }}</span>
-                                    @endif
-                                </td>
+                                <td class="fw-bold text-muted">{{ $index + 1 }}</td>
                                 <td>
-                                    <strong class="text-white">{{ Str::limit($movie->primaryTitle, 25) }}</strong>
-                                    <br><small class="text-muted">{{ $movie->startYear }}</small>
+                                    {{-- LOGIKA LINK KUAT: Cek tconst ATAU show_id --}}
+                                    @php
+                                        // Ambil ID dari tconst, kalau gak ada coba show_id, kalau gak ada null
+                                        $movieId = $movie->tconst ?? $movie->show_id ?? null;
+                                        $title = $movie->primaryTitle ?? $movie->name ?? 'Unknown Title';
+                                    @endphp
+
+                                    @if($movieId)
+                                        <a href="{{ url('/title/' . $movieId) }}" class="fw-bold movie-link">
+                                            {{ Str::limit($title, 22) }}
+                                        </a>
+                                    @else
+                                        {{-- Fallback jika ID benar-benar tidak ada --}}
+                                        <span class="fw-bold text-white">{{ Str::limit($title, 22) }}</span>
+                                    @endif
+                                    
+                                    <div class="small" style="color: var(--c-rose)">{{ $movie->startYear ?? '-' }}</div>
                                 </td>
-                                <td class="text-center">
-                                    <span class="badge bg-warning text-dark fw-bold">
-                                        {{ number_format($movie->averageRating, 1) }} ⭐
+                                <td class="text-end">
+                                    <span class="badge bg-dark border border-warning text-warning rounded-pill px-3">
+                                        <i class="fas fa-star me-1 small"></i> {{ number_format($movie->averageRating ?? 0, 1) }}
                                     </span>
                                 </td>
                             </tr>
-                            @endforeach
+                            @empty
+                            <tr><td colspan="3" class="text-center text-muted">Data tidak tersedia</td></tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
@@ -217,269 +166,161 @@
         </div>
     </div>
 
-    {{-- Row 2: Rating Trend & Genre Popularity --}}
-    <div class="row">
-        <div class="col-lg-7 mb-4">
+    {{-- ROW 3: DETAIL CHARTS --}}
+    <div class="row g-4">
+        <div class="col-lg-4">
             <div class="chart-container">
-                <div class="chart-title">
-                    <i class="fas fa-chart-line" style="color: #06b6d4;"></i>
-                    <span>Rating Trend Per Year</span>
+                <div class="chart-title"><i class="fas fa-users"></i> Produktivitas Aktor</div>
+                <div class="chart-wrapper">
+                    <canvas id="actorChart"></canvas>
                 </div>
-                <canvas id="ratingTrendChart" height="80"></canvas>
             </div>
         </div>
-
-        <div class="col-lg-5 mb-4">
+        <div class="col-lg-4">
             <div class="chart-container">
-                <div class="chart-title">
-                    <i class="fas fa-chart-pie" style="color: #10b981;"></i>
-                    <span>Genre Popularity (Top 10)</span>
+                <div class="chart-title"><i class="fas fa-chart-pie"></i> Distribusi Genre</div>
+                <div class="chart-wrapper">
+                    <canvas id="genreChart"></canvas>
                 </div>
-                <canvas id="genreChart"></canvas>
             </div>
         </div>
-    </div>
-
-    {{-- Row 3: Actor Productivity & Top TV Shows --}}
-    <div class="row">
-        <div class="col-lg-6 mb-4">
+        {{-- TV SHOWS CHART (LINK FIXED) --}}
+        <div class="col-lg-4">
             <div class="chart-container">
-                <div class="chart-title">
-                    <i class="fas fa-user-tie" style="color: #f59e0b;"></i>
-                    <span>Top 15 Most Productive Actors</span>
+                <div class="chart-title"><i class="fas fa-tv"></i> Top TV Series <small class="ms-2 text-muted fw-normal fs-6">(Klik Grafik)</small></div>
+                <div class="chart-wrapper">
+                    <canvas id="tvShowsChart"></canvas>
                 </div>
-                <canvas id="actorChart" height="100"></canvas>
-            </div>
-        </div>
-
-        <div class="col-lg-6 mb-4">
-            <div class="chart-container">
-                <div class="chart-title">
-                    <i class="fas fa-tv" style="color: #8b5cf6;"></i>
-                    <span>Top 10 TV Shows</span>
-                </div>
-                <canvas id="tvShowsChart" height="100"></canvas>
             </div>
         </div>
     </div>
 </div>
 
-{{-- Chart.js Library --}}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-
 <script>
-// Data dari Laravel
-const topMovies = @json($topMovies);
-const genrePopularity = @json($genrePopularity->take(10));
-const actorProductivity = @json($actorProductivity->take(15));
-const ratingTrend = @json($ratingTrend);
-const topTVShows = @json($topTVShows);
+    // 1. DATA PREPARATION
+    const topMovies = @json($topMovies);
+    const genrePopularity = @json($genrePopularity);
+    const actorProductivity = @json($actorProductivity);
+    const ratingTrend = @json($ratingTrend);
+    const topTVShows = @json($topTVShows); 
 
-// Color palette
-const colors = {
-    primary: '#3b82f6',
-    success: '#10b981',
-    warning: '#f59e0b',
-    info: '#06b6d4',
-    danger: '#ef4444',
-    purple: '#8b5cf6'
-};
+    // 2. THEME SETUP
+    const theme = {
+        rose: '#d95f8c', amaranth: '#870339', text: '#a3a3a3', grid: '#333333',
+        palette: ['#65022a', '#870339', '#aa4465', '#ce306fff', '#d95f8c', '#f895bcff', '#fbbf24', '#ffd875ff']
+    };
+    Chart.defaults.color = theme.text;
+    Chart.defaults.borderColor = theme.grid;
+    Chart.defaults.font.family = "'Outfit', sans-serif";
 
-// Chart default options
-Chart.defaults.color = '#94a3b8';
-Chart.defaults.borderColor = '#334155';
+    // 3. CHART CONFIGURATION
 
-// 1. Top Movies Bar Chart
-if (topMovies.length > 0) {
-    const topMoviesCtx = document.getElementById('topMoviesChart').getContext('2d');
-    new Chart(topMoviesCtx, {
-        type: 'bar',
-        data: {
-            labels: topMovies.map(m => m.primaryTitle.length > 20 ? m.primaryTitle.substring(0, 20) + '...' : m.primaryTitle),
-            datasets: [{
-                label: 'Rating',  
-                data: topMovies.map(m => parseFloat(m.averageRating)),
-                backgroundColor: colors.primary,
-                borderRadius: 8,
-                barThickness: 35
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    backgroundColor: '#1e293b',
-                    callbacks: {
-                        label: (context) => 'Rating: ' + context.parsed.y.toFixed(1) + ' ⭐'
+    // A. TREND CHART (Line) - Filter Tahun > 2000
+    if(ratingTrend.length > 0) {
+        const recentTrend = ratingTrend.filter(r => parseInt(r.startYear) >= 2000); 
+
+        new Chart(document.getElementById('ratingTrendChart'), {
+            type: 'line',
+            data: {
+                labels: recentTrend.map(r => r.startYear),
+                datasets: [{
+                    label: 'Rata-rata Rating',
+                    data: recentTrend.map(r => r.avg_rating),
+                    borderColor: theme.rose,
+                    backgroundColor: (context) => {
+                        const ctx = context.chart.ctx;
+                        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                        gradient.addColorStop(0, 'rgba(217, 95, 140, 0.5)');
+                        gradient.addColorStop(1, 'rgba(217, 95, 140, 0)');
+                        return gradient;
+                    },
+                    fill: true, tension: 0.4, borderWidth: 3, pointRadius: 0, pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: false, min: 5, max: 10 }, x: { grid: { display: false } } }
+            }
+        });
+    }
+
+    // B. ACTOR (Bar)
+    if(actorProductivity.length > 0) {
+        new Chart(document.getElementById('actorChart'), {
+            type: 'bar',
+            data: {
+                labels: actorProductivity.slice(0, 10).map(a => a.primaryName.substring(0, 15)), 
+                datasets: [{
+                    label: 'Jumlah Judul',
+                    data: actorProductivity.slice(0, 10).map(a => a.total_titles),
+                    backgroundColor: theme.amaranth, borderRadius: 4, barThickness: 15
+                }]
+            },
+            options: {
+                indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { x: { display: false }, y: { grid: { display: false }, ticks: { color: 'white' } } }
+            }
+        });
+    }
+
+    // C. GENRE (Doughnut)
+    if(genrePopularity.length > 0) {
+        new Chart(document.getElementById('genreChart'), {
+            type: 'doughnut',
+            data: {
+                labels: genrePopularity.slice(0, 8).map(g => g.genre_name),
+                datasets: [{
+                    data: genrePopularity.slice(0, 8).map(g => g.total_titles),
+                    backgroundColor: theme.palette, borderWidth: 0, hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, usePointStyle: true, padding: 20 } } },
+                cutout: '70%'
+            }
+        });
+    }
+
+    // D. TV SHOWS (Vertical Bar) - FIX LINK CLICK
+    if(topTVShows.length > 0) {
+        const tvChart = new Chart(document.getElementById('tvShowsChart'), {
+            type: 'bar',
+            data: {
+                // Fix: Pakai 'name' dan 'vote_average'
+                labels: topTVShows.slice(0, 8).map(t => t.name ? t.name.substring(0, 10) + '..' : 'Unknown'),
+                datasets: [{
+                    label: 'Rating',
+                    data: topTVShows.slice(0, 8).map(t => t.vote_average),
+                    backgroundColor: theme.rose, borderRadius: 6, barThickness: 20
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true, max: 10, grid: { color: '#333' } }, x: { grid: { display: false } } },
+                // Event Click yang Lebih Aman
+                onClick: (e) => {
+                    const canvasPosition = Chart.helpers.getRelativePosition(e, tvChart);
+                    const dataX = tvChart.scales.x.getValueForPixel(canvasPosition.x);
+                    
+                    if (dataX >= 0 && dataX < topTVShows.length) {
+                        const show = topTVShows[dataX];
+                        // Cek apakah punya tconst ATAU show_id
+                        const id = show.tconst || show.show_id;
+                        if(id) { 
+                            window.location.href = "/title/" + id; 
+                        }
                     }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 10,
-                    ticks: { color: '#94a3b8' },
-                    grid: { color: '#334155' }
                 },
-                x: {
-                    ticks: { color: '#94a3b8', maxRotation: 45, minRotation: 45 },
-                    grid: { display: false }
+                onHover: (event, chartElement) => {
+                    event.native.target.style.cursor = chartElement[0] ? 'pointer' : 'default';
                 }
             }
-        }
-    });
-}
-
-// 2. Rating Trend Line Chart
-if (ratingTrend.length > 0) {
-    const ratingTrendCtx = document.getElementById('ratingTrendChart').getContext('2d');
-    new Chart(ratingTrendCtx, {
-        type: 'line',
-        data: {
-            labels: ratingTrend.map(r => r.startYear),
-            datasets: [{
-                label: 'Average Rating',
-                data: ratingTrend.map(r => parseFloat(r.avg_rating)),
-                borderColor: colors.info,
-                backgroundColor: 'rgba(6, 182, 212, 0.1)',
-                fill: true,
-                tension: 0.4,
-                borderWidth: 3,
-                pointRadius: 3,
-                pointBackgroundColor: colors.info
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { labels: { color: '#e2e8f0' } },
-                tooltip: { backgroundColor: '#1e293b' }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 10,
-                    ticks: { color: '#94a3b8' },
-                    grid: { color: '#334155' }
-                },
-                x: {
-                    ticks: { color: '#94a3b8', maxRotation: 45 },
-                    grid: { display: false }
-                }
-            }
-        }
-    });
-}
-
-// 3. Genre Pie Chart
-if (genrePopularity.length > 0) {
-    const genreCtx = document.getElementById('genreChart').getContext('2d');
-    new Chart(genreCtx, {
-        type: 'doughnut',
-        data: {
-            labels: genrePopularity.map(g => g.genre_name),
-            datasets: [{
-                data: genrePopularity.map(g => parseInt(g.total_titles)),
-                backgroundColor: [
-                    colors.primary, colors.success, colors.warning, colors.info, 
-                    colors.danger, colors.purple, '#ec4899', '#f59e0b', '#10b981', '#3b82f6'
-                ],
-                borderWidth: 3,
-                borderColor: '#1e293b'
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: { color: '#e2e8f0', padding: 10, font: { size: 11 } }
-                },
-                tooltip: { backgroundColor: '#1e293b' }
-            }
-        }
-    });
-}
-
-// 4. Actor Productivity Horizontal Bar
-if (actorProductivity.length > 0) {
-    const actorCtx = document.getElementById('actorChart').getContext('2d');
-    new Chart(actorCtx, {
-        type: 'bar',
-        data: {
-            labels: actorProductivity.map(a => a.primaryName.length > 25 ? a.primaryName.substring(0, 25) + '...' : a.primaryName),
-            datasets: [{
-                label: 'Total Titles',
-                data: actorProductivity.map(a => parseInt(a.total_titles)),
-                backgroundColor: colors.warning,
-                borderRadius: 8,
-                barThickness: 25
-            }]
-        },
-        options: {
-            indexAxis: 'y',
-            responsive: true,
-            plugins: {
-                legend: { display: false },
-                tooltip: { backgroundColor: '#1e293b' }
-            },
-            scales: {
-                x: {
-                    beginAtZero: true,
-                    ticks: { color: '#94a3b8' },
-                    grid: { color: '#334155' }
-                },
-                y: {
-                    ticks: { color: '#94a3b8', font: { size: 11 } },
-                    grid: { display: false }
-                }
-            }
-        }
-    });
-}
-
-// 5. Top TV Shows Bar Chart
-if (topTVShows.length > 0) {
-    const tvShowsCtx = document.getElementById('tvShowsChart').getContext('2d');
-    new Chart(tvShowsCtx, {
-        type: 'bar',
-        data: {
-            labels: topTVShows.map(tv => tv.name.length > 20 ? tv.name.substring(0, 20) + '...' : tv.name),
-            datasets: [{
-                label: 'Vote Average',
-                data: topTVShows.map(tv => parseFloat(tv.vote_average)),
-                backgroundColor: colors.purple,
-                borderRadius: 8,
-                barThickness: 30
-            }]
-        },
-        options: {
-            indexAxis: 'y',
-            responsive: true,
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    backgroundColor: '#1e293b',
-                    callbacks: {
-                        label: (context) => 'Rating: ' + context.parsed.x.toFixed(1) + ' ⭐'
-                    }
-                }
-            },
-            scales: {
-                x: {
-                    beginAtZero: true,
-                    max: 10,
-                    ticks: { color: '#94a3b8' },
-                    grid: { color: '#334155' }
-                },
-                y: {
-                    ticks: { color: '#94a3b8', font: { size: 11 } },
-                    grid: { display: false }
-                }
-            }
-        }
-    });
-}
+        });
+    }
 </script>
-@endsection 
+@endsection

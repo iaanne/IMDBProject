@@ -4,112 +4,147 @@
 
 @section('content')
 <style>
-    body { background-color: #0f172a !important; }
-    .page-header {
-        background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+    /* === THEME CONFIGURATION (SHOWFY STYLE) === */
+    :root {
+        --bg-main: #0d0d0d;
+        --bg-card: #141414;
+        --primary-pink: #d95f8c;
+        --primary-red: #870339;
+        --border-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    body { background-color: var(--bg-main) !important; color: white !important; }
+
+    .form-label { color: #a3a3a3; font-size: 0.9rem; margin-bottom: 8px; }
+    
+    /* Custom Input Style */
+    .form-control-custom {
+        background-color: #0d0d0d;
+        border: 1px solid var(--border-color);
         color: white;
-        padding: 25px 30px;
-        border-radius: 15px;
-        margin-bottom: 25px;
-        box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3);
+        padding: 12px 15px;
+        border-radius: 10px;
     }
-    .form-card {
-        background: #1e293b;
-        border-radius: 15px;
-        padding: 30px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    
+    .form-control-custom:focus {
+        background-color: #000;
+        border-color: var(--primary-pink);
+        box-shadow: 0 0 10px rgba(217, 95, 140, 0.2);
+        color: white;
+        outline: none;
     }
-    .form-label { color: #e2e8f0; font-weight: 600; margin-bottom: 8px; }
-    .form-control {
-        background-color: #0f172a;
-        border: 1px solid #334155;
-        color: #e2e8f0;
-        padding: 12px;
-        border-radius: 8px;
+
+    /* Style khusus Readonly (Biar kelihatan mati tapi tetap estetik) */
+    .form-control-custom:disabled, .form-control-custom:read-only {
+        background-color: #1a1a1a;
+        border-color: #333;
+        color: #777;
+        cursor: not-allowed;
+        font-style: italic;
     }
-    .form-control:focus {
-        background-color: #0f172a;
-        border-color: #f59e0b;
-        color: #e2e8f0;
-        box-shadow: 0 0 0 0.2rem rgba(245, 158, 11, 0.25);
+
+    /* Tombol Gradient Pink */
+    .btn-gradient-pink {
+        background: linear-gradient(135deg, var(--primary-red), var(--primary-pink));
+        color: white;
+        border: none;
+        box-shadow: 0 4px 15px rgba(135, 3, 57, 0.3);
+        transition: 0.3s;
+    }
+    
+    .btn-gradient-pink:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(217, 95, 140, 0.4);
+        color: white;
     }
 </style>
 
-<div class="container mt-4 mb-5">
-    <div class="page-header">
-        <h1 class="mb-1"><i class="fas fa-edit"></i> Edit Episode</h1>
-        <p class="mb-0 opacity-75">Update episode information</p>
-    </div>
-
-    <div class="form-card">
-        <form action="{{ route('production.episodes.update', $episode->tconst) }}" method="POST">
-            @csrf
-            @method('PUT')
-            
-            <div class="mb-3">
-                <label class="form-label">
-                    <i class="fas fa-key"></i> Episode ID
-                </label>
-                <input type="text" 
-                       class="form-control" 
-                       value="{{ $episode->tconst }}"
-                       disabled>
-                <small class="text-muted">ID cannot be changed</small>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">
-                    <i class="fas fa-film"></i> Episode Title
-                </label>
-                <input type="text" 
-                       class="form-control" 
-                       value="{{ $episode->episode_title ?? 'Untitled' }}"
-                       disabled>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6 mb-4">
-                    <label for="seasonNumber" class="form-label">
-                        <i class="fas fa-layer-group"></i> Season Number *
-                    </label>
-                    <input type="number" 
-                           class="form-control @error('seasonNumber') is-invalid @enderror" 
-                           id="seasonNumber" 
-                           name="seasonNumber" 
-                           value="{{ old('seasonNumber', $episode->seasonNumber) }}"
-                           min="1"
-                           required>
-                    @error('seasonNumber')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-lg" style="background: var(--bg-card); border-radius: 20px;">
+                
+                {{-- HEADER --}}
+                <div class="card-header border-0 bg-transparent py-4 px-4">
+                    <h4 class="mb-0 fw-bold text-white">
+                        <i class="fas fa-edit me-2" style="color: var(--primary-pink)"></i> Edit Episode
+                    </h4>
                 </div>
+                
+                {{-- BODY --}}
+                <div class="card-body px-4 pb-4">
+                    <form action="{{ route('production.episodes.update', $episode->tconst) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        
+                        {{-- 1. INFO EPISODE (READ ONLY) --}}
+                        {{-- GANTI INPUT TITLE YANG SEBELUMNYA READONLY DENGAN INI: --}}
+<div class="col-md-8 mb-4">
+    <label class="form-label">Episode Title</label>
+    <input type="text" 
+           class="form-control form-control-custom @error('primaryTitle') is-invalid @enderror" 
+           name="primaryTitle" 
+           value="{{ old('primaryTitle', $episode->episode_title) }}" 
+           required> {{-- SEKARANG BISA DIEDIT --}}
+    @error('primaryTitle') <div class="invalid-feedback">{{ $message }}</div> @enderror
+</div>
 
-                <div class="col-md-6 mb-4">
-                    <label for="episodeNumber" class="form-label">
-                        <i class="fas fa-list-ol"></i> Episode Number *
-                    </label>
-                    <input type="number" 
-                           class="form-control @error('episodeNumber') is-invalid @enderror" 
-                           id="episodeNumber" 
-                           name="episodeNumber" 
-                           value="{{ old('episodeNumber', $episode->episodeNumber) }}"
-                           min="1"
-                           required>
-                    @error('episodeNumber')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+{{-- Tambahkan juga Input Runtime di bawahnya jika mau --}}
+
+                            <div class="col-md-8 mb-4">
+                                <label class="form-label">Episode Title</label>
+                                <input type="text" 
+                                       class="form-control form-control-custom" 
+                                       value="{{ $episode->episode_title ?? 'Untitled' }}" 
+                                       readonly>
+                                <div class="form-text text-muted small mt-1">Judul diedit via menu Movies/Titles.</div>
+                            </div>
+                        </div>
+
+                        {{-- 2. SEASON & NOMOR EPISODE (EDITABLE) --}}
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label for="seasonNumber" class="form-label">Season Number</label>
+                                <input type="number" 
+                                       class="form-control form-control-custom @error('seasonNumber') is-invalid @enderror" 
+                                       id="seasonNumber" 
+                                       name="seasonNumber" 
+                                       value="{{ old('seasonNumber', $episode->seasonNumber) }}"
+                                       min="1"
+                                       required>
+                                @error('seasonNumber')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="col-md-6 mb-4">
+                                <label for="episodeNumber" class="form-label">Episode Number</label>
+                                <input type="number" 
+                                       class="form-control form-control-custom @error('episodeNumber') is-invalid @enderror" 
+                                       id="episodeNumber" 
+                                       name="episodeNumber" 
+                                       value="{{ old('episodeNumber', $episode->episodeNumber) }}"
+                                       min="1"
+                                       required>
+                                @error('episodeNumber')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        {{-- TOMBOL AKSI --}}
+                        <div class="d-flex justify-content-between pt-3">
+                            <a href="{{ route('production.episodes.index') }}" class="btn btn-outline-secondary px-4 rounded-pill">
+                                Cancel
+                            </a>
+                            <button type="submit" class="btn btn-gradient-pink px-5 rounded-pill fw-bold">
+                                Update Episode <i class="fas fa-save ms-2"></i>
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
-
-            <div class="d-flex gap-2">
-                <button type="submit" class="btn btn-warning btn-lg">
-                    <i class="fas fa-save"></i> Update Episode
-                </button>
-                <a href="{{ route('production.episodes.index') }}" class="btn btn-secondary btn-lg">
-                    <i class="fas fa-times"></i> Cancel
-                </a>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 @endsection

@@ -10,6 +10,8 @@ use App\Http\Controllers\TvController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ExecutiveController;
 use App\Http\Controllers\ProductionController;
+use App\Http\Controllers\WatchlistController;
+use App\Http\Controllers\RegisterController;
 
 // HOME PAGE — gunakan HomeController saja!
 Route::get('/', [HomeController::class, 'home'])->name('home');
@@ -126,3 +128,26 @@ Route::middleware(['auth'])->prefix('production')->name('production.')->group(fu
 Route::get('/cek-file', function () {
     return view('production.movies.index');
 });
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/watchlist/toggle', [WatchlistController::class, 'toggle'])->name('watchlist.toggle');
+});
+
+// Route untuk submit form register
+Route::post('/register', [RegisterController::class, 'register'])->name('register.submit');
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/watchlist/toggle', [WatchlistController::class, 'toggle'])->name('watchlist.toggle');
+    
+    // TAMBAHKAN INI: Route untuk melihat halaman watchlist
+    Route::get('/my-watchlist', [WatchlistController::class, 'index'])->name('watchlist.index');
+});
+
+// Episodes Routes
+Route::get('/episodes', [ProductionController::class, 'indexEpisodes'])->name('production.episodes.index');
+Route::get('/episodes/create', [ProductionController::class, 'createEpisode'])->name('production.episodes.create');
+Route::post('/episodes', [ProductionController::class, 'storeEpisode'])->name('production.episodes.store');
+Route::get('/episodes/{tconst}/edit', [ProductionController::class, 'editEpisode'])->name('production.episodes.edit');
+Route::put('/episodes/{tconst}', [ProductionController::class, 'updateEpisode'])->name('production.episodes.update');
+// Di routes/web.php
+Route::get('/api/search-series', [App\Http\Controllers\ProductionController::class, 'searchSeries'])->name('api.searchSeries');
