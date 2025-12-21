@@ -6,18 +6,38 @@ use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
-    public function home()
+   public function home()
     {
-        // 1. Film untuk Hero Preview (hanya satu)
+        // 1. Featured
         $featuredMovieData = DB::select('EXEC sp_GetFeaturedMovie');
-        $featuredMovie = $featuredMovieData[0] ?? null; // Ambil baris pertama atau null
+        $featuredMovie = $featuredMovieData[0] ?? null;
 
-        // 2. Film Terpopuler (Top 10)
+        // 2. Top 10
         $topMovies = DB::select('EXEC sp_PopularMovies @top = 10');
 
-        // 3. Film Rekomendasi
-        $recommendedMovies = DB::select('EXEC sp_GetRecommendedMovies @top = 12');
+        // 3. Rekomendasi
+        $recommended = DB::select('EXEC sp_GetRecommended @top = 12');
 
-        return view('home', compact('featuredMovie', 'topMovies', 'recommendedMovies'));
+        // 4. === (BARU) SEASONAL CONTENT ===
+        $seasonalContent = DB::select('EXEC sp_GetSeasonalContent @top = 12');
+
+        // Pastikan tulisan 'Action', 'Romance' ini ada di kolom genre_name tabel dim_genre kamu
+        $actionMovies    = DB::select("EXEC sp_GetMoviesByGenre @GenreName = 'Action'");
+        $ComedyMovies    = DB::select("EXEC sp_GetMoviesByGenre @GenreName = 'Comedy'");
+        $familyMovies    = DB::select("EXEC sp_GetMoviesByGenre @GenreName = 'Family'");
+        $animationMovies = DB::select("EXEC sp_GetMoviesByGenre @GenreName = 'Animation'");
+        $romanceMovies   = DB::select("EXEC sp_GetMoviesByGenre @GenreName = 'Romance'");
+
+        
+        // Khusus Kids, kita pinjam genre Family lagi tapi diacak ulang
+        $kidsMovies      = DB::select("EXEC sp_GetMoviesByGenre @GenreName = 'Family'"); 
+
+
+        return view('home', compact('featuredMovie', 'topMovies', 'recommended', 'seasonalContent', 'actionMovies',
+            'ComedyMovies',
+            'familyMovies',
+            'animationMovies',
+            'kidsMovies', 
+            'romanceMovies',));
     }
 }

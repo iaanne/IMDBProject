@@ -269,9 +269,14 @@
         @forelse ($topMovies as $movie)
             <a href="{{ route('titles.show', $movie->tconst) }}" class="movie-card">
                 <div class="movie-card-image">
-                    {{-- Placeholder Icon --}}
-                    <i class="fas fa-film"></i>
-                </div>
+        {{-- GANTI ICON DENGAN IMG INI --}}
+        <img src="https://via.placeholder.com/300x450?text=Loading..." 
+             class="tmdb-poster" 
+             alt="{{ $movie->primaryTitle }}"
+             data-id="{{ $movie->tconst }}" 
+             data-type="movie"
+             style="width: 100%; height: 100%; object-fit: cover;">
+    </div>
                 <div class="movie-card-content">
                     <h5 class="movie-title">{{ Str::limit($movie->primaryTitle, 40) }}</h5>
                     <div class="movie-meta">
@@ -300,21 +305,27 @@
     </div>
 
     <div class="movies-grid">
-        @forelse ($recommendedMovies as $movie)
-            <a href="{{ route('titles.show', $movie->tconst) }}" class="movie-card">
+        @forelse ($recommended as $rekomen)
+            <a href="{{ route('titles.show', $rekomen->tconst) }}" class="movie-card">
                 <div class="movie-card-image">
-                    <i class="fas fa-ticket-alt"></i>
-                </div>
+        {{-- GANTI ICON DENGAN IMG INI --}}
+        <img src="https://via.placeholder.com/300x450?text=Loading..." 
+             class="tmdb-poster" 
+             alt="{{ $rekomen->primaryTitle }}"
+             data-id="{{ $rekomen->tconst }}" 
+             data-type="movie"
+             style="width: 100%; height: 100%; object-fit: cover;">
+    </div>
                 <div class="movie-card-content">
-                    <h5 class="movie-title">{{ Str::limit($movie->primaryTitle, 40) }}</h5>
+                    <h5 class="movie-title">{{ Str::limit($rekomen->primaryTitle, 40) }}</h5>
                     <div class="movie-meta">
                         <span>
                             <i class="fas fa-calendar me-1 text-pink" style="opacity: 0.7"></i>
-                            {{ $movie->startYear ?? 'N/A' }}
+                            {{ $rekomen->startYear ?? 'N/A' }}
                         </span>
                         <span style="color: white; font-weight: 600;">
                             <i class="fas fa-star text-pink me-1"></i> 
-                            {{ number_format($movie->averageRating, 1) }}
+                            {{ number_format($rekomen->averageRating, 1) }}
                         </span>
                     </div>
                 </div>
@@ -327,5 +338,314 @@
         @endforelse
     </div>
 
+
+    {{-- ... (Setelah Section Rekomendasi) ... --}}
+
+    {{-- 4. DAFTAR MUSIM INI (NEW THIS SEASON) --}}
+    <div class="section-header mt-5">
+        <h2 class="section-title">Rekomendasi Musim Ini</h2>
+    </div>
+
+    <div class="movies-grid">
+        @forelse ($seasonalContent as $item)
+            <a href="{{ route('titles.show', $item->tconst) }}" class="movie-card">
+                <div class="movie-card-image">
+                    {{-- Script JS kita otomatis baca data-type ini --}}
+                    <img src="https://via.placeholder.com/300x450?text=Loading..." 
+                         class="tmdb-poster" 
+                         alt="{{ $item->primaryTitle }}"
+                         data-id="{{ $item->tconst }}" 
+                         data-type="{{ $item->titleType == 'movie' ? 'movie' : 'tv' }}"
+                         style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div class="movie-card-content">
+                    <h5 class="movie-title">{{ Str::limit($item->primaryTitle, 40) }}</h5>
+                    <div class="movie-meta">
+                        <span>
+                             {{-- Ikon beda buat Movie vs TV --}}
+                             @if($item->titleType == 'movie')
+                                <i class="fas fa-film me-1 text-pink" style="opacity: 0.7"></i>
+                             @else
+                                <i class="fas fa-tv me-1 text-pink" style="opacity: 0.7"></i>
+                             @endif
+                            {{ $item->startYear ?? 'N/A' }}
+                        </span>
+                        <span style="color: white; font-weight: 600;">
+                            <i class="fas fa-star text-pink me-1"></i> 
+                            {{ number_format($item->averageRating, 1) }}
+                        </span>
+                    </div>
+                </div>
+            </a>
+        @empty
+            <div class="col-12 text-center py-5 text-muted">
+                <p>Belum ada data musim ini.</p>
+            </div>
+        @endforelse
+    </div>
+
+    {{-- ========================================================= --}}
+    {{-- 1. GENRE: ACTION --}}
+    {{-- ========================================================= --}}
+    <div class="section-header mt-5">
+        <h2 class="section-title">💥 Action Packed</h2>
+    </div>
+
+    <div class="movies-grid">
+        @forelse ($actionMovies as $item)
+            <a href="{{ route('titles.show', $item->tconst) }}" class="movie-card">
+                <div class="movie-card-image">
+                    <img src="https://via.placeholder.com/300x450?text=Loading..." 
+                         class="tmdb-poster" 
+                         alt="{{ $item->primaryTitle }}"
+                         data-id="{{ $item->tconst }}" 
+                         data-type="movie"
+                         style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div class="movie-card-content">
+                    <h5 class="movie-title">{{ Str::limit($item->primaryTitle, 40) }}</h5>
+                    <div class="movie-meta">
+                        <span>
+                            <i class="fas fa-calendar-alt me-1 text-pink" style="opacity: 0.7"></i>
+                            {{ $item->startYear ?? 'N/A' }}
+                        </span>
+                        <span style="color: white; font-weight: 600;">
+                            <i class="fas fa-star text-pink me-1"></i> 
+                            {{ number_format($item->averageRating, 1) }}
+                        </span>
+                    </div>
+                </div>
+            </a>
+        @empty
+            <div class="col-12 text-center py-5 text-muted">Belum ada data Action.</div>
+        @endforelse
+    </div>
+    {{-- ========================================================= --}}
+    {{-- 3. GENRE: COMEDY --}}
+    {{-- ========================================================= --}}
+    <div class="section-header mt-5">
+        <h2 class="section-title">😂 Comedy Central</h2>
+    </div>
+
+    <div class="movies-grid">
+        @forelse ($ComedyMovies as $item)
+            <a href="{{ route('titles.show', $item->tconst) }}" class="movie-card">
+                <div class="movie-card-image">
+                    <img src="https://via.placeholder.com/300x450?text=Loading..." 
+                         class="tmdb-poster" 
+                         alt="{{ $item->primaryTitle }}"
+                         data-id="{{ $item->tconst }}" 
+                         data-type="movie"
+                         style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div class="movie-card-content">
+                    <h5 class="movie-title">{{ Str::limit($item->primaryTitle, 40) }}</h5>
+                    <div class="movie-meta">
+                        <span>
+                            <i class="fas fa-calendar-alt me-1 text-pink" style="opacity: 0.7"></i>
+                            {{ $item->startYear ?? 'N/A' }}
+                        </span>
+                        <span style="color: white; font-weight: 600;">
+                            <i class="fas fa-star text-pink me-1"></i> 
+                            {{ number_format($item->averageRating, 1) }}
+                        </span>
+                    </div>
+                </div>
+            </a>
+        @empty
+            <div class="col-12 text-center py-5 text-muted">Belum ada data Comedy.</div>
+        @endforelse
+    </div>
+
+    {{-- ========================================================= --}}
+    {{-- 3. GENRE: FAMILY --}}
+    {{-- ========================================================= --}}
+    <div class="section-header mt-5">
+        <h2 class="section-title">👨‍👩‍👧‍👦 Tontonan Keluarga</h2>
+    </div>
+
+    <div class="movies-grid">
+        @forelse ($familyMovies as $item)
+            <a href="{{ route('titles.show', $item->tconst) }}" class="movie-card">
+                <div class="movie-card-image">
+                    <img src="https://via.placeholder.com/300x450?text=Loading..." 
+                         class="tmdb-poster" 
+                         alt="{{ $item->primaryTitle }}"
+                         data-id="{{ $item->tconst }}" 
+                         data-type="movie"
+                         style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div class="movie-card-content">
+                    <h5 class="movie-title">{{ Str::limit($item->primaryTitle, 40) }}</h5>
+                    <div class="movie-meta">
+                        <span>{{ $item->startYear ?? 'N/A' }}</span>
+                        <span style="color: white; font-weight: 600;">
+                            <i class="fas fa-star text-pink me-1"></i> {{ number_format($item->averageRating, 1) }}
+                        </span>
+                    </div>
+                </div>
+            </a>
+        @empty
+            <div class="col-12 text-center py-5 text-muted">Belum ada data Family.</div>
+        @endforelse
+    </div>
+
+
+    {{-- ========================================================= --}}
+    {{-- 4. GENRE: ANIMATION --}}
+    {{-- ========================================================= --}}
+    <div class="section-header mt-5">
+        <h2 class="section-title">🎨 Dunia Animasi</h2>
+    </div>
+
+    <div class="movies-grid">
+        @forelse ($animationMovies as $item)
+            <a href="{{ route('titles.show', $item->tconst) }}" class="movie-card">
+                <div class="movie-card-image">
+                    <img src="https://via.placeholder.com/300x450?text=Loading..." 
+                         class="tmdb-poster" 
+                         alt="{{ $item->primaryTitle }}"
+                         data-id="{{ $item->tconst }}" 
+                         data-type="movie"
+                         style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div class="movie-card-content">
+                    <h5 class="movie-title">{{ Str::limit($item->primaryTitle, 40) }}</h5>
+                    <div class="movie-meta">
+                        <span>{{ $item->startYear ?? 'N/A' }}</span>
+                        <span style="color: white; font-weight: 600;">
+                            <i class="fas fa-star text-pink me-1"></i> {{ number_format($item->averageRating, 1) }}
+                        </span>
+                    </div>
+                </div>
+            </a>
+        @empty
+            <div class="col-12 text-center py-5 text-muted">Belum ada data Animasi.</div>
+        @endforelse
+    </div>
+
+
+    {{-- ========================================================= --}}
+    {{-- 5. GENRE: KIDS --}}
+    {{-- ========================================================= --}}
+    <div class="section-header mt-5">
+        <h2 class="section-title">🧸 Kids Corner</h2>
+    </div>
+
+    <div class="movies-grid">
+        @forelse ($kidsMovies as $item)
+            <a href="{{ route('titles.show', $item->tconst) }}" class="movie-card">
+                <div class="movie-card-image">
+                    <img src="https://via.placeholder.com/300x450?text=Loading..." 
+                         class="tmdb-poster" 
+                         alt="{{ $item->primaryTitle }}"
+                         data-id="{{ $item->tconst }}" 
+                         data-type="movie"
+                         style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div class="movie-card-content">
+                    <h5 class="movie-title">{{ Str::limit($item->primaryTitle, 40) }}</h5>
+                    <div class="movie-meta">
+                        <span>{{ $item->startYear ?? 'N/A' }}</span>
+                        <span style="color: white; font-weight: 600;">
+                            <i class="fas fa-star text-pink me-1"></i> {{ number_format($item->averageRating, 1) }}
+                        </span>
+                    </div>
+                </div>
+            </a>
+        @empty
+            <div class="col-12 text-center py-5 text-muted">Belum ada data Anak-anak.</div>
+        @endforelse
+    </div>
+    {{-- ========================================================= --}}
+    {{-- 2. GENRE: ROMANCE --}}
+    {{-- ========================================================= --}}
+    <div class="section-header mt-5">
+        <h2 class="section-title">💖 Romance & Love</h2>
+    </div>
+
+    <div class="movies-grid">
+        @forelse ($romanceMovies as $item)
+            <a href="{{ route('titles.show', $item->tconst) }}" class="movie-card">
+                <div class="movie-card-image">
+                    <img src="https://via.placeholder.com/300x450?text=Loading..." 
+                         class="tmdb-poster" 
+                         alt="{{ $item->primaryTitle }}"
+                         data-id="{{ $item->tconst }}" 
+                         data-type="movie"
+                         style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div class="movie-card-content">
+                    <h5 class="movie-title">{{ Str::limit($item->primaryTitle, 40) }}</h5>
+                    <div class="movie-meta">
+                        <span>{{ $item->startYear ?? 'N/A' }}</span>
+                        <span style="color: white; font-weight: 600;">
+                            <i class="fas fa-star text-pink me-1"></i> {{ number_format($item->averageRating, 1) }}
+                        </span>
+                    </div>
+                </div>
+            </a>
+        @empty
+            <div class="col-12 text-center py-5 text-muted">Belum ada data Romance.</div>
+        @endforelse
+    </div>
+
+
 </div>
 @endsection
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    // === API KEY TMDB (Punya kamu) ===
+    const apiKey = '8e8ed515442c24035b99b36d4bbb8e6d'; 
+    // =================================
+
+    $('.tmdb-poster').each(function() {
+        var imgElement = $(this);
+        var id = imgElement.data('id');
+        
+        if (!id) return;
+
+        // URL Find by External ID (IMDb ID)
+        var url = `https://api.themoviedb.org/3/find/${id}?api_key=${apiKey}&external_source=imdb_id`;
+
+        $.ajax({
+            url: url,
+            method: 'GET',
+            success: function(data) {
+                var imagePath = null;
+                
+                // --- PERBAIKAN LOGIKA DI SINI ---
+
+                // 1. Cek Laci MOVIE (Poster)
+                if (data.movie_results && data.movie_results.length > 0 && data.movie_results[0].poster_path) {
+                    imagePath = data.movie_results[0].poster_path;
+                }
+                // 2. Cek Laci TV SHOW (Poster)
+                else if (data.tv_results && data.tv_results.length > 0 && data.tv_results[0].poster_path) {
+                    imagePath = data.tv_results[0].poster_path;
+                }
+                // 3. Cek Laci EPISODE (Still/Thumbnail) -> INI YANG KURANG TADI
+                else if (data.tv_episode_results && data.tv_episode_results.length > 0 && data.tv_episode_results[0].still_path) {
+                    imagePath = data.tv_episode_results[0].still_path;
+                }
+
+                // --- UPDATE SRC GAMBAR ---
+                if (imagePath) {
+                    // w500 = ukuran sedang
+                    imgElement.attr('src', 'https://image.tmdb.org/t/p/w500' + imagePath);
+                } else {
+                    // Placeholder kalau gambar tidak ditemukan sama sekali
+                    imgElement.attr('src', 'https://via.placeholder.com/300x450/1a1a1a/555555?text=No+Image');
+                }
+            },
+            error: function() {
+                console.log("Gagal load gambar untuk ID: " + id);
+            }
+        });
+    });
+});
+</script>
