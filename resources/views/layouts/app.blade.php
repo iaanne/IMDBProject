@@ -219,9 +219,6 @@
                 {{-- Menu Tengah --}}
                 <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->is('/') ? 'active' : '' }}" href="{{ url('/') }}">Home</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link {{ request()->is('films*') ? 'active' : '' }}" href="{{ route('films.index') }}">Films</a>
                     </li>
                     <li class="nav-item">
@@ -249,7 +246,7 @@
 
                 {{-- Kanan: Search & User --}}
                 <div class="d-flex align-items-center gap-3">
-                    <form action="{{ route('search') }}" method="GET" class="position-relative d-none d-lg-block">
+                    <form action="{{ route('titles.search') }}" method="GET" class="position-relative d-none d-lg-block">
                         <input type="text" name="q" class="search-input-nav" placeholder="Cari..." value="{{ request('q') }}">
                         <button type="submit" class="search-btn-nav"><i class="fas fa-search"></i></button>
                     </form>

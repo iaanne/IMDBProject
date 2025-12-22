@@ -285,53 +285,81 @@
         });
     }
 
-    // D. TV SHOWS CHART - PERBAIKAN DI SINI (FIXED)
-    if(topTVShows.length > 0) {
-        const tvChart = new Chart(document.getElementById('tvShowsChart'), {
-            type: 'bar',
-            data: {
-                labels: topTVShows.slice(0, 8).map(t => t.name ? t.name.substring(0, 10) + '..' : 'Unknown'),
-                datasets: [{
-                    label: 'Rating',
-                    data: topTVShows.slice(0, 8).map(t => t.vote_average),
-                    backgroundColor: theme.rose, borderRadius: 6, barThickness: 20
-                }]
-            },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true, max: 10, grid: { color: '#333' } }, x: { grid: { display: false } } },
-                
-                // === LOGIKA KLIK YANG DIPERBAIKI ===
-                onClick: (e) => {
-                    const points = tvChart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true);
+   // ... kode chart sebelumnya ...
 
-                    if (points.length) {
-                        const firstPoint = points[0];
-                        const dataIndex = firstPoint.index;
-                        const show = topTVShows[dataIndex];
+// D. TV SHOWS CHART
+if(topTVShows.length > 0) {
+    const tvChart = new Chart(document.getElementById('tvShowsChart'), {
+        type: 'bar',
+        data: {
+            // ... (bagian data sama seperti sebelumnya)
+            labels: topTVShows.slice(0, 8).map(t => t.name ? t.name.substring(0, 10) + '..' : 'Unknown'),
+            datasets: [{
+                label: 'Rating',
+                data: topTVShows.slice(0, 8).map(t => t.vote_average),
+                backgroundColor: theme.rose, borderRadius: 6, barThickness: 20
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true, max: 10, grid: { color: '#333' } }, x: { grid: { display: false } } },
+            
+            // === BAGIAN YANG DIBERIKAN ===
+            onClick: (e) => {
+                const points = tvChart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true);
+
+                if (points.length) {
+                    const firstPoint = points[0];
+                    const dataIndex = firstPoint.index;
+                    const show = topTVShows[dataIndex];
+                    
+                    // Ambil ID dari data (bisa id angka atau tconst)
+                    let rawId = show.tconst || show.show_id || show.id;
+
+                    if(rawId) { 
+                        // 1. Ubah jadi String & Hapus huruf (jaga-jaga kalau datanya kotor)
+                        let cleanId = String(rawId).replace(/\D/g, '');
                         
-                        // Ambil ID (bisa tconst 'tt123' atau ID angka '246')
-                        let rawId = show.tconst || show.show_id || show.id;
-
-                        if(rawId) { 
-                            // 1. Bersihkan ID dari karakter non-angka (misal: tt00246 -> 00246)
-                            let cleanId = String(rawId).replace(/\D/g, '');
-                            
-                            // 2. Format ulang jadi tt + 7 digit (misal: 246 -> tt0000246)
-                            // Ini yang mencegah error 404
-                            let finalId = 'tt' + cleanId.padStart(7, '0');
-                            
-                            window.location.href = "/titles/" + finalId;
-                        }
+                        // 2. Tambahkan 'tt' dan 0 di depan (Padding) agar jadi 7 digit angka
+                        // Contoh: 246 -> tt0000246
+                        let finalId = 'tt' + cleanId.padStart(7, '0');
+                        
+                        // 3. Redirect ke URL yang benar
+                        // PERHATIKAN: Saya ubah '/titles/' jadi '/title/' sesuai route kamu
+                        window.location.href = "/title/" + finalId;
                     }
-                },
-                onHover: (event, chartElement) => {
-                    event.native.target.style.cursor = chartElement[0] ? 'pointer' : 'default';
                 }
+            },
+            onHover: (event, chartElement) => {
+                event.native.target.style.cursor = chartElement[0] ? 'pointer' : 'default';
             }
-        });
+        }
+    });
+}
+
+onClick: (e) => {
+    const points = tvChart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true);
+
+    if (points.length) {
+        const index = points[0].index;
+        const show = topTVShows[index];
+        let rawId = show.tconst || show.show_id || show.id;
+
+        if(rawId) { 
+            let finalId = String(rawId);
+            
+            // Jika ID belum punya 'tt', baru kita tambahkan & padding
+            if (!finalId.startsWith('tt')) {
+                let cleanNumber = finalId.replace(/\D/g, '');
+                finalId = 'tt' + cleanNumber.padStart(7, '0');
+            }
+            
+            // Redirect sesuai route yang kita rapikan tadi
+            window.location.href = "/title/" + finalId;
+        }
     }
+}
 </script>
 
 @endsection
