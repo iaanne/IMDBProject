@@ -349,7 +349,11 @@ a.show-card:hover .show-title {
 </div>
 
 <div class="container pb-5">
-    
+    <div class="section-header mt-5">
+    <h2 class="section-title">
+        <i class="fas fa-star"></i> Paling Popular
+    </h2>
+</div>
   <div class="shows-grid">
     @foreach($topShows as $show)
         @php
@@ -359,18 +363,19 @@ a.show-card:hover .show-title {
         @endphp
         
         @if($finalId)
-            {{-- Tambahkan inline style text-decoration none sebagai pengaman tambahan --}}
             <a href="{{ route('titles.show', $finalId) }}" class="show-card" style="text-decoration: none;">
         @else
             <div class="show-card" style="opacity: 0.7; cursor: not-allowed;">
         @endif
         
-            <div class="show-card-image">
-                <img src="https://via.placeholder.com/300x450?text=Loading..." 
+            {{-- Tambahkan class placeholder-bg di sini --}}
+            <div class="show-card-image placeholder-bg">
+                <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
                      class="tmdb-poster" 
                      alt="{{ $show->primaryTitle ?? 'Show' }}"
                      data-id="{{ $finalId }}" 
-                     data-type="tv">
+                     data-type="tv"
+                     onerror="this.style.opacity='0'"> {{-- Jika error, sembunyikan gambar --}}
             </div>
             
             <div class="show-card-content">
@@ -379,7 +384,6 @@ a.show-card:hover .show-title {
                     <span><i class="fas fa-star text-pink"></i> {{ number_format($show->averageRating ?? 0, 1) }}</span>
                     <span><i class="fas fa-eye text-pink"></i> {{ number_format(($show->numVotes ?? 0) / 1000, 1) }}K</span>
                 </div>
-                {{-- Ubah span button agar tidak terlihat seperti link tradisional --}}
                 <span class="show-detail-btn">Lihat Detail</span>
             </div>
 
@@ -389,6 +393,7 @@ a.show-card:hover .show-title {
             </div>
         @endif
     @endforeach
+</div>
 </div>
 {{-- ========================================================= --}}
 {{-- SECTION: PALING BANYAK DITONTON (MOST WATCHED SERIES) --}}
