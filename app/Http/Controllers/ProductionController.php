@@ -9,28 +9,12 @@ use Illuminate\Support\Facades\Log;
 class ProductionController extends Controller
 {
     // ========== DASHBOARD ==========
-    public function dashboard()
-    {
-        try {
-            // Gunakan TOP jika SQL Server, LIMIT jika MySQL
-            $totalMovies = DB::select("SELECT COUNT(*) as total FROM dim_title WHERE titleType = 'movie'")[0]->total ?? 0;
-            $totalTVSeries = DB::select("SELECT COUNT(*) as total FROM dim_title WHERE titleType = 'tvSeries'")[0]->total ?? 0;
-            $totalShows = DB::select("SELECT COUNT(*) as total FROM dim_show")[0]->total ?? 0;
-            $totalEpisodes = DB::select("SELECT COUNT(*) as total FROM dim_episode")[0]->total ?? 0;
-            
-            // Recent additions (SQL Server Syntax)
-            $recentMovies = DB::select("SELECT TOP 5 * FROM dim_title WHERE titleType = 'movie' ORDER BY startYear DESC");
-            $recentShows = DB::select("SELECT TOP 5 * FROM dim_show ORDER BY show_id DESC");
-            
-            return view('production.dashboard', compact(
-                'totalMovies', 'totalTVSeries', 'totalShows', 'totalEpisodes',
-                'recentMovies', 'recentShows'
-            ));
-        } catch (\Exception $e) {
-            Log::error('Production Dashboard Error: ' . $e->getMessage());
-            return back()->with('error', 'Gagal memuat dashboard: ' . $e->getMessage());
-        }
-    }
+    // ========== DASHBOARD (DIALIHKAN) ==========
+public function dashboard()
+{
+    // Langsung arahkan ke daftar episode karena view dashboard sudah dihapus
+    return redirect()->route('production.episodes.index');
+}
 
     // ========== MOVIES CRUD ==========
     public function indexMovies()

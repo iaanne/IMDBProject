@@ -24,29 +24,27 @@ class AuthController extends Controller
 public function login(Request $request)
 {
     try {
-        // Validasi input
+        // 1. Validasi input
         $request->validate([
             'username' => 'required|string',
             'password' => 'required|string',
         ]);
 
-        // Cari user
-        $user = User::where('username', $request->username)->first();
+        // 2. Gunakan Auth::attempt (Ini cara paling benar & aman di Laravel)
+        // Fungsi ini otomatis mencari user, melakukan Hash check, dan membuat session.
+        $credentials = [
+            'username' => $request->username,
+            'password' => $request->password
+        ];
 
-        if (!$user) {
-            return back()->withErrors([
-                'login' => 'Username atau password salah.',
-            ])->withInput($request->only('username'));
-        }
-
-        // Cek password (plain text untuk sementara)
-        if ($user->password === $request->password) {
-            Auth::login($user, $request->has('remember'));
+        if (Auth::attempt($credentials, $request->has('remember'))) {
             
             // REGENERATE SESSION (penting!)
             $request->session()->regenerate();
 
-            // Redirect berdasarkan role
+            $user = Auth::user();
+
+            // 3. Redirect berdasarkan role
             if ($user->role === 'executive') {
                 return redirect()->route('executive.dashboard')
                     ->with('success', 'Selamat datang, ' . $user->username . '!');
@@ -59,14 +57,15 @@ public function login(Request $request)
             }
         }
 
+        // Jika Auth::attempt gagal
         return back()->withErrors([
             'login' => 'Username atau password salah.',
         ])->withInput($request->only('username'));
 
     } catch (\Exception $e) {
-        // Kalau ada error (termasuk CSRF)
+        // Log error jika diperlukan untuk debugging
         return redirect()->route('login')
-            ->with('error', 'Session expired. Silakan login lagi.');
+            ->with('error', 'Terjadi kesalahan sistem atau session expired.');
     }
 }
 
