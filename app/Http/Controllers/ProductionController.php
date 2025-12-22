@@ -221,15 +221,22 @@ class ProductionController extends Controller
         ]);
 
         try {
-            DB::statement('EXEC sp_InsertEpisodeFull @tconst = ?, @parentTconst = ?, @seasonNumber = ?, @episodeNumber = ?, @primaryTitle = ?, @runtimeMinutes = ?', 
-            [
-                $request->tconst,
-                $request->parentTconst,
-                $request->seasonNumber,
-                $request->episodeNumber,
-                $request->primaryTitle,
-                $request->runtimeMinutes
-            ]);
+            DB::statement("EXEC sp_InsertEpisodeFull 
+    @tconst = ?, 
+    @parentTconst = ?, 
+    @seasonNumber = ?, 
+    @episodeNumber = ?, 
+    @primaryTitle = ?, 
+    @runtimeMinutes = ?", 
+    [
+        $request->tconst,
+        $request->parentTconst,
+        $request->seasonNumber,
+        $request->episodeNumber,
+        $request->primaryTitle,
+        $request->runtimeMinutes
+    ]
+);
             return redirect()->route('production.episodes.index')->with('success', 'Episode berhasil ditambahkan!');
         } catch (\Exception $e) {
             return back()->withInput()->with('error', 'Gagal: ' . $e->getMessage());
@@ -288,28 +295,17 @@ class ProductionController extends Controller
     }
 
     public function searchSeries(Request $request)
-    {
-        $search = $request->input('q');
-        if (empty($search)) return response()->json([]);
+{
+    $query = $request->get('q');
 
-        // Gunakan LIMIT jika MySQL, TOP jika SQL Server
-        // Karena kamu pakai MySQL Localhost (XAMPP), harusnya LIMIT.
-        $series = DB::select("
-            SELECT tconst, primaryTitle, startYear
-            FROM dim_title 
-            WHERE titleType IN ('tvSeries', 'tvMiniSeries') 
-            AND primaryTitle LIKE ?
-            ORDER BY primaryTitle ASC
-            LIMIT 20
-        ", ["%$search%"]);
+    // Cari data di database (hanya tvSeries agar tidak campur dengan film)
+    $data = DB::table('dim_title')
+        ->where('titleType', 'tvSeries')
+        ->where('primaryTitle', 'LIKE', "%$query%")
+        ->select('tconst as id', 'primaryTitle as text')
+        ->limit(10)
+        ->get();
 
-        $formatted = [];
-        foreach ($series as $s) {
-            $formatted[] = [
-                'id' => $s->tconst,
-                'text' => $s->primaryTitle . ' (' . ($s->startYear ?? '-') . ')'
-            ];
-        }
-        return response()->json($formatted);
-    }
+    return response()->json($data);
+}
 }
