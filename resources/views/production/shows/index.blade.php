@@ -150,7 +150,7 @@
                         {{-- 3. Overview (Teks Turun ke Bawah) --}}
                         <td>
                             @if(empty($show->overview))
-                                <span class="text-muted small fst-italic opacity-50">-- Tidak ada deskripsi --</span>
+                                <span class="text-white-muted small fst-italic opacity-50">-- Tidak ada deskripsi --</span>
                             @else
                                 <span style="color: #cbd5e1 !important; line-height: 1.5; font-size: 0.9rem;">
                                     {{ \Illuminate\Support\Str::limit($show->overview, 150) }}
@@ -181,7 +181,7 @@
                                 
                                 {{-- Info Seasons --}}
                                 @if(isset($show->number_of_seasons) && $show->number_of_seasons > 0)
-                                    <small class="text-muted mt-1">
+                                    <small class="text-white-muted mt-1">
                                         <i class="fas fa-layer-group text-secondary"></i> {{ $show->number_of_seasons }} Seasons
                                     </small>
                                 @endif
@@ -200,7 +200,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="5" class="text-center text-muted py-5">
+                        <td colspan="5" class="text-white-center text-white-muted py-5">
                             <i class="fas fa-tv fa-3x mb-3 opacity-25"></i>
                             <p>Belum ada data TV Show.</p>
                         </td>
