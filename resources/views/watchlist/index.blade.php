@@ -56,20 +56,22 @@
         <div class="movies-grid">
             @foreach($movies as $movie)
                 <a href="{{ route('titles.show', $movie->tconst) }}" class="movie-card">
-                    <div class="card-img-placeholder">
-                        @if(isset($movie->titleType) && $movie->titleType == 'movie')
-                            <i class="fas fa-film"></i>
-                        @else
-                            <i class="fas fa-tv"></i>
-                        @endif
-                    </div>
-                    <div class="p-3">
-                        <h6 class="fw-bold mb-1 text-white text-truncate">{{ $movie->primaryTitle }}</h6>
-                        <div class="d-flex justify-content-between small text-muted">
-                            <span>{{ $movie->startYear ?? 'N/A' }}</span>
-                            <span>{{ $movie->runtimeMinutes ? $movie->runtimeMinutes.' min' : '' }}</span>
-                        </div>
-                    </div>
+    <div class="card-img-placeholder position-relative" style="height: 300px; overflow: hidden;">
+        <img src="" 
+             class="tmdb-poster w-100 h-100" 
+             style="object-fit: cover; display: none;" 
+             data-title="{{ $movie->primaryTitle }}" 
+             data-year="{{ $movie->startYear }}">
+
+        <div class="fallback-icon h-100 w-100 d-flex align-items-center justify-content-center">
+            @if(isset($movie->titleType) && $movie->titleType == 'movie')
+                <i class="fas fa-film"></i>
+            @else
+                <i class="fas fa-tv"></i>
+            @endif
+        </div>
+    </div>
+    </a>
                 </a>
             @endforeach
         </div>
