@@ -11,50 +11,173 @@
         --c-onyx: #0d0d0d;
         --c-gold: #fbbf24;
         --text-muted: #a3a3a3;
+        --text-white: #ffffff; /* Tambahkan variabel untuk warna putih */
     }
 
     /* === 2. DASHBOARD STYLES === */
     .dashboard-header {
         background: linear-gradient(135deg, var(--c-amaranth) 0%, var(--c-rose) 100%);
-        color: white; padding: 40px 30px; border-radius: 20px; margin-bottom: 40px;
-        box-shadow: 0 20px 50px rgba(135, 3, 57, 0.3); position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);
+        color: white; 
+        padding: 40px 30px; 
+        border-radius: 20px; 
+        margin-bottom: 40px;
+        box-shadow: 0 20px 50px rgba(135, 3, 57, 0.3); 
+        position: relative; 
+        overflow: hidden; 
+        border: 1px solid rgba(255,255,255,0.1);
     }
     .stats-card {
-        background: #141414; border-radius: 16px; padding: 25px; border: 1px solid rgba(255, 255, 255, 0.08);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); height: 100%; position: relative; overflow: hidden;
+        background: #141414; 
+        border-radius: 16px; 
+        padding: 25px; 
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+        height: 100%; 
+        position: relative; 
+        overflow: hidden;
     }
-    .stats-card:hover { transform: translateY(-5px); border-color: var(--c-rose); box-shadow: 0 10px 30px rgba(217, 95, 140, 0.15); }
-    .stats-card::after { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--c-rose); opacity: 0.5; }
+    .stats-card:hover { 
+        transform: translateY(-5px); 
+        border-color: var(--c-rose); 
+        box-shadow: 0 10px 30px rgba(217, 95, 140, 0.15); 
+    }
+    .stats-card::after { 
+        content: ''; 
+        position: absolute; 
+        left: 0; 
+        top: 0; 
+        bottom: 0; 
+        width: 4px; 
+        background: var(--c-rose); 
+        opacity: 0.5; 
+    }
     
-    .stat-label { color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; margin-bottom: 5px; }
-    .stat-number { font-size: 2.5rem; font-weight: 800; color: white; line-height: 1.2; margin-bottom: 5px; background: linear-gradient(90deg, #fff, #ffcce0); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .stat-icon { font-size: 3rem; color: var(--c-rose); opacity: 0.15; position: absolute; right: 20px; top: 50%; transform: translateY(-50%); }
+    .stat-label { 
+        color: var(--text-muted); 
+        font-size: 0.75rem; 
+        text-transform: uppercase; 
+        letter-spacing: 1.5px; 
+        font-weight: 600; 
+        margin-bottom: 5px; 
+    }
+    .stat-number { 
+        font-size: 2.5rem; 
+        font-weight: 800; 
+        color: white; 
+        line-height: 1.2; 
+        margin-bottom: 5px; 
+        background: linear-gradient(90deg, #fff, #ffcce0); 
+        -webkit-background-clip: text; 
+        -webkit-text-fill-color: transparent; 
+    }
+    .stat-icon { 
+        font-size: 3rem; 
+        color: var(--c-rose); 
+        opacity: 0.15; 
+        position: absolute; 
+        right: 20px; 
+        top: 50%; 
+        transform: translateY(-50%); 
+    }
 
     /* Chart Containers & Wrappers */
     .chart-container {
-        background: #141414; border-radius: 16px; padding: 20px; border: 1px solid rgba(255, 255, 255, 0.08);
-        box-shadow: 0 4px 20px rgba(0,0,0,0.2); height: 100%; display: flex; flex-direction: column; justify-content: center;
+        background: #141414; 
+        border-radius: 16px; 
+        padding: 20px; 
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2); 
+        height: 100%; 
+        display: flex; 
+        flex-direction: column; 
+        justify-content: center;
     }
-    .chart-title { font-size: 1rem; font-weight: 700; margin-bottom: 15px; color: white; display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-    .chart-title i { color: var(--c-rose); background: rgba(217, 95, 140, 0.1); padding: 8px; border-radius: 8px; }
+    .chart-title { 
+        font-size: 1rem; 
+        font-weight: 700; 
+        margin-bottom: 15px; 
+        color: white; 
+        display: flex; 
+        align-items: center; 
+        gap: 10px; 
+        flex-shrink: 0; 
+    }
+    .chart-title i { 
+        color: var(--c-rose); 
+        background: rgba(217, 95, 140, 0.1); 
+        padding: 8px; 
+        border-radius: 8px; 
+    }
     
-    .chart-wrapper { position: relative; width: 100%; height: 300px; margin-top: auto; margin-bottom: auto; }
+    .chart-wrapper { 
+        position: relative; 
+        width: 100%; 
+        height: 300px; 
+        margin-top: auto; 
+        margin-bottom: auto; 
+    }
 
     /* Table Styles */
-    .table-custom { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
-    .table-custom thead th { color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; padding: 0 15px 10px 15px; border: none; }
-    .table-custom tbody tr { background: rgba(255, 255, 255, 0.03); transition: 0.2s; }
-    .table-custom tbody tr:hover { background: rgba(217, 95, 140, 0.1); transform: scale(1.01); }
-    .table-custom td { padding: 15px; border: none; vertical-align: middle; color: white; }
-    .table-custom td:first-child { border-radius: 10px 0 0 10px; }
-    .table-custom td:last-child { border-radius: 0 10px 10px 0; }
+    .table-custom { 
+        width: 100%; 
+        border-collapse: separate; 
+        border-spacing: 0 8px; 
+    }
+    .table-custom thead th { 
+        color: var(--text-white) !important; /* Ubah ke putih */
+        font-size: 0.8rem; 
+        text-transform: uppercase; 
+        letter-spacing: 1px; 
+        padding: 0 15px 10px 15px; 
+        border: none; 
+    }
+    .table-custom tbody tr { 
+        background: rgba(255, 255, 255, 0.03); 
+        transition: 0.2s; 
+    }
+    .table-custom tbody tr:hover { 
+        background: rgba(217, 95, 140, 0.1); 
+        transform: scale(1.01); 
+    }
+    .table-custom td { 
+        padding: 15px; 
+        border: none; 
+        vertical-align: middle; 
+        color: white !important; /* Pastikan warna putih */
+    }
+    .table-custom td:first-child { 
+        border-radius: 10px 0 0 10px; 
+    }
+    .table-custom td:last-child { 
+        border-radius: 0 10px 10px 0; 
+    }
 
-    .table-wrapper { max-height: 420px; overflow-y: auto; padding-right: 5px; }
-    .table-wrapper::-webkit-scrollbar { width: 4px; }
-    .table-wrapper::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+    .table-wrapper { 
+        max-height: 420px; 
+        overflow-y: auto; 
+        padding-right: 5px; 
+    }
+    .table-wrapper::-webkit-scrollbar { 
+        width: 4px; 
+    }
+    .table-wrapper::-webkit-scrollbar-thumb { 
+        background: #333; 
+        border-radius: 2px; 
+    }
 
-    .movie-link { text-decoration: none; color: white; transition: 0.3s; }
-    .movie-link:hover { color: var(--c-rose); }
+    .movie-link { 
+        text-decoration: none; 
+        color: white !important; /* Pastikan warna putih */
+        transition: 0.3s; 
+    }
+    .movie-link:hover { 
+        color: var(--c-rose) !important; /* Warna pink saat hover */
+    }
+    
+    /* Perbaikan untuk teks di badge */
+    .badge {
+        color: white !important;
+    }
 </style>
 
 <div class="container-fluid py-4">
@@ -73,7 +196,7 @@
             <div class="stats-card">
                 <div class="stat-label">Total Movies</div>
                 <div class="stat-number">{{ count($topMovies) > 0 ? '10+' : '0' }}</div>
-                <div class="small text-muted"><i class="fas fa-arrow-up text-success me-1"></i> Data Teranalisis</div>
+                <div class="small text-white-muted"><i class="fas fa-arrow-up text-success me-1"></i> Data Teranalisis</div>
                 <i class="fas fa-film stat-icon"></i>
             </div>
         </div>
@@ -81,7 +204,7 @@
             <div class="stats-card">
                 <div class="stat-label">TV Shows</div>
                 <div class="stat-number">{{ count($topTVShows) > 0 ? '10+' : '0' }}</div>
-                <div class="small text-muted"><i class="fas fa-star text-warning me-1"></i> Top Rated</div>
+                <div class="small text-white-muted"><i class="fas fa-star text-warning me-1"></i> Top Rated</div>
                 <i class="fas fa-tv stat-icon"></i>
             </div>
         </div>
@@ -89,7 +212,7 @@
             <div class="stats-card">
                 <div class="stat-label">Genre Variances</div>
                 <div class="stat-number">{{ count($genrePopularity) }}</div>
-                <div class="small text-muted">Kategori Konten</div>
+                <div class="small text-white-muted">Kategori Konten</div>
                 <i class="fas fa-layer-group stat-icon"></i>
             </div>
         </div>
@@ -97,7 +220,7 @@
             <div class="stats-card">
                 <div class="stat-label">Top Talents</div>
                 <div class="stat-number">{{ count($actorProductivity) }}</div>
-                <div class="small text-muted">Aktor Paling Aktif</div>
+                <div class="small text-white-muted">Aktor Paling Aktif</div>
                 <i class="fas fa-user-astronaut stat-icon"></i>
             </div>
         </div>
@@ -130,7 +253,7 @@
                         <tbody>
                             @forelse($topMovies as $index => $movie)
                             <tr>
-                                <td class="fw-bold text-muted">{{ $index + 1 }}</td>
+                                <td class="fw-bold text-white">{{ $index + 1 }}</td>
                                 <td>
                                     @php
                                         // 1. Ambil ID mentah
@@ -154,7 +277,7 @@
                                         <span class="fw-bold text-white">{{ Str::limit($title, 22) }}</span>
                                     @endif
                                     
-                                    <div class="small" style="color: var(--c-rose)">{{ $movie->startYear ?? '-' }}</div>
+                                    <div class="small text-white">{{ $movie->startYear ?? '-' }}</div>
                                 </td>
                                 <td class="text-end">
                                     <span class="badge bg-dark border border-warning text-warning rounded-pill px-3">
@@ -163,7 +286,7 @@
                                 </td>
                             </tr>
                             @empty
-                            <tr><td colspan="3" class="text-center text-muted">Data tidak tersedia</td></tr>
+                            <tr><td colspan="3" class="text-center text-white">Data tidak tersedia</td></tr>
                             @endforelse
                         </tbody>
                     </table>
@@ -192,7 +315,7 @@
         </div>
         <div class="col-lg-4">
             <div class="chart-container">
-                <div class="chart-title"><i class="fas fa-tv"></i> Top TV Series <small class="ms-2 text-muted fw-normal fs-6">(Klik Grafik)</small></div>
+                <div class="chart-title"><i class="fas fa-tv"></i> Top TV Series <small class="ms-2 text-white fw-normal fs-6">(Klik Grafik)</small></div>
                 <div class="chart-wrapper">
                     <canvas id="tvShowsChart"></canvas>
                 </div>
@@ -210,9 +333,14 @@
     const topTVShows = @json($topTVShows); 
 
     const theme = {
-        rose: '#d95f8c', amaranth: '#870339', text: '#a3a3a3', grid: '#333333',
+        rose: '#d95f8c', 
+        amaranth: '#870339', 
+        text: '#ffffff', // Ubah ke putih
+        grid: '#333333',
         palette: ['#65022a', '#870339', '#aa4465', '#ce306fff', '#d95f8c', '#f895bcff', '#fbbf24', '#ffd875ff']
     };
+    
+    // Set default warna teks ke putih
     Chart.defaults.color = theme.text;
     Chart.defaults.borderColor = theme.grid;
     Chart.defaults.font.family = "'Outfit', sans-serif";
@@ -235,13 +363,31 @@
                         gradient.addColorStop(1, 'rgba(217, 95, 140, 0)');
                         return gradient;
                     },
-                    fill: true, tension: 0.4, borderWidth: 3, pointRadius: 0, pointHoverRadius: 6
+                    fill: true, 
+                    tension: 0.4, 
+                    borderWidth: 3, 
+                    pointRadius: 0, 
+                    pointHoverRadius: 6
                 }]
             },
             options: {
-                responsive: true, maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: false, min: 5, max: 10 }, x: { grid: { display: false } } }
+                responsive: true, 
+                maintainAspectRatio: false,
+                plugins: { 
+                    legend: { display: false } 
+                },
+                scales: { 
+                    y: { 
+                        beginAtZero: false, 
+                        min: 5, 
+                        max: 10,
+                        ticks: { color: theme.text } // Pastikan teks sumbu Y putih
+                    }, 
+                    x: { 
+                        grid: { display: false },
+                        ticks: { color: theme.text } // Pastikan teks sumbu X putih
+                    } 
+                }
             }
         });
     }
@@ -255,13 +401,28 @@
                 datasets: [{
                     label: 'Jumlah Judul',
                     data: actorProductivity.slice(0, 10).map(a => a.total_titles),
-                    backgroundColor: theme.amaranth, borderRadius: 4, barThickness: 15
+                    backgroundColor: theme.amaranth, 
+                    borderRadius: 4, 
+                    barThickness: 15
                 }]
             },
             options: {
-                indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { x: { display: false }, y: { grid: { display: false }, ticks: { color: 'white' } } }
+                indexAxis: 'y', 
+                responsive: true, 
+                maintainAspectRatio: false,
+                plugins: { 
+                    legend: { display: false } 
+                },
+                scales: { 
+                    x: { 
+                        display: false,
+                        ticks: { color: theme.text } // Pastikan teks sumbu X putih
+                    }, 
+                    y: { 
+                        grid: { display: false }, 
+                        ticks: { color: theme.text } // Pastikan teks sumbu Y putih
+                    } 
+                }
             }
         });
     }
@@ -274,12 +435,25 @@
                 labels: genrePopularity.slice(0, 8).map(g => g.genre_name),
                 datasets: [{
                     data: genrePopularity.slice(0, 8).map(g => g.total_titles),
-                    backgroundColor: theme.palette, borderWidth: 0, hoverOffset: 10
+                    backgroundColor: theme.palette, 
+                    borderWidth: 0, 
+                    hoverOffset: 10
                 }]
             },
             options: {
-                responsive: true, maintainAspectRatio: false,
-                plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, usePointStyle: true, padding: 20 } } },
+                responsive: true, 
+                maintainAspectRatio: false,
+                plugins: { 
+                    legend: { 
+                        position: 'bottom', 
+                        labels: { 
+                            color: theme.text, // Pastikan teks legenda putih
+                            boxWidth: 10, 
+                            usePointStyle: true, 
+                            padding: 20 
+                        } 
+                    } 
+                },
                 cutout: '70%'
             }
         });
@@ -297,13 +471,29 @@ if(topTVShows.length > 0) {
             datasets: [{
                 label: 'Rating',
                 data: topTVShows.slice(0, 8).map(t => t.vote_average),
-                backgroundColor: theme.rose, borderRadius: 6, barThickness: 20
+                backgroundColor: theme.rose, 
+                borderRadius: 6, 
+                barThickness: 20
             }]
         },
         options: {
-            responsive: true, maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: { y: { beginAtZero: true, max: 10, grid: { color: '#333' } }, x: { grid: { display: false } } },
+            responsive: true, 
+            maintainAspectRatio: false,
+            plugins: { 
+                legend: { display: false } 
+            },
+            scales: { 
+                y: { 
+                    beginAtZero: true, 
+                    max: 10, 
+                    grid: { color: '#333' },
+                    ticks: { color: theme.text } // Pastikan teks sumbu Y putih
+                }, 
+                x: { 
+                    grid: { display: false },
+                    ticks: { color: theme.text } // Pastikan teks sumbu X putih
+                } 
+            },
             
             // === BAGIAN YANG DIBERIKAN ===
             onClick: (e) => {

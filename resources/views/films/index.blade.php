@@ -263,37 +263,6 @@
 
 <div class="container pb-5">
 
-    {{-- 1. FILM TERPOPULER --}}
-    <div class="section-header" style="margin-top: 0;">
-        <h2 class="section-title">🔥 Film Terpopuler</h2>
-    </div>
-
-    <div class="films-grid">
-        @forelse ($topFilms as $film)
-            <div class="film-card">
-                <div class="film-card-image">
-                    {{-- POSTER IMAGE --}}
-                    <img src="https://via.placeholder.com/300x450?text=Loading..." 
-                         class="tmdb-poster" 
-                         alt="{{ $film->primaryTitle }}"
-                         data-id="{{ $film->tconst }}" 
-                         data-type="movie"
-                         style="width: 100%; height: 100%; object-fit: cover;">
-                </div>
-                <div class="film-card-content">
-                    <h5 class="film-title">{{ Str::limit($film->primaryTitle, 40) }}</h5>
-                    <div class="film-meta">
-                        <span><i class="fas fa-calendar-alt me-1 text-pink"></i> {{ $film->startYear ?? 'N/A' }}</span>
-                        <span style="color: white; font-weight: bold;"><i class="fas fa-star me-1 text-pink"></i> {{ number_format($film->averageRating, 1) }}</span>
-                    </div>
-                    <a href="{{ route('titles.show', $film->tconst) }}" class="film-detail-btn">Lihat Detail</a>
-                </div>
-            </div>
-        @empty
-            <div class="col-12 text-center text-muted">Belum ada data.</div>
-        @endforelse
-    </div>
-
 {{-- SECTION: MOST WATCHED (BY VOTES) --}}
     <div class="section-header mt-5">
         <h2 class="section-title">⭐ Paling Banyak Ditonton (All Time)</h2>
