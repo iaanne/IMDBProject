@@ -23,26 +23,50 @@
     /* Utilities */
     .text-pink { color: var(--primary-pink) !important; }
     
-    /* === HERO SECTION (PURE GRADIENT - REVERSED) === */
+    /* === HERO SECTION (SLIDESHOW) === */
     .hero-wrapper {
         position: relative;
         height: 85vh;
         min-height: 550px;
+        overflow: hidden;
         
-        /* --- PERBAIKAN GRADASI DISINI --- */
-        /* Kita tukar posisi warnanya agar Hitam di awal, Merah di akhir */
-        background: 
-            /* Layer 1: Cahaya Pink lembut (tetap di kiri atas sebagai highlight) */
-            radial-gradient(circle at 20% 30%, rgba(217, 95, 140, 0.2) 0%, transparent 50%),
-            
-            /* Layer 2: Gradasi Diagonal UTAMA (DIBALIK) */
-            /* Mulai dari Hitam Pekat (0%) -> ke Burgundy Cerah (100%) */
-            linear-gradient(135deg, var(--bg-main) 0%, #1a0510 50%, var(--primary-red) 100%);
-        
+        /* Gradasi background yang akan ditimpa oleh gambar slide aktif */
+        background: linear-gradient(135deg, var(--bg-main) 0%, #1a0510 50%, var(--primary-red) 100%);
         border-bottom: 1px solid var(--border-color);
+    }
+
+    .hero-slideshow {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+
+    .hero-slides {
+        display: flex;
+        height: 100%;
+        transition: transform 0.8s ease-in-out;
+    }
+
+    .hero-slide {
+        min-width: 100%;
+        height: 100%;
         display: flex;
         align-items: center;
-        overflow: hidden;
+        position: relative;
+        background-size: cover;
+        background-position: center;
+        transition: opacity 1s ease-in-out;
+    }
+
+    .hero-slide::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(to right, rgba(13, 13, 13, 0.9) 0%, rgba(13, 13, 13, 0.7) 50%, rgba(13, 13, 13, 0.4) 100%);
+        z-index: 1;
     }
 
     .hero-content {
@@ -52,16 +76,7 @@
         padding-left: 15px;
     }
 
-    /* Kita tidak butuh .hero-overlay lagi karena backgroundnya sudah gelap */
-
-    .hero-content {
-        position: relative;
-        z-index: 2;
-        max-width: 750px;
-        padding-left: 15px;
-    }
-
-    /* Badge Khusus (Ganti dari Merah ke Gradasi Pink) */
+    /* Badge Khusus */
     .badge-featured {
         background: linear-gradient(90deg, var(--primary-red), var(--primary-pink));
         color: white;
@@ -70,7 +85,7 @@
         font-weight: 600;
         font-size: 0.9rem;
         letter-spacing: 1px;
-        box-shadow: 0 5px 15px rgba(217, 95, 140, 0.3); /* Glow Pink */
+        box-shadow: 0 5px 15px rgba(217, 95, 140, 0.3);
         border: 1px solid rgba(255,255,255,0.1);
         display: inline-flex;
         align-items: center;
@@ -83,7 +98,6 @@
         line-height: 1.1;
         margin-top: 1.5rem;
         margin-bottom: 1.5rem;
-        /* Efek Teks Gradasi Putih ke Pink */
         background: linear-gradient(90deg, #ffffff 60%, var(--primary-pink) 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -123,6 +137,62 @@
         color: white;
     }
 
+    /* Slide Indicators */
+    .hero-indicators {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 10px;
+        z-index: 3;
+    }
+
+    .indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.3);
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .indicator.active {
+        background-color: var(--primary-pink);
+        transform: scale(1.2);
+    }
+
+    /* Navigation Arrows */
+    .hero-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 50px;
+        height: 50px;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 3;
+        transition: all 0.3s ease;
+    }
+
+    .hero-nav:hover {
+        background-color: rgba(217, 95, 140, 0.7);
+    }
+
+    .hero-nav.prev {
+        left: 20px;
+    }
+
+    .hero-nav.next {
+        right: 20px;
+    }
+
     /* === SECTION HEADERS === */
     .section-header {
         display: flex;
@@ -153,7 +223,7 @@
         background: var(--bg-card);
         border-radius: 16px;
         overflow: hidden;
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Efek membal halus */
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         border: 1px solid var(--border-color);
         height: 100%;
         display: flex;
@@ -166,7 +236,7 @@
     .movie-card:hover {
         transform: translateY(-12px) scale(1.02);
         border-color: var(--primary-pink);
-        box-shadow: 0 20px 40px -10px rgba(217, 95, 140, 0.3); /* Pink Glow lebih kuat */
+        box-shadow: 0 20px 40px -10px rgba(217, 95, 140, 0.3);
     }
 
     .movie-card-image {
@@ -216,44 +286,62 @@
     }
 </style>
 
-{{-- 1. HERO PREVIEW SECTION (PURE GRADIENT) --}}
-@if ($featuredMovie)
-    {{-- Hapus style background-image --}}
+{{-- 1. HERO PREVIEW SECTION (SLIDESHOW) --}}
+@if (isset($featuredMovies) && count($featuredMovies) > 0)
     <div class="hero-wrapper">
-        
-        {{-- Hapus div hero-overlay --}}
+        <div class="hero-slideshow">
+            <div class="hero-slides">
+                @foreach ($featuredMovies as $index => $movie)
+                    <div class="hero-slide {{ $index == 0 ? 'active' : '' }}" 
+                         data-index="{{ $index }}"
+                         style="background-image: url('https://image.tmdb.org/t/p/original{{ $movie->backdrop_path ?? '' }}');">
+                        <div class="hero-content">
+                            <span class="badge badge-featured">
+                                <i class="fas fa-crown me-2"></i> Featured Movie
+                            </span>
+                            
+                            <h1 class="hero-title">{{ $movie->primaryTitle }}</h1>
+                            
+                            <div class="hero-meta">
+                                <span>
+                                    <i class="fas fa-calendar-alt text-pink me-2"></i> 
+                                    {{ $movie->startYear ?? 'N/A' }}
+                                </span>
+                                <span>
+                                    <i class="fas fa-clock text-pink me-2"></i> 
+                                    {{ $movie->runtimeMinutes ?? 'N/A' }} min
+                                </span>
+                                <span style="color: white; font-weight: bold;">
+                                    <i class="fas fa-star text-pink me-1"></i> 
+                                    {{ number_format($movie->averageRating, 1) }}
+                                </span>
+                                <span class="text-muted" style="font-size: 0.9rem;">
+                                    ({{ number_format($movie->numVotes) }} votes)
+                                </span>
+                            </div>
 
-        <div class="container">
-            <div class="hero-content">
-                {{-- PERBAIKAN BADGE WARNA --}}
-                <span class="badge badge-featured">
-                    <i class="fas fa-crown me-2"></i> Featured Movie
-                </span>
-                
-                <h1 class="hero-title">{{ $featuredMovie->primaryTitle }}</h1>
-                
-                <div class="hero-meta">
-                    <span>
-                        <i class="fas fa-calendar-alt text-pink me-2"></i> 
-                        {{ $featuredMovie->startYear ?? 'N/A' }}
-                    </span>
-                    <span>
-                        <i class="fas fa-clock text-pink me-2"></i> 
-                        {{ $featuredMovie->runtimeMinutes ?? 'N/A' }} min
-                    </span>
-                    <span style="color: white; font-weight: bold;">
-                        <i class="fas fa-star text-pink me-1"></i> 
-                        {{ number_format($featuredMovie->averageRating, 1) }}
-                    </span>
-                    <span class="text-muted" style="font-size: 0.9rem;">
-                        ({{ number_format($featuredMovie->numVotes) }} votes)
-                    </span>
-                </div>
-
-                <a href="{{ route('titles.show', $featuredMovie->tconst) }}" class="btn-hero">
-                    <i class="fas fa-info-circle"></i> Lihat Detail
-                </a>
+                            <a href="{{ route('titles.show', $movie->tconst) }}" class="btn-hero">
+                                <i class="fas fa-info-circle"></i> Lihat Detail
+                            </a>
+                        </div>
+                    </div>
+                @endforeach
             </div>
+            
+            <!-- Slide Indicators -->
+            <div class="hero-indicators">
+                @foreach ($featuredMovies as $index => $movie)
+                    <div class="indicator {{ $index == 0 ? 'active' : '' }}" data-index="{{ $index }}"></div>
+                @endforeach
+            </div>
+            
+            <!-- Navigation Arrows -->
+            <button class="hero-nav prev">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="hero-nav next">
+                <i class="fas fa-chevron-right"></i>
+            </button>
         </div>
     </div>
 @endif
@@ -269,14 +357,14 @@
         @forelse ($topMovies as $movie)
             <a href="{{ route('titles.show', $movie->tconst) }}" class="movie-card">
                 <div class="movie-card-image">
-        {{-- GANTI ICON DENGAN IMG INI --}}
-        <img src="https://via.placeholder.com/300x450?text=Loading..." 
-             class="tmdb-poster" 
-             alt="{{ $movie->primaryTitle }}"
-             data-id="{{ $movie->tconst }}" 
-             data-type="movie"
-             style="width: 100%; height: 100%; object-fit: cover;">
-    </div>
+                    {{-- GANTI ICON DENGAN IMG INI --}}
+                    <img src="https://via.placeholder.com/300x450?text=Loading..." 
+                         class="tmdb-poster" 
+                         alt="{{ $movie->primaryTitle }}"
+                         data-id="{{ $movie->tconst }}" 
+                         data-type="movie"
+                         style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
                 <div class="movie-card-content">
                     <h5 class="movie-title">{{ Str::limit($movie->primaryTitle, 40) }}</h5>
                     <div class="movie-meta">
@@ -308,14 +396,14 @@
         @forelse ($recommended as $rekomen)
             <a href="{{ route('titles.show', $rekomen->tconst) }}" class="movie-card">
                 <div class="movie-card-image">
-        {{-- GANTI ICON DENGAN IMG INI --}}
-        <img src="https://via.placeholder.com/300x450?text=Loading..." 
-             class="tmdb-poster" 
-             alt="{{ $rekomen->primaryTitle }}"
-             data-id="{{ $rekomen->tconst }}" 
-             data-type="movie"
-             style="width: 100%; height: 100%; object-fit: cover;">
-    </div>
+                    {{-- GANTI ICON DENGAN IMG INI --}}
+                    <img src="https://via.placeholder.com/300x450?text=Loading..." 
+                         class="tmdb-poster" 
+                         alt="{{ $rekomen->primaryTitle }}"
+                         data-id="{{ $rekomen->tconst }}" 
+                         data-type="movie"
+                         style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
                 <div class="movie-card-content">
                     <h5 class="movie-title">{{ Str::limit($rekomen->primaryTitle, 40) }}</h5>
                     <div class="movie-meta">
@@ -337,7 +425,6 @@
             </div>
         @endforelse
     </div>
-
 
     {{-- ... (Setelah Section Rekomendasi) ... --}}
 
@@ -594,11 +681,9 @@
 </div>
 @endsection
 
-
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-$(document).ready(function() {
+ $(document).ready(function() {
     // === API KEY TMDB (Punya kamu) ===
     const apiKey = '8e8ed515442c24035b99b36d4bbb8e6d'; 
     // =================================
@@ -647,5 +732,80 @@ $(document).ready(function() {
             }
         });
     });
+    
+    // === HERO SLIDESHOW FUNCTIONALITY ===
+    const slides = document.querySelectorAll('.hero-slide');
+    const indicators = document.querySelectorAll('.indicator');
+    const prevBtn = document.querySelector('.hero-nav.prev');
+    const nextBtn = document.querySelector('.hero-nav.next');
+    
+    if (slides.length > 0) {
+        let currentSlide = 0;
+        let slideInterval;
+        
+        // Function to show a specific slide
+        function showSlide(index) {
+            // Hide all slides
+            slides.forEach(slide => slide.classList.remove('active'));
+            indicators.forEach(indicator => indicator.classList.remove('active'));
+            
+            // Show the current slide
+            slides[index].classList.add('active');
+            indicators[index].classList.add('active');
+            currentSlide = index;
+        }
+        
+        // Function to show the next slide
+        function nextSlide() {
+            let newSlide = (currentSlide + 1) % slides.length;
+            showSlide(newSlide);
+        }
+        
+        // Function to show the previous slide
+        function prevSlide() {
+            let newSlide = (currentSlide - 1 + slides.length) % slides.length;
+            showSlide(newSlide);
+        }
+        
+        // Function to start the automatic slideshow
+        function startSlideshow() {
+            slideInterval = setInterval(nextSlide, 5000); // Change slide every 5 seconds
+        }
+        
+        // Function to stop the slideshow
+        function stopSlideshow() {
+            clearInterval(slideInterval);
+        }
+        
+        // Event listeners for navigation buttons
+        nextBtn.addEventListener('click', () => {
+            nextSlide();
+            stopSlideshow();
+            startSlideshow();
+        });
+        
+        prevBtn.addEventListener('click', () => {
+            prevSlide();
+            stopSlideshow();
+            startSlideshow();
+        });
+        
+        // Event listeners for indicators
+        indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => {
+                showSlide(index);
+                stopSlideshow();
+                startSlideshow();
+            });
+        });
+        
+        // Pause slideshow on hover
+        const slideshowContainer = document.querySelector('.hero-slideshow');
+        slideshowContainer.addEventListener('mouseenter', stopSlideshow);
+        slideshowContainer.addEventListener('mouseleave', startSlideshow);
+        
+        // Start the slideshow
+        startSlideshow();
+    }
 });
 </script>
