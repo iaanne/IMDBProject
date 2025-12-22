@@ -444,24 +444,6 @@ a.show-card:hover .show-title {
     @endforelse
 </div>
 
-    {{-- BAGIAN JARINGAN --}}
-    <div class="section-header mt-5">
-        <h2 class="section-title"><i class="fas fa-broadcast-tower"></i> Jaringan Populer</h2>
-        <span class="badge bg-dark border border-secondary text-white rounded-pill px-3">Top 12</span>
-    </div>
-    
-    <div class="networks-grid">
-        @foreach(array_slice($networks, 0, 12) as $network)
-            <a href="{{ route('tv.index', ['network' => $network->name]) }}" 
-               class="network-card" 
-               title="{{ $network->name }}">
-               <div class="network-icon"><i class="fas fa-satellite-dish"></i></div>
-               <div class="network-name">{{ $network->name }}</div>
-            </a>
-        @endforeach
-    </div>
-
-
 </div>
 
 <script>
