@@ -66,6 +66,7 @@
         <div class="movies-grid">
             @foreach($movies as $movie)
                 <a href="{{ route('titles.show', $movie->tconst) }}" class="movie-card">
+<<<<<<< HEAD
                     <div class="card-img-container">
                         <div class="fallback-icon">
                             @if(isset($movie->titleType) && $movie->titleType == 'movie')
@@ -80,6 +81,14 @@
                              style="kdisplay: none;" 
                              data-title="{{ $movie->primaryTitle }}" 
                              data-year="{{ $movie->startYear }}">
+=======
+                    <div class="card-img-placeholder">
+                        @if(isset($movie->titleType) && $movie->titleType == 'movie')
+                            <i class="fas fa-film"></i>
+                        @else
+                            <i class="fas fa-tv"></i>
+                        @endif
+>>>>>>> 0d65629f8cb074845db1ff81bdc5a2df74b40ddf
                     </div>
                     <div class="p-3">
                         <h6 class="fw-bold mb-1 text-white text-truncate">{{ $movie->primaryTitle }}</h6>
