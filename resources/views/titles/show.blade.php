@@ -14,6 +14,12 @@
         --c-border: rgba(255, 255, 255, 0.1);
     }
 
+    body {
+        background-color: var(--c-dark);
+        color: #ffffff;
+        font-family: 'Outfit', 'Poppins', sans-serif;
+    }
+
     /* === 2. DETAIL PAGE STYLES === */
     
     /* Hero Section dengan Overlay Gradient */
@@ -102,25 +108,24 @@
     /* Rating Box */
     /* Update pada bagian Rating Box */
 .rating-box {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px; /* Jarak antara bintang dan angka dikurangi */
-    background: rgba(255, 255, 255, 0.05);
-    padding: 8px 20px; /* Padding dikurangi */
-    border-radius: 50px;
-    margin-bottom: 20px; /* Jarak bawah dikurangi */
-}
+        display: inline-flex;
+        align-items: center;
+        gap: 10px; /* Jarak antara bintang dan angka dikurangi */
+        background: rgba(255, 255, 255, 0.05);
+        padding: 8px 20px; /* Padding dikurangi */
+        border-radius: 50px;
+        margin-bottom: 20px; /* Jarak bawah dikurangi */
+    }
 
-.rating-score {
-    font-size: 1.2rem; /* Ukuran font dikecilkan dari 1.5rem */
-    font-weight: 700;
-    color: #fbbf24;
-}
+    .rating-score {
+        font-size: 1.2rem; /* Ukuran font dikecilkan dari 1.5rem */
+        font-weight: 700;
+        color: #fbbf24;
+    }
 
-.rating-box i.fa-2x {
-    font-size: 1.2rem; /* Ukuran ikon bintang dikecilkan agar seimbang */
-}
-
+    .rating-box i.fa-2x {
+        font-size: 1.2rem; /* Ukuran ikon bintang dikecilkan agar seimbang */
+    }
 
     /* Genre Badges */
     .genre-badge {
@@ -173,6 +178,17 @@
         justify-content: center;
         font-size: 2rem;
         color: #666;
+        position: relative;
+        overflow: hidden;
+    }
+    .person-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+        position: absolute;
+        top: 0;
+        left: 0;
     }
     .person-name {
         font-weight: 700;
@@ -182,7 +198,7 @@
     }
     .person-role {
         font-size: 0.85rem;
-        color: #a3a3a3;
+        color: var(--text-muted);
     }
 
     /* Role Badge (Actor/Actress) */
@@ -231,18 +247,17 @@
 
     /* Menambah jarak antar section */
 .section-header-small {
-    margin-top: 50px; /* Tambahkan margin top agar tidak mepet ke atas */
-    margin-bottom: 25px;
-    font-size: 1.3rem; /* Ukuran header section sedikit diperkecil */
-}
+        margin-top: 50px; /* Tambahkan margin top agar tidak mepet ke atas */
+        margin-bottom: 25px;
+        font-size: 1.3rem; /* Ukuran header section sedikit diperkecil */
+    }
 
-/* Container utama di bawah hero */
-.container.pb-5 {
-    padding-top: 20px; /* Memberi ruang napas tambahan */
-}
+    /* Container utama di bawah hero */
+    .container.pb-5 {
+        padding-top: 20px; /* Memberi ruang napas tambahan */
+    }
 </style>
 
-{{-- 1. HERO SECTION --}}
 {{-- 1. HERO SECTION --}}
 {{-- Tambahkan id "detailHero" untuk backdrop --}}
 <div class="detail-hero" id="detailHero" data-id="{{ $detail->tconst ?? $detail->show_id }}">
@@ -265,8 +280,6 @@
                     @endif
                 </div>
             </div>
-
-            {{-- ... (Kanan: Informasi tetap sama) ... --}}
 
             {{-- Kanan: Informasi --}}
             <div class="info-content flex-grow-1">
@@ -368,8 +381,9 @@
     @if (count($cast) > 0)
         <div class="people-grid">
             @foreach ($cast as $c)
-                <div class="person-card">
+                <div class="person-card" data-person-name="{{ Str::lower(trim($c->PersonName ?? '')) }}">
                     <div class="person-avatar">
+                        {{-- Elemen gambar akan disisipkan di sini oleh JavaScript --}}
                         <i class="fas fa-user"></i>
                     </div>
                     <div class="person-name">{{ $c->PersonName ?? 'Unknown' }}</div>
@@ -397,8 +411,9 @@
     @if (isset($crew) && count($crew) > 0)
         <div class="people-grid">
             @foreach ($crew as $c)
-                <div class="person-card">
+                <div class="person-card" data-person-name="{{ Str::lower(trim($c->PersonName ?? '')) }}">
                     <div class="person-avatar">
+                        {{-- Elemen gambar akan disisipkan di sini oleh JavaScript --}}
                         <i class="fas fa-video"></i>
                     </div>
                     <div class="person-name">{{ $c->PersonName ?? 'Unknown' }}</div>
@@ -476,17 +491,21 @@
                 .then(response => response.json())
                 .then(data => {
                     let result = null;
+                    let contentType = null; // 'movie' atau 'tv'
                     
-                    // Cek apakah hasil ditemukan di kategori movie atau tv
+                    // Tentukan apakah ini film atau tv show dan ambil hasilnya
                     if (data.movie_results && data.movie_results.length > 0) {
                         result = data.movie_results[0];
+                        contentType = 'movie';
                     } else if (data.tv_results && data.tv_results.length > 0) {
                         result = data.tv_results[0];
+                        contentType = 'tv';
                     }
 
                     if (result) {
                         const posterPath = result.poster_path;
                         const backdropPath = result.backdrop_path;
+                        const tmdbId = result.id; // Dapatkan TMDB ID
 
                         // 1. Update Poster Utama
                         if (posterPath) {
@@ -503,11 +522,65 @@
                             const hero = document.getElementById('detailHero');
                             hero.style.backgroundImage = `url('https://image.tmdb.org/t/p/original${backdropPath}')`;
                         }
+
+                        // 3. Ambil Data Cast & Crew dari TMDB
+                        if (tmdbId) {
+                            const creditsUrl = `https://api.themoviedb.org/3/${contentType}/${tmdbId}/credits?api_key=${apiKey}`;
+                            
+                            fetch(creditsUrl)
+                                .then(response => response.json())
+                                .then(creditsData => {
+                                    // Proses data cast
+                                    if (creditsData.cast && creditsData.cast.length > 0) {
+                                        // Loop melalui setiap pemeran dari database Anda
+                                        document.querySelectorAll('.person-card[data-person-name]').forEach(card => {
+                                            const dbPersonName = card.dataset.personName;
+                                            
+                                            // Cari pemeran yang cocok di data dari TMDB
+                                            const tmdbPerson = creditsData.cast.find(actor => {
+                                                const tmdbActorName = actor.name.toLowerCase().trim();
+                                                return tmdbActorName === dbPersonName;
+                                            });
+
+                                            // Jika ditemukan dan memiliki foto
+                                            if (tmdbPerson && tmdbPerson.profile_path) {
+                                                const avatarDiv = card.querySelector('.person-avatar');
+                                                const profileImgUrl = `https://image.tmdb.org/t/p/w185${tmdbPerson.profile_path}`;
+                                                
+                                                // Buat elemen gambar dan ganti icon
+                                                avatarDiv.innerHTML = `<img src="${profileImgUrl}" alt="${tmdbPerson.name}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+                                            }
+                                        });
+                                    }
+
+                                    // Proses data crew
+                                    if (creditsData.crew && creditsData.crew.length > 0) {
+                                        // Loop melalui setiap kru dari database Anda
+                                        document.querySelectorAll('.person-card[data-person-name]').forEach(card => {
+                                            const dbPersonName = card.dataset.personName;
+                                            
+                                            // Cari kru yang cocok di data dari TMDB
+                                            const tmdbPerson = creditsData.crew.find(crew => {
+                                                const tmdbCrewName = crew.name.toLowerCase().trim();
+                                                return tmdbCrewName === dbPersonName;
+                                            });
+
+                                            // Jika ditemukan dan memiliki foto
+                                            if (tmdbPerson && tmdbPerson.profile_path) {
+                                                const avatarDiv = card.querySelector('.person-avatar');
+                                                const profileImgUrl = `https://image.tmdb.org/t/p/w185${tmdbPerson.profile_path}`;
+                                                
+                                                // Buat elemen gambar dan ganti icon
+                                                avatarDiv.innerHTML = `<img src="${profileImgUrl}" alt="${tmdbPerson.name}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+                                            }
+                                        });
+                                    }
+                                })
+                                .catch(err => console.error("TMDB Credits Fetch Error:", err));
+                        }
                     }
                 })
-                .catch(err => console.error("TMDB Fetch Error:", err));
+                .catch(err => console.error("TMDB Find Fetch Error:", err));
         }
     });
-
-    // ... (Fungsi toggleWatchlist Anda tetap di sini) ...
 </script>

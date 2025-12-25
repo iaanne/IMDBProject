@@ -66,16 +66,33 @@
         <div class="movies-grid">
             @foreach($movies as $movie)
                 <a href="{{ route('titles.show', $movie->tconst) }}" class="movie-card">
+<<<<<<< HEAD
+                    <div class="card-img-container">
+                        <div class="fallback-icon">
+                            @if(isset($movie->titleType) && $movie->titleType == 'movie')
+                                <i class="fas fa-film"></i>
+                            @else
+                                <i class="fas fa-tv"></i>
+                            @endif
+                        </div>
+                        
+                        <img src="" 
+                             class="tmdb-poster" 
+                             style="kdisplay: none;" 
+                             data-title="{{ $movie->primaryTitle }}" 
+                             data-year="{{ $movie->startYear }}">
+=======
                     <div class="card-img-placeholder">
                         @if(isset($movie->titleType) && $movie->titleType == 'movie')
                             <i class="fas fa-film"></i>
                         @else
                             <i class="fas fa-tv"></i>
                         @endif
+>>>>>>> 0d65629f8cb074845db1ff81bdc5a2df74b40ddf
                     </div>
                     <div class="p-3">
                         <h6 class="fw-bold mb-1 text-white text-truncate">{{ $movie->primaryTitle }}</h6>
-                        <div class="d-flex justify-content-between small text-muted">
+                        <div class="d-flex justify-content-between small text-white-muted">
                             <span>{{ $movie->startYear ?? 'N/A' }}</span>
                             <span>{{ $movie->runtimeMinutes ? $movie->runtimeMinutes.' min' : '' }}</span>
                         </div>
@@ -85,9 +102,9 @@
         </div>
     @else
         <div class="text-center py-5">
-            <i class="far fa-bookmark fa-4x mb-3 text-muted opacity-25"></i>
+            <i class="far fa-bookmark fa-4x mb-3 text-white-muted opacity-25"></i>
             <h3 class="fw-bold">Watchlist Kosong</h3>
-            <p class="text-muted">Anda belum menambahkan film apapun ke daftar tontonan.</p>
+            <p class="text-white-muted">Anda belum menambahkan film apapun ke daftar tontonan.</p>
             <a href="{{ route('films.index') }}" class="btn btn-gradient mt-3">Jelajahi Film</a>
         </div>
     @endif
