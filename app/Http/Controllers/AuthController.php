@@ -17,7 +17,7 @@ class AuthController extends Controller
             return redirect()->route('home');
         }
         
-        return view('auth.login');
+        return back()->with('openLoginModal', true);
     }
 
 // Di AuthController.php, method login()
