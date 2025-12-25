@@ -418,6 +418,7 @@
                             <a class="nav-link dropdown-toggle text-warning" href="#"
                                 data-bs-toggle="dropdown">Production</a>
                             <ul class="dropdown-menu dropdown-menu-dark-custom">
+                                <li><a class="dropdown-item" href="{{ route('production.dashboard') }}">Dashboard</a></li>
                                 <li><a class="dropdown-item" href="{{ route('production.movies.index') }}">Manage
                                         Movies</a></li>
                                 <li><a class="dropdown-item" href="{{ route('production.shows.index') }}">Manage

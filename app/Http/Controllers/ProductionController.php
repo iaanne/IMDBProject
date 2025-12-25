@@ -11,10 +11,45 @@ class ProductionController extends Controller
     // ========== DASHBOARD ==========
     // ========== DASHBOARD (DIALIHKAN) ==========
 public function dashboard()
-{
-    // Langsung arahkan ke daftar episode karena view dashboard sudah dihapus
-    return redirect()->route('production.episodes.index');
-}
+    {
+        // 1. Upcoming (Siap Tayang)
+        $upcomingContent = DB::select('EXEC sp_GetUpcomingContent');
+
+        // 2. In Production (Sedang Syuting) - BARU
+        $inProductionContent = DB::select('EXEC sp_GetInProductionContent');
+
+        // 3. Top Productions (INI YANG TADI HILANG/ERROR)
+        $topProductions = DB::select('EXEC sp_GetTopProductions');
+
+        // 2. Top Directors (Sutradara Rating Tinggi)
+        $topDirectors = DB::select('EXEC sp_GetTopDirectors');
+
+        // 3. Top Writers (Penulis Rating Tinggi)
+        $topWriters = DB::select('EXEC sp_GetTopWriters');
+
+        // 4. Top Cast (Aktor Terpopuler)
+        $topCast = DB::select('EXEC sp_GetTopCast');
+
+        // 5. Upcoming Content (Film/TV Masa Depan)
+        $upcomingContent = DB::select('EXEC sp_GetUpcomingContent');
+
+        // 6. Platform Analysis (Analisis Network)
+        $platformAnalysis = DB::select('EXEC sp_GetPlatformAnalysis');
+
+        $competitorLeaderboard = DB::select('EXEC sp_GetCompetitorLeaderboard');
+
+        // Kirim data ke View
+        return view('production.dashboard', compact(
+           'upcomingContent',
+            'inProductionContent',
+            'topProductions', 
+            'topDirectors', 
+            'topWriters', 
+            'topCast', 
+            'platformAnalysis', 
+            'competitorLeaderboard'
+        ));
+    }
 
     // ========== MOVIES CRUD ==========
     public function indexMovies()
