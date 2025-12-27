@@ -154,6 +154,7 @@
         .search-wrapper {
             position: relative;
             width: 280px;
+            margin-top 15 px;
             transition: all 0.3s ease;
         }
 
@@ -170,7 +171,9 @@
             width: 100%;
             transition: all 0.3s ease;
             font-size: 0.9rem;
-            margin-top: 15px;
+            margin-top: 0px;
+            height: 45px;
+            line-height: normal;
         }
 
         .search-input-nav::placeholder {
@@ -200,6 +203,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            z-index : 10;
         }
 
         .search-btn-nav {
