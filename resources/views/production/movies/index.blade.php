@@ -174,14 +174,14 @@
                                     <i class="fas fa-star me-1"></i>{{ number_format($movie->rating, 1) }}
                                 </span>
                             @else
-                                <span class="text-muted small opacity-50">N/A</span>
+                                <span class="text-white small opacity-50">N/A</span>
                             @endif
                         </td>
                         <td class="text-center">
                             @if(isset($movie->votes) && $movie->votes > 0)
-                                <span class="text-muted small">{{ number_format($movie->votes) }}</span>
+                                <span class="text-white small">{{ number_format($movie->votes) }}</span>
                             @else
-                                <span class="text-muted small opacity-50">-</span>
+                                <span class="text-white small opacity-50">-</span>
                             @endif
                         </td>
                         <td class="text-center">
@@ -199,7 +199,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="text-center text-muted py-5">
+                        <td colspan="6" class="text-center text-white py-5">
                             <i class="fas fa-film fa-3x mb-3 opacity-25"></i>
                             <p>Belum ada data film.</p>
                         </td>

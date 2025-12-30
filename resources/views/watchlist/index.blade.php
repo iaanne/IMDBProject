@@ -44,7 +44,7 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: 0.5s;
+        display: none; /* default hidden sampai ada poster */
     }
     .fallback-icon {
         color: rgba(255,255,255,0.1);
@@ -66,30 +66,24 @@
         <div class="movies-grid">
             @foreach($movies as $movie)
                 <a href="{{ route('titles.show', $movie->tconst) }}" class="movie-card">
-<<<<<<< HEAD
                     <div class="card-img-container">
                         <div class="fallback-icon">
-                            @if(isset($movie->titleType) && $movie->titleType == 'movie')
+                            @if(($movie->titleType ?? '') === 'movie')
                                 <i class="fas fa-film"></i>
                             @else
                                 <i class="fas fa-tv"></i>
                             @endif
                         </div>
-                        
-                        <img src="" 
-                             class="tmdb-poster" 
-                             style="kdisplay: none;" 
-                             data-title="{{ $movie->primaryTitle }}" 
-                             data-year="{{ $movie->startYear }}">
-=======
-                    <div class="card-img-placeholder">
-                        @if(isset($movie->titleType) && $movie->titleType == 'movie')
-                            <i class="fas fa-film"></i>
-                        @else
-                            <i class="fas fa-tv"></i>
-                        @endif
->>>>>>> 0d65629f8cb074845db1ff81bdc5a2df74b40ddf
+
+                        <img
+                            src="https://via.placeholder.com/300x450?text=Loading..."
+                            class="tmdb-poster"
+                            data-title="{{ $movie->primaryTitle }}"
+                            data-year="{{ $movie->startYear }}"
+                            alt="{{ $movie->primaryTitle }}"
+                        >
                     </div>
+
                     <div class="p-3">
                         <h6 class="fw-bold mb-1 text-white text-truncate">{{ $movie->primaryTitle }}</h6>
                         <div class="d-flex justify-content-between small text-white-muted">
@@ -113,8 +107,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function() {
-    // Ganti API_KEY ini dengan key milikmu dari themoviedb.org
-    const API_KEY = '8e8ed515442c24035b99b36d4bbb8e6d'; 
+    const API_KEY = '8e8ed515442c24035b99b36d4bbb8e6d';
 
     $('.tmdb-poster').each(function() {
         const $img = $(this);
@@ -122,19 +115,22 @@ $(document).ready(function() {
         const year = $img.data('year');
         const $fallback = $img.siblings('.fallback-icon');
 
-        // Gunakan Multi Search agar bisa cari Movie sekaligus TV Series
-        const url = `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(title)}&year=${year}`;
+        if (!title) return;
+
+        const url = `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(title)}${year ? `&year=${year}` : ''}`;
 
         fetch(url)
-            .then(response => response.json())
+            .then(res => res.json())
             .then(data => {
                 if (data.results && data.results.length > 0) {
-                    // Ambil hasil pertama yang punya poster
                     const match = data.results.find(item => item.poster_path);
-                    if (match) {
+                    if (match && match.poster_path) {
                         $img.attr('src', `https://image.tmdb.org/t/p/w500${match.poster_path}`);
-                        $img.fadeIn(); // Muncul perlahan
-                        $fallback.hide(); // Sembunyikan icon kotak hitam
+                        $img.fadeIn();
+                        $fallback.hide();
+                    } else {
+                        // kalau ga nemu poster, biarin iconnya tampil
+                        $img.hide();
                     }
                 }
             })

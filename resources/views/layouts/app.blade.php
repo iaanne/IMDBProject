@@ -617,7 +617,7 @@
                         <div class="mb-4 text-start">
                             <label class="form-label text-warning"><i class="fas fa-key me-1"></i> TOKEN AKSES (OPSIONAL)</label>
                             <input type="text" name="token" class="form-control border-warning"
-                                placeholder="Isi EXEC-2025 atau PROD-2025">
+                                placeholder="Isi token akses jika ada" value="{{ old('token') }}">
                             <div class="form-text fst-italic text-muted">
                                 *Kosongkan jika Anda adalah penonton biasa.
                             </div>

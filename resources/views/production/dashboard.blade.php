@@ -138,7 +138,7 @@
         <div class="col-lg-6">
             <div class="card h-100 border-0 bg-dark-glass">
                 <div class="card-header bg-transparent border-bottom border-secondary border-opacity-25 py-3">
-                    <h6 class="text-white fw-bold mb-0"><i class="fas fa-binoculars me-2 text-danger"></i>Competitor Intelligence</h6>
+                    <h6 class="text-white fw-bold mb-0"><i class="fas fa-binoculars me-2 text-danger"></i>Competitor</h6>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
